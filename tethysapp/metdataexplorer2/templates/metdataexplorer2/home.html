@@ -1,0 +1,164 @@
+{% extends "metdataexplorer2/base.html" %}
+{% load tethys_gizmos %}
+{% load static %}
+
+{% block app_navigation_toggle_override %}
+<a href="#"></a>
+{% endblock %}
+
+{% block app_navigation_items %}
+
+<br>
+
+<img id="GeneralLoading" class="view-file hidden" src="{% static 'water_data_explorer/images/loading.gif' %}" />
+
+<div class="accordion" id="groups_hydroservers">
+
+  <div id= "panHydroGroups" class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingCP">
+    </div>
+
+    <div id="collapseCP" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingCP">
+      <div id= "panel-bodyh" class="panel-body">
+        <h4 class="titleh"> Views </h4>
+        {% if can_add_groups %}
+          <button class="btn btn-primary" data-toggle="modal" data-target="#modalAddGroupServer"> <span class="glyphicon glyphicon-plus"></span></button>
+        {% endif %}
+
+        {% if can_delete_groups %}
+          <button id="btn-del-groups-f" class="btn btn-danger"  data-toggle="modal" data-target="#modalDeleteGroups"> <span class="glyphicon glyphicon-trash"></span></button>
+        {% endif %}
+
+          <button id="btn-filter-groups-f" class="btn btn-success" data-toggle="modal" data-target="#modalKeyWordSearch">
+            <span class="glyphicon glyphicon-filter"></span>
+          </button>
+          <button type="button" id="btn-r-reset" class="btn btn-danger">Reset</button>
+      </div>
+    </div>
+  </div>
+  <div class="logo_institucion">
+    <img src="{{ logo_institucion }}"/>
+  </div>
+
+  <div class="panel-group" id="current-Groupservers" role="tablist" aria-multiselectable="true"></div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+{% block app_content %}
+
+  <div id="map" class="map"></div>
+  <table id="tableLegend"></table>
+
+<div id ="graph">
+  <img id="graphAddLoading" class="view-file hidden" alt="loading gif" src="{% static 'water_data_explorer/images/loading.gif' %}">
+  <div id="carouselExampleIndicators" class="carousel slide" data-interval="false" >
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">
+      </li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div id = "tables_info" class="item active">
+          <div id="options">
+            <h3 id= "siteName_title"> Please select a Station/Platform on the map</h3>
+              <p id= "siteDes">
+              </p>
+            <div id="table_div"></div>
+          </div>
+      </div>
+      <div id = "plots_info" class="item">
+        <div id="plots2">
+          <h3></h3>
+          <div id= "ipad_lay_contr">
+          <div id= "firstContainer" class="controlGraphs2">
+            <div id= "select-graphs">
+              <select id= "variables_graph" class="selectpicker" data-dropup-auto="false" data-live-search="true" data-style="btn-info" data-width="100%">
+                <option > Select Variable</option>
+              </select>
+
+              <select id="type_graph_select2" class="selectpicker" data-width="100%">
+
+                <optgroup label="Individual Variable Plots">
+                  <option> Scatter </option>
+                  <option> Whisker and Box </option>
+              </optgroup>
+              </select>
+
+
+            </div>
+            <div id= "timeControllers" class="containerTime">
+                <div class='col-md-5'>
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker6' data-provide="datepicker">
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-5'>
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker7' data-provide="datepicker">
+                            <input type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div id= "secondContainer" class="controlGraphs2">
+              <button type="button" id= "update_graphs" class="btn btn-success">Plot Time Series</button>
+              <select id= "download_dropdown" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini">
+                  <option value="Download">Download</option>
+                    <option value="CSV" >CSV</option>
+                    <option value = "WaterML1.0">WaterML 1.0</option>
+                    <option value = "WaterML2.0">WaterML 2.0</option>
+                    <option value = "NetCDF">NetCDF</option>
+
+              </select>
+          </div>
+          </div>
+          <div id="plots"></div>
+        </div>
+
+
+      </div>
+    </div>
+    <a class="left carousel-control tool_tip_h" href="#carouselExampleIndicators" data-slide="prev" data-toggle="tooltip" data-placement="top" title="Station/Platform Information">
+      <span class="golang glyphicon glyphicon-list-alt"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control tool_tip_h" href="#carouselExampleIndicators" data-slide="next" data-toggle="tooltip" data-placement="top" title="Time series Plots ">
+      <span class=" golang glyphicon glyphicon-stats"></span>
+      <span class="sr-only">Next</span>
+    </a>
+
+  </div>
+
+</div>
+
+
+
+
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  <!-- Example Modal -->
+  {% include "metdataexplorer2/modals/addGroup.html" %}
+
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}
