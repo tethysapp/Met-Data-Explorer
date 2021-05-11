@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-<div id="modalAddGroupServer" class="modal fade" role="dialog">
+<div id="modalAddGroupThredds" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content myModal">
             <div class="modal-header">
@@ -19,36 +19,90 @@
                 <br>
                 <p> If available, please enter below a catalog endpoint to automatically import its views.</p>
                 <div class="form-row">
-                    <div class="col-md-12 mb-3 form-group">
-                        <label for="url">Endpoint/URL (Optional):</label>
-                        <input type="text" class="form-control" name="url" id="url" placeholder="Please enter an Endpoint " required>
-                        <br>
-                        <button id= "btn-check_available_serv" type="button" class="btn btn-primary">Check Variables</button>
+                    <div class="col-md-12 mb-3 form-group" id = "littleSearch">
+                        <div class="input_url">
+                          <label for="url">Endpoint/URL (Optional):</label>
+                          <div class="buttons_url">
+                            <input type="text" class="form-control" name="url" id="url" placeholder="Please enter an Endpoint " required>
+
+                            <button id= "btn-check_available_serv" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                          </div>
+                        </div>
 
                     </div>
-                    <img id="soapAddLoading-group" class="view-file hidden" src="{% static 'metdataexplorer2/images/loading.gif' %}" />
-
+                    <img id="loading-group" class="view-file hidden" src="{% static 'metdataexplorer2/images/loading.gif' %}" />
                 </div>
-                <br>
-
                 <div class="form-row">
                     <div class="col-md-12 mb-3 form-group hidden" id="available_services">
                       <br>
-                      <p>Available Views</p>
-                      <table id="table-check-services" class="table table-sm">
-                        <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Add</th>
-                            <th scope="col">View Name</th>
-                          </tr>
-                        </thead>
-                        <tbody id= "rows_servs">
 
-                        </tbody>
-                    </table>
+                      <div class="accordion" id="folders_structures">
+                        <div class="panel-group" id="current-Files" role="tablist" aria-multiselectable="true">
+                          <div class="panel panel-default">
+                            <div class="panel-heading buttonAppearance" role="tab">
+                                <a role="button" data-toggle="collapse" data-target="#collapse_structure" href="#collapse_structure" aria-expanded="true" aria-controls="collapse_structure">
+                                <span class="group-name"> Folders/Files </span>
+                                </a>
+                                <button id= "btn-uplevel" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-up"></span></button>
+                            </div>
+                            <div id="collapse_structure" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_${title}">
+                              <div class="panel-body">
+                                <table id="filetree-div" class="table table-hover inner-div">
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div id="filetree-div" class="inner-div"></div> -->
+                    </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-md-12 mb-3 form-group" id="metadata_available">
+                    <div id="file-info-div">
+                      <div class = "variables_times">
+                        <label for="variable-input">Variables:</label>
+                        <select id="variable-input" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini" data-style="btn-info"></select>
+                      </div>
+                      <div class = "variables_times">
+                        <label for="time" >Time:</label>
+                        <select id="time" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini" data-style="btn-info"></select>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                <div class="form-row">
+                  <div style="width: 100%; padding: 20px; flex-direction: column;">
+                    <b style="float: left; font-size: 11pt; color: #333; padding-top: 25px;">Variables:</b><br>
+                    <div style="display: flex; flex-direction: row; width: 100%; height: 30px; padding: 5px 0px 2px 0px">
+                      <input id="add-attribute" class="inputsty">
+                      <img id="add-attribute-button" class="img-button" src="{% static 'metdataexplorer/images/addButtonGrey.png' %}" style="height: 25px; width:auto; margin: 0px">
+                      <button id="select-all-button" data-select="true">Select All</button>
+                    </div>
+                    <!-- <div id="attributes" style="width: 100%; height: 430px; border-style: solid; border-color:#000; border-width: 1px; border-radius: 3px; overflow-y: scroll; overflow-x: scroll">
+
+
+                    </div> -->
+                    <div id="table_wrapper">
+                      <table id="attributes_table" class="table table-hover table-condensed">
+                        <thead>
+                          <tr>
+                            <th scope="col">Select</th>
+                            <th scope="col">Variable</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Latitude/Longitude</th>
+                          </tr>
+                        </thead>
+                        <tbody id="attributes">
+
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+                </div>
+
                 <div class="loading_id">
                 </div>
                 <div class="warning"> </div>

@@ -55,8 +55,13 @@
 {% block scripts %}
   {{ block.super }}
   <script type="text/javascript">
-    var can_delete_groups = {{can_delete_groups|yesno:"true,false"}};
-    var can_add_groups = {{can_add_groups|yesno:"true,false"}};
+     var can_delete_groups = {{can_delete_groups|yesno:"true,false"}};
+
+     var can_add_groups = {{can_add_groups|yesno:"true,false"}};
+
+     let pathToFileImage = "{% static 'metdataexplorer2/images/fileImage.png' %}";
+
+     let pathToFolderImage = "{% static 'metdataexplorer2/images/folderImage.png' %}";
 
   </script>
 
@@ -83,11 +88,13 @@
 
 
   <script src="{% static 'tethys_gizmos/vendor/d3_tooltip/d3.tip.v0.6.3.js' %}" type="text/javascript"></script>
+  <script src="{% static 'metdataexplorer2/vendor/bootstrap-notify.min.js' %}" type="text/javascript"></script>
 
   <script src="{% static 'metdataexplorer2/js/main.js' %}" type="text/javascript"></script>
 
   <script src="{% static 'metdataexplorer2/js/map.js' %}" type="text/javascript"></script>
   <script src="{% static 'metdataexplorer2/js/auxiliary.js' %}" type="text/javascript"></script>
-  
+  <script src="{% static 'metdataexplorer2/js/groups.js' %}" type="text/javascript"></script>
+
 
 {% endblock %}
