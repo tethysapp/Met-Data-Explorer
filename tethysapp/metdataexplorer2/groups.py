@@ -1,7 +1,7 @@
 
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
-from tethys_sdk.permissions import login_required #, has_permission
+from tethys_sdk.permissions import  has_permission
 from siphon.catalog import TDSCatalog
 import requests
 import netCDF4
@@ -14,6 +14,8 @@ from .app import Metdataexplorer2 as app
 
 log = logging.getLogger('tethys.metdataexplorer2')
 Persistent_Store_Name = 'thredds_db'
+
+
 
 
 
@@ -174,6 +176,50 @@ def get_groups_list(request):
 
 
     return JsonResponse(list_catalog)
+
+
+######*****************************************************************************************################
+############################## DELETE A GROUP OF HYDROSERVERS #############################
+######*****************************************************************************************################
+def delete_groups(request):
+    list_catalog = {}
+    list_groups ={}
+    list_response = {}
+    if has_permission(request,"delete_groups"):
+
+        SessionMaker = app.get_persistent_store_database(
+            Persistent_Store_Name, as_sessionmaker=True)
+        session = SessionMaker()
+        #print(request.POST)
+        if request.is_ajax() and request.method == 'POST':
+            groups=request.POST.getlist('groups[]')
+            list_groups['groups']=groups
+            list_response['groups']=groups
+            #print(groups)
+            i=0
+            arrayTitles = []
+            # for group in session.query(Groups).all():
+            #     print(group.title)
+
+            for group in groups:
+                thredds_group = session.query(Groups).filter(Groups.name == group)[0].thredds_server
+                for single_thredds in thredds_group:
+                    title=single_thredds.title
+                    arrayTitles.append(title)
+                    i_string=str(i);
+                    list_catalog[i_string] = title
+
+                    i=i+1
+                thredds_group = session.query(Groups).filter(Groups.name == group).first()
+                session.delete(thredds_group)
+                session.commit()
+                session.close()
+            list_response['thredds']=arrayTitles
+
+    return JsonResponse(list_response)
+
+
+
 
 # def add_thredd(request):
 #     group_obj={}

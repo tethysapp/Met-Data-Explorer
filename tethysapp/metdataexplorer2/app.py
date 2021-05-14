@@ -55,6 +55,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='get-groups-list/',
                 controller='metdataexplorer2.groups.get_groups_list'
             ),
+            UrlMap(
+                name='delete-groups',
+                url='delete-groups/',
+                controller='metdataexplorer2.groups.delete_groups'
+            ),
 
         )
 

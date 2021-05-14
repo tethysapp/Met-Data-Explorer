@@ -12,7 +12,7 @@ var GROUPS_PACKAGE = (function(){
             URLpath.pop();
         }
     })
-    $("#btn-add-addServiceToTable").on("click",addServiceToTable());
+    $("#btn-add-addServiceToTable").on("click",addServiceToTable);
 
     $('#btn-add-addGroup').on("click",function() {
         if ($('#title-input').val() == '') {
@@ -45,15 +45,204 @@ var GROUPS_PACKAGE = (function(){
     });
     document.getElementById('add-attribute').addEventListener("keyup", searchGroups_group);
 
-    // Delete Groups Listener//
+    // Display list of Groups in the Delete Groups modal//
     $("#btn-del-groups-f").on("click", make_list_groups);
+
+    // Delete list of Groups in the Delete Groups modal//
+    $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
 
   })
 
 })()
 
+var delete_group_of_hydroservers = function(){
+  try{
+    let datastring = Object.values($("#tbl-groups").find(".chkbx-group"));
+    let groups_to_delete=[];
+    datastring.forEach(function(data){
+      if(data.checked== true){
+        let group_name = data.value;
+        groups_to_delete.push(id_dictionary[group_name]);
+      }
+    });
 
-make_list_groups = function(){
+    if(groups_to_delete.length > 0){
+      let groups_to_delete_obj={
+        groups:groups_to_delete
+      };
+      $.ajax({
+        type: "POST",
+        url: `delete-groups/`,
+        dataType: "JSON",
+        data: groups_to_delete_obj,
+        success: function(result){
+          try{
+            let groups_to_erase = result.groups;
+            let thredds_to_erase = result.thredds;
+
+            $("#pop-up_description2").empty();
+
+            groups_to_erase.forEach(function(group){
+              let group_name_e3;
+              Object.keys(id_dictionary).forEach(function(key) {
+                if(id_dictionary[key] == group ){
+                  group_name_e3 = key;
+                }
+              });
+              let element=document.getElementById(group_name_e3);
+              element.parentNode.removeChild(element);
+              let id_group_separator = `${group_name_e3}_list_separator`;
+              let separator = document.getElementById(id_group_separator);
+              separator.parentNode.removeChild(separator);
+              let group_panel_id = `${group_name_e3}_panel`;
+              let group_panel = document.getElementById(group_panel_id);
+              group_panel.parentNode.removeChild(group_panel);
+              $(`#${group_name_e3}deleteID`).remove();
+            });
+
+            thredds_to_erase.forEach(function(thredd_single){
+                let new_title;
+                Object.keys(id_dictionary).forEach(function(key) {
+                  if(id_dictionary[key] == thredd_single ){
+                    new_title = key;
+                  }
+                });
+                // map.removeLayer(layersDict[thredd_single]);
+                // if (layersDict.hasOwnProperty(thredd_single)){
+                //   delete layersDict[thredd_single]
+                //   $(`#${new_title}-row-complete`).remove()
+                // }
+            });
+            // if(layersDict['selectedPointModal']){
+            //   map.removeLayer(layersDict['selectedPointModal'])
+            //   map.updateSize()
+            //
+            // }
+            //
+            // if(layersDict['selectedPoint']){
+            //   map.removeLayer(layersDict['selectedPoint'])
+            //   map.updateSize()
+            // }
+            //
+            // map.updateSize();
+
+              $.notify(
+                  {
+                      message: `Successfully Deleted Group!`
+                  },
+                  {
+                      type: "success",
+                      allow_dismiss: true,
+                      z_index: 20000,
+                      delay: 5000,
+                      animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                      },
+                      onShow: function() {
+                          this.css({'width':'auto','height':'auto'});
+                      }
+                  }
+              )
+          }
+          catch(e){
+            console.log(e);
+            $.notify(
+                {
+                    message: `We are having an error deleting the selected groups of views`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
+
+
+
+        },
+        error: function(error) {
+            console.log(error);
+            $.notify(
+                {
+                    message: `We are having an error deleting the selected groups of views`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+        }
+
+
+      })
+    }
+    else{
+      $.notify(
+          {
+              message: `You need to select at least one group to delete`
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+
+    }
+
+  }
+  catch(err){
+    $.notify(
+        {
+            message: `We are having problems tryingto recognize the actual group`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+
+  }
+}
+
+
+var make_list_groups = function(){
   try{
     let groupsDiv = $("#current-GroupThredds").find(".panel.panel-default");
     let arrayGroups = Object.values(groupsDiv);
@@ -374,12 +563,7 @@ var addServiceToTable = function(){
     `
     $( "#added_thredds_files").append(html_row);
     $(`#${$('#addService-title').val()}_vars`).selectpicker('refresh');
-
-     $($.fn.dataTable.tables({ visible: true, api: true })).DataTable()
-              .columns.adjust()
-              .responsive.recalc();
 }
-
 
 var make_varaibles_appear = function () {
     if ($('#url').val() == '') {
@@ -680,7 +864,8 @@ var createDBArray = function() {
 
           // $("#modalAddGroupServer").modal("hide")
           $("#modalAddGroupServerForm").each(function() {
-              this.reset()
+              this.reset();
+              $("#added_thredds_files_table_body").empty();
           })
 
           $.notify(
