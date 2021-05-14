@@ -44,9 +44,73 @@ var GROUPS_PACKAGE = (function(){
         }
     });
     document.getElementById('add-attribute').addEventListener("keyup", searchGroups_group);
+
+    // Delete Groups Listener//
+    $("#btn-del-groups-f").on("click", make_list_groups);
+
   })
 
 })()
+
+
+make_list_groups = function(){
+  try{
+    let groupsDiv = $("#current-GroupThredds").find(".panel.panel-default");
+    let arrayGroups = Object.values(groupsDiv);
+    let finalGroupArray=[];
+    // console.log(arrayGroups)
+    arrayGroups.forEach(function(g){
+      if(g.id){
+        let stringGroups = g.id.split("_")[0];
+        finalGroupArray.push(stringGroups);
+      }
+    });
+    var HSTableHtml =
+        '<table class="table table-condensed-xs" id="tbl-groups"><thead><th>Select</th><th>Catalog Title</th></thead><tbody>'
+    if (finalGroupArray.length < 0) {
+      $("#modalDeleteGroups").find(".modal-body")
+            .html(
+                "<b>There are no groups in the Water Data Explorer</b>"
+            )
+    } else {
+        for (var i = 0; i < finalGroupArray.length; i++) {
+            var title = finalGroupArray[i]
+            HSTableHtml +=
+                `<tr id="${title}deleteID">` +
+                '<td><input class="chkbx-group" type="checkbox" name="server" value="' +
+                title +
+                '"></td>' +
+                '<td class="hs_title">' +
+                id_dictionary[title] +
+                "</td>" +
+                "</tr>"
+        }
+        HSTableHtml += "</tbody></table>"
+        $("#modalDeleteGroups").find(".modal-body").html(HSTableHtml);
+    }
+  }
+  catch(error){
+    $.notify(
+        {
+            message: `We are having an error trying to make the list of groups in the application`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
+
+}
 
 var load_groups_start = function(){
     $.ajax({
