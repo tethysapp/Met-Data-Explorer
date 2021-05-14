@@ -14,3 +14,4 @@ let urlInfoBox = true;
 let fullArrayTimeseries = {};
 let spatial_shape = false;
 let add_services_list = [];
+let services_layers = {};

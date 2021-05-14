@@ -624,6 +624,8 @@ var addServiceToTable = function(){
         group: $("#addGroup-title").val(),
         title: $('#addService-title').val(),
         url: url,
+        url_wms:wmsURL,
+        url_subset:subsetURL,
         epsg: epsg,
         spatial: spatial_shape,
         description: $('#addService-title').val(),
@@ -735,6 +737,7 @@ var updateFilepath = function() {
         $("#file-info-div").css("display", "flex");
         opendapURL = $(this).attr("data-opendap-url");
         subsetURL = $(this).attr("data-subset-url");
+        console.log(subsetURL);
         wmsURL = $(this).attr("data-wms-url");
         if ($("#groups_variables_div").is(":hidden")) {
             let variablesAndFileMetadata = getVariablesAndFileMetadata();

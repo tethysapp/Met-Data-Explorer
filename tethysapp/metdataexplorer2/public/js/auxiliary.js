@@ -99,31 +99,83 @@ var uuidv4 = function () {
   });
 };
 
-var html_for_servers = function (title,group_name,isNew){
+var html_for_servers = function (title,group_name, url_opendap, url_wms, url_subset,isNew){
+  console.log(url_subset);
   try{
     let check_var = (( isNew == true ) ? 'checked' : '');
-    let newHtml = `
-    <li class="ui-state-default" layer-name="${title}" id="${title}" >
-    <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
-    <input class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" ${check_var}>
-    <button type="button" id="${title}_${group_name}_reload" class="btn btn-sm" >
-     <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
-     </span>
-    </button>
-    <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
-     <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
-    </button>
+    // let newHtml = `
+    // <li class="ui-state-default" layer-name="${title}" id="${title}" >
+    // <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+    // <input data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" ${check_var}>
+    // <button type="button" id="${title}_${group_name}_reload" class="btn btn-sm" >
+    //  <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
+    //  </span>
+    // </button>
+    // <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
+    //  <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
+    // </button>
+    //
+    // <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
+    // </button>
+    //
+    // <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
+    //  <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+    // </button>
+    // </li>
+    // `;
+    // let newHtml =
+    //         `<div class="container">
+    //
+    //         <div class="panel panel-default">
+    //            <div class="panel-heading">
+    //                <h4 class="panel-title"
+    //                    data-toggle="collapse"
+    //                    data-target="#collapseOne">
+    //                    View Content
+    //                </h4>
+    //             </div>
+    //             <div id="collapseOne" class="panel-collapse collapse">
+    //               <div class="panel-body">
+    //                 All the hidden content
+    //               </div>
+    //             </div>
+    //         </div>
+    //
+    //       </div>`
 
-    <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
-    </button>
-
-    <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
-     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-    </button>
 
 
-    </li>
-    `;
+    let newHtml = `<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <li class="ui-state-default" layer-name="${title}" id="${title}" >
+            <span data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+
+            <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
+             <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
+            </button>
+
+            <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
+            </button>
+
+            <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
+             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </button>
+          </li>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>`
+
+
     return newHtml
   }
   catch (e){

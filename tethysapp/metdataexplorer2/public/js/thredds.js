@@ -48,27 +48,32 @@ var load_individual_thredds_for_group = function(group_name){
                    let {
                        title,
                        url,
+                       url_wms,
+                       url_subset,
                        epsg,
                        spatial,
                        description,
                        timestamp
                    } = server
+                   console.log(server);
                    let unique_id_group = uuidv4();
                    id_dictionary[unique_id_group] = title
 
                    let new_title = unique_id_group;
-                   let newHtml = html_for_servers(new_title,group_name_e3);
+                   console.log(url_subset);
+
+                   let newHtml = html_for_servers(new_title,group_name_e3,url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
                    //
                    // $(`#${new_title}_variables`).on("click",showVariables2);
                    // $(`#${new_title}_variables_info`).on("click",hydroserver_information);
                    // $(`#${new_title}_${group_name_e3}_reload`).on("click",update_hydroserver);
 
-                   // let lis = document.getElementById(`${id_group_separator}`).getElementsByTagName("li");
-                   // let li_arrays = Array.from(lis);
-                   // let li_arrays2 = Array.from(lis);
+                   let lis = document.getElementById(`${id_group_separator}`).getElementsByTagName("li");
+                   let li_arrays = Array.from(lis);
+                   let li_arrays2 = Array.from(lis);
                    //
-                   // let input_check = li_arrays.filter(x => new_title === x.attributes['layer-name'].value)[0].getElementsByClassName("chkbx-layer")[0];
+                   let input_check = li_arrays.filter(x => new_title === x.attributes['layer-name'].value)[0].getElementsByClassName("chkbx-layer")[0];
                    //
                    //
                    //   input_check.addEventListener("change", function(){

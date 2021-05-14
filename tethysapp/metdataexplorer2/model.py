@@ -31,16 +31,20 @@ class Thredds(Base):
     group = relationship("Groups", back_populates="thredds_server")
     title = Column(String(2000))
     url = Column(String(2000))
+    url_wms = Column(String(2000))
+    url_subset = Column(String(2000))
     epsg = Column(String(100))
     spatial = Column(String(2000))
     description = Column(String(4000))
     attributes = relationship("Variables", back_populates="thredds_servers")
     timestamp = Column(String(2000))
 
-    def __init__(self, server_type, title, url, epsg, spatial, description, timestamp):
+    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp):
         self.server_type = server_type
         self.title = title
         self.url = url
+        self.url_wms = url_wms
+        self.url_subset = url_subset
         self.epsg = epsg
         self.spatial = spatial
         self.description = description

@@ -105,6 +105,8 @@ def add_group(request):
             thredds_one = Thredds(server_type=servi['type'],
                              title=servi['title'],
                              url = servi['url'],
+                             url_wms = servi['url_wms'],
+                             url_subset = servi['url_subset'],
                              epsg=servi['epsg'],
                              spatial = json.dumps(servi['spatial']),
                              description = servi['description'],
@@ -140,6 +142,8 @@ def load_group(request):
         layer_obj = {}
         layer_obj["title"] = trds.title
         layer_obj["url"] = trds.url.strip()
+        layer_obj["url_wms"] = trds.url_wms.strip()
+        layer_obj["url_subset"] = trds.url_subset.strip()
         layer_obj["epsg"] = trds.epsg
         layer_obj["spatial"] = trds.spatial
         layer_obj["description"] = trds.description
