@@ -241,7 +241,6 @@ var delete_group_of_hydroservers = function(){
   }
 }
 
-
 var make_list_groups = function(){
   try{
     let groupsDiv = $("#current-GroupThredds").find(".panel.panel-default");
@@ -463,7 +462,79 @@ var addAttribute = function(attribute, dimensionString, units, color) {
 }
 
 var addServiceToTable = function(){
-    console.log("adding data");
+  try{
+    //CHECKS IF THE INPUT IS EMPTY ///
+    if($("#addService-title").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a title. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+    if ($("#addService-title").val() != "") {
+      var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
+      var specials=/[*|\":<>[\]{}`\\()';@&$]/;
+      var title = $("#addService-title").val()
+      if (specials.test(title)){
+        $.notify(
+            {
+              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
+            },
+            {
+                type: "info",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+          return false
+      }
+    }
+
+    //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
+    if($("#addService-description").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a description for this group. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
     var url = $('#url').val();
     var timestamp = 'false';
     let units = 'false';
@@ -510,6 +581,28 @@ var addServiceToTable = function(){
 
         }
     })
+    if(variables_list.length <= 0){
+      $.notify(
+          {
+            message: "Please select at least one variable."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
 
     // var group = $("#addGroup-title").val();
     var groupID = 'user-group-container';
@@ -563,6 +656,28 @@ var addServiceToTable = function(){
     `
     $( "#added_thredds_files").append(html_row);
     $(`#${$('#addService-title').val()}_vars`).selectpicker('refresh');
+  }
+  catch(error){
+    console.log(error);
+    $.notify(
+        {
+          message: `There was an error while adding the THREDDS file and its variables to the Group.`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
 }
 
 var make_varaibles_appear = function () {
@@ -709,6 +824,7 @@ var addFileMetadata = function(fileMetadata) {
 
     $('#file-metadata-button').css("background-color", "#1600F0");
 }
+
 var getVariablesAndFileMetadata = function () {
     //$("#loading-modal").modal("show");
     let variables = {};
@@ -824,6 +940,79 @@ var getFoldersAndFiles = function() {
 };
 
 var createDBArray = function() {
+  try{
+    //CHECKS IF THE INPUT IS EMPTY ///
+    if($("#addGroup-title").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a title. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+    if ($("#addGroup-title").val() != "") {
+      var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
+      var specials=/[*|\":<>[\]{}`\\()';@&$]/;
+      var title = $("#addGroup-title").val()
+      if (specials.test(title)){
+        $.notify(
+            {
+              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
+            },
+            {
+                type: "info",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+          return false
+      }
+    }
+
+    //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
+    if($("#addGroup-description").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a description for this group. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
 
     let group_info = {
         title: $('#addGroup-title').val(),
@@ -885,8 +1074,29 @@ var createDBArray = function() {
 
         }
     })
+  }
+  catch(error){
+    console.log(error);
+    $.notify(
+        {
+          message: `There was an error while adding the group of THREDDS files`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
 }
-
 
 var general_search = function(id_search_input, id_table){
   try{
