@@ -1,5 +1,6 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.permissions import Permission, PermissionGroup
+from tethys_sdk.app_settings import PersistentStoreDatabaseSetting
 
 class Metdataexplorer2(TethysAppBase):
     """
@@ -39,6 +40,22 @@ class Metdataexplorer2(TethysAppBase):
                 url='getVariablesAndFileMetadata/',
                 controller='metdataexplorer2.groups.get_variables_and_file_metadata'
             ),
+            UrlMap(
+                name='add-group',
+                url='add-group/',
+                controller='metdataexplorer2.groups.add_group'
+            ),
+            UrlMap(
+                name='load-group',
+                url='load-group/',
+                controller='metdataexplorer2.groups.load_group'
+            ),
+            UrlMap(
+                name='get-groups-list',
+                url='get-groups-list/',
+                controller='metdataexplorer2.groups.get_groups_list'
+            ),
+
         )
 
         return url_maps
@@ -64,3 +81,15 @@ class Metdataexplorer2(TethysAppBase):
         permissions = (admin, )
 
         return permissions
+
+    #### Persistant storage ###
+    def persistent_store_settings(self):
+        ps_settings = (
+            PersistentStoreDatabaseSetting(
+                name='thredds_db',
+                description='thredds database',
+                initializer='metdataexplorer2.init_stores.init_thredds_db',
+                required=True
+            ),
+        )
+        return ps_settings

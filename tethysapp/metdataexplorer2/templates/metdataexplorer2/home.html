@@ -12,7 +12,7 @@
 
 <img id="GeneralLoading" class="view-file hidden" src="{% static 'water_data_explorer/images/loading.gif' %}" />
 
-<div class="accordion" id="groups_hydroservers">
+<div class="accordion" id="groups_thredds">
 
   <div id= "panHydroGroups" class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingCP">
@@ -29,7 +29,7 @@
           <button id="btn-del-groups-f" class="btn btn-danger"  data-toggle="modal" data-target="#modalDeleteGroups"> <span class="glyphicon glyphicon-trash"></span></button>
         {% endif %}
 
-          <button id="btn-filter-groups-f" class="btn btn-success" data-toggle="modal" data-target="#modalKeyWordSearch">
+          <button id="btn-filter-groups-f" class="btn btn-success" data-toggle="modal" data-target="#modalVariableFilter">
             <span class="glyphicon glyphicon-filter"></span>
           </button>
           <button type="button" id="btn-r-reset" class="btn btn-danger">Reset</button>
@@ -40,7 +40,9 @@
     <img src="{{ logo_institucion }}"/>
   </div>
 
-  <div class="panel-group" id="current-Groupservers" role="tablist" aria-multiselectable="true"></div>
+  <div class="panel-group" id="current-GroupThredds" role="tablist" aria-multiselectable="true">
+
+  </div>
 
 
 </div>
@@ -156,6 +158,9 @@
 {% block after_app_content %}
   <!-- Example Modal -->
   {% include "metdataexplorer2/modals/addGroup.html" %}
+  {% include "metdataexplorer2/modals/addGroupThredds.html" %}
+  {% include "metdataexplorer2/modals/addServices.html" %}
+  {% include "metdataexplorer2/modals/DeleteGroup.html" %}
 
 {% endblock %}
 

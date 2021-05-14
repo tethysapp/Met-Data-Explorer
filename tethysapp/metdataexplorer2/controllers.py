@@ -15,4 +15,4 @@ def home(request):
         'can_add_groups': has_permission(request, 'add_groups'),
     }
 
-    return render(request, 'metdataexplorer2/home.html', context)
+    return render(request, 'metdataexplorer2/home.html', context)    

@@ -71,10 +71,133 @@ var MAP_PACKAGE = (function(){
     }
   }
 
+
+  var clickShpLayer = function (e) {
+      let coords = e.sourceTarget._bounds;
+      let coord = {
+          0: {
+              0: {'lat': coords['_southWest']['lat'], 'lng': coords['_southWest']['lng']},
+              1: {'lat': coords['_northEast']['lat'], 'lng': coords['_southWest']['lng']},
+              2: {'lat': coords['_northEast']['lat'], 'lng': coords['_northEast']['lng']},
+              3: {'lat': coords['_southWest']['lat'], 'lng': coords['_northEast']['lng']}
+          }
+      };
+      getTimeseries(coord);
+  };
+
+
+  var configureBounds = function(bounds) {
+      if (typeof(bounds) === 'string') {
+          if (bounds.slice(0, 4) == 'http') {
+              $.getJSON(bounds,function(data){
+                  makeGeojsonLayer(data);
+                  mapObj.flyToBounds(shpLayer.getBounds());
+              });
+          } else {
+              $.ajax({
+                  url: URL_getGeojson,
+                  data: {
+                      name: bounds,
+                  },
+                  dataType: "json",
+                  contentType: "application/json",
+                  method: "GET",
+                  async: false,
+                  success: function (result) {
+                      let geojson = result['geojson'];
+                      console.log(geojson)
+                      makeGeojsonLayer(geojson);
+                      mapObj.flyToBounds(shpLayer.getBounds());
+                  },
+              });
+          }
+      } else {
+          makeGeojsonLayer(bounds);
+          mapObj.flyToBounds(shpLayer.getBounds());
+      }
+  }
+
+
+
+
+
   $(function(){
     let mapObj = map_init();
+    var getDataBounds = function() {
+        let rectangleDrawer = new L.Draw.Rectangle(mapObj);
+        rectangleDrawer.enable();
+        /* Controls for when drawing on the maps */
+    }
+
+    var getThreddsBounds = function() {
+        // $('#main-body').css('display', 'block');
+        // $('#db-forms').css('display', 'none');
+        // $('#add-shape-resource-modal').modal('hide');
+        let polygonDrawer = new L.Draw.Polygon(mapObj);
+        polygonDrawer.enable();
+    }
+
     let basemapObj = basemaps_init(mapObj);
     let layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
+    /* Drawing/Layer Controls */
+    let drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
+    let shpLayer;
+
+    let drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems,
+            edit: true,
+        },
+        draw: {
+            marker: false,
+            polyline: false,
+            circlemarker: false,
+            circle: false,
+            polygon: false,
+            rectangle: false,
+            trash: true,
+        },
+    });
+
+    /* Add the controls to the map */
+    mapObj.addControl(drawControl);
+    $('#draw-on-map-button').click(function(){
+      // $('#modalAddGroupThredds').modal('hide');
+      $('#modalAddGroupThredds').modal('hide');
+      $('#modalAddServices').modal('hide');
+      getThreddsBounds();
+    });
+    $('#get-data-button').click(getDataBounds);
+
+    drawnItems.on('click', function (e) {
+        let coord = e.layer.getLatLngs();
+        getTimeseries(coord);
+    });
+
+    mapObj.on(L.Draw.Event.CREATED, function (e) {
+        if (urlInfoBox == true) {
+            let coord = e.layer.toGeoJSON();
+            console.log(coord)
+            /*let bounds = '((';
+            for (let i = 0; i < 4; i++) {
+                bounds += coord[0][i].lng.toFixed(2) + ' ' + coord[0][i].lat.toFixed(2) + ', ';
+            }
+            bounds += coord[0][0].lng.toFixed(2) + ' ' + coord[0][0].lat.toFixed(2) + '))';*/
+            $('#spatial-input').val(JSON.stringify(coord));
+            spatial_shape = coord;
+            $('#modalAddGroupThredds').modal('show');
+            $('#modalAddServices').modal('show');
+
+            // $('#main-body').css('display', 'none');
+            // $('#db-forms').css('display', 'block');
+        } else {
+            drawnItems.addLayer(e.layer);
+            let coord = e.layer.getLatLngs();
+            getTimeseries(coord);
+        }
+    });
+
+
   })
 
 })();
