@@ -1,3 +1,7 @@
+
+.panel-body, .panel-heading{
+  padding: 0px;
+}
 #current-GroupThredds {
     width: 100%;
     height: 100%;
@@ -398,7 +402,7 @@ tr:hover {
 
 
 
-.server-name {
+.server-name, .variable-name {
     -webkit-box-flex: 1;
     -webkit-flex: 1 1 auto;
     -ms-flex: 1 1 auto;
