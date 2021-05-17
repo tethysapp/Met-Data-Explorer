@@ -148,7 +148,15 @@ def load_group(request):
         layer_obj["spatial"] = trds.spatial
         layer_obj["description"] = trds.description
         layer_obj["timestamp"] = trds.timestamp
-
+        layer_obj["attributes"] = []
+        for attribute_single in trds.attributes:
+            temp_var_td = {}
+            temp_var_td['name'] = attribute_single.name
+            temp_var_td['dimensions'] = attribute_single.dimensions
+            temp_var_td['units'] = attribute_single.units
+            temp_var_td['color'] = attribute_single.color
+            print(temp_var_td)
+            layer_obj["attributes"].append(temp_var_td)
         td_list.append(layer_obj)
 
     list_catalog["thredds"] = td_list
