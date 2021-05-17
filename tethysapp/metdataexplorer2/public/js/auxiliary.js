@@ -99,9 +99,20 @@ var uuidv4 = function () {
   });
 };
 
-var html_for_servers = function (title,group_name, url_opendap, url_wms, url_subset,isNew){
+var html_for_servers = function (title,group_name, variables_array, url_opendap, url_wms, url_subset,isNew){
   console.log(url_subset);
   try{
+    let html_vars = '';
+    for(var i= 0;  i< variables_array.length; ++i){
+      html_vars +=
+`      <li class="ui-state-default buttonAppearance" id="${variables_array[i]['name']}_${title}" variable-layer="${variables_array[i]['name']}_${title}">
+          <span class="variable-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${variables_array[i]['name']}">${variables_array[i]['name']}</span>
+          <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox">
+          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalVariableInfo">
+            <span class=" glyphicon glyphicon-info-sign "></span>
+          </button>
+      </li>`
+    }
     let check_var = (( isNew == true ) ? 'checked' : '');
     // let newHtml = `
     // <li class="ui-state-default" layer-name="${title}" id="${title}" >
@@ -145,11 +156,11 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
 
 
 
-    let newHtml = `<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <a role="button" data-toggle="collapse" data-parent="#accordion_${title}" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <li class="ui-state-default" layer-name="${title}" id="${title}" >
             <span data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
 
@@ -169,7 +180,7 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        ${html_vars}
       </div>
     </div>
   </div>
