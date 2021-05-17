@@ -26,6 +26,7 @@ var load_individual_thredds_for_group = function(group_name){
            data: group_name_obj,
            success: result => {
              try{
+               console.log(result);
                let servers = result["thredds"]
                //USE A FUNCTION TO FIND THE LI ASSOCIATED WITH THAT GROUP  AND DELETE IT FROM THE MAP AND MAKE ALL
                // THE CHECKBOXES VISIBLE //
@@ -53,7 +54,8 @@ var load_individual_thredds_for_group = function(group_name){
                        epsg,
                        spatial,
                        description,
-                       timestamp
+                       timestamp,
+                       attributes
                    } = server
                    console.log(server);
                    let unique_id_group = uuidv4();
@@ -62,7 +64,7 @@ var load_individual_thredds_for_group = function(group_name){
                    let new_title = unique_id_group;
                    console.log(url_subset);
 
-                   let newHtml = html_for_servers(new_title,group_name_e3,url, url_wms, url_subset);
+                   let newHtml = html_for_servers(new_title,group_name_e3, attributes, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
                    //
                    // $(`#${new_title}_variables`).on("click",showVariables2);
@@ -72,47 +74,57 @@ var load_individual_thredds_for_group = function(group_name){
                    let lis = document.getElementById(`${id_group_separator}`).getElementsByTagName("li");
                    let li_arrays = Array.from(lis);
                    let li_arrays2 = Array.from(lis);
+                   console.log(li_arrays);
+
+                   for (let i = 0; i< attributes.length; ++i){
+                     console.log(attributes[i]['name']);
+                     var check_id_var = `${attributes[i]['name']}_${new_title}_check`
+                     let input_check = $(`#${check_id_var}`);
+                     console.log(input_check);
+                     input_check.on("change", function(){
+                       console.log("HOLA");
+
+
+                     })
+                   }
                    //
-                   let input_check = li_arrays.filter(x => new_title === x.attributes['layer-name'].value)[0].getElementsByClassName("chkbx-layer")[0];
-                   //
-                   //
-                   //   input_check.addEventListener("change", function(){
-                   //     let check_box = this;
-                   //     if(layersDict['selectedPointModal']){
-                   //       map.removeLayer(layersDict['selectedPointModal'])
-                   //       map.updateSize()
-                   //     }
-                   //     if(layersDict['selectedPoint']){
-                   //       map.removeLayer(layersDict['selectedPoint'])
-                   //       map.updateSize()
-                   //     }
-                   //     map.getLayers().forEach(function(layer) {
-                   //       if(layer_object_filter.hasOwnProperty(title) == false){
-                   //         if(layer instanceof ol.layer.Vector && layer == layersDict[title]){
-                   //           if(check_box.checked){
-                   //
-                   //             layer.setStyle(featureStyle(layerColorDict[title]));
-                   //           }
-                   //           else{
-                   //             layer.setStyle(new ol.style.Style({}));
-                   //
-                   //           }
-                   //         }
-                   //       }
-                   //       else{
-                   //         if(layer instanceof ol.layer.Vector && layer == layer_object_filter[title]){
-                   //           if(check_box.checked){
-                   //
-                   //             layer.setStyle(featureStyle(layerColorDict[title]));
-                   //           }
-                   //           else{
-                   //             layer.setStyle(new ol.style.Style({}));
-                   //           }
-                   //         }
-                   //       }
-                   //      });
-                   //
-                   //   });
+                     // input_check.addEventListener("change", function(){
+                     //   let check_box = this;
+                     //   if(layersDict['selectedPointModal']){
+                     //     map.removeLayer(layersDict['selectedPointModal'])
+                     //     map.updateSize()
+                     //   }
+                     //   if(layersDict['selectedPoint']){
+                     //     map.removeLayer(layersDict['selectedPoint'])
+                     //     map.updateSize()
+                     //   }
+                     //   map.getLayers().forEach(function(layer) {
+                     //     if(layer_object_filter.hasOwnProperty(title) == false){
+                     //       if(layer instanceof ol.layer.Vector && layer == layersDict[title]){
+                     //         if(check_box.checked){
+                     //
+                     //           layer.setStyle(featureStyle(layerColorDict[title]));
+                     //         }
+                     //         else{
+                     //           layer.setStyle(new ol.style.Style({}));
+                     //
+                     //         }
+                     //       }
+                     //     }
+                     //     else{
+                     //       if(layer instanceof ol.layer.Vector && layer == layer_object_filter[title]){
+                     //         if(check_box.checked){
+                     //
+                     //           layer.setStyle(featureStyle(layerColorDict[title]));
+                     //         }
+                     //         else{
+                     //           layer.setStyle(new ol.style.Style({}));
+                     //         }
+                     //       }
+                     //     }
+                     //    });
+                     //
+                     // });
                    //
                    //   let sites = siteInfo
                    //   if (typeof(sites) == "string"){
@@ -179,6 +191,7 @@ var load_individual_thredds_for_group = function(group_name){
                $("#GeneralLoading").addClass("hidden");
              }
              catch(e){
+               console.log(e);
                $("#GeneralLoading").addClass("hidden");
                $.notify(
                    {
@@ -204,6 +217,7 @@ var load_individual_thredds_for_group = function(group_name){
 
            },
            error: function(error) {
+             console.log(error);
              $("#GeneralLoading").addClass("hidden");
                $.notify(
                    {
