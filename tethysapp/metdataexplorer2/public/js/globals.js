@@ -10,7 +10,7 @@ let containerAttributes = false;
 let chartdata = {};
 //databases.js
 let editing = false;
-let urlInfoBox = true;
+let urlInfoBox = false;
 let fullArrayTimeseries = {};
 let spatial_shape = false;
 let add_services_list = [];

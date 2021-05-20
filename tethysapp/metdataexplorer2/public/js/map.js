@@ -111,12 +111,12 @@ var MAP_PACKAGE = (function(){
             edit: true,
         },
         draw: {
-            marker: false,
-            polyline: false,
-            circlemarker: false,
-            circle: false,
-            polygon: false,
-            rectangle: false,
+            marker: true,
+            polyline: true,
+            circlemarker: true,
+            circle: true,
+            polygon: true,
+            rectangle: true,
             trash: true,
         },
     });
@@ -125,6 +125,7 @@ var MAP_PACKAGE = (function(){
     mapObj.addControl(drawControl);
     $('#draw-on-map-button').click(function(){
       // $('#modalAddGroupThredds').modal('hide');
+      urlInfoBox = true;
       $('#modalAddGroupThredds').modal('hide');
       $('#modalAddServices').modal('hide');
       getThreddsBounds();
@@ -138,20 +139,14 @@ var MAP_PACKAGE = (function(){
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
         if (urlInfoBox == true) {
-            let coord = e.layer.toGeoJSON();
-            console.log(coord)
-            /*let bounds = '((';
-            for (let i = 0; i < 4; i++) {
-                bounds += coord[0][i].lng.toFixed(2) + ' ' + coord[0][i].lat.toFixed(2) + ', ';
-            }
-            bounds += coord[0][0].lng.toFixed(2) + ' ' + coord[0][0].lat.toFixed(2) + '))';*/
-            $('#spatial-input').val(JSON.stringify(coord));
-            spatial_shape = coord;
-            $('#modalAddGroupThredds').modal('show');
-            $('#modalAddServices').modal('show');
 
-            // $('#main-body').css('display', 'none');
-            // $('#db-forms').css('display', 'block');
+          let coord = e.layer.toGeoJSON();
+          $('#spatial-input').val(JSON.stringify(coord));
+          spatial_shape = coord;
+          $('#modalAddGroupThredds').modal('show');
+          $('#modalAddServices').modal('show');
+          urlInfoBox = false;
+
         } else {
             drawnItems.addLayer(e.layer);
             let coord = e.layer.getLatLngs();
