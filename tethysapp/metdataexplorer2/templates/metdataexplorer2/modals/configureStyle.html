@@ -1,0 +1,44 @@
+{% load staticfiles %}
+
+<div id="modalStyleInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Customize Layer Style</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modalLayerForm">
+                <div id="layer-display-container">
+                  <div>
+                    <b style="font-size: 10.5pt; margin-top: 10px">Set Layer Opacity</b>
+                    <input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="opacity-slider">
+                  </div>
+                  <div>
+                    <label for="wmslayer-style">Select Color Style</label>
+                    <select id="wmslayer-style" class = "selectpicker">
+                      <option value="boxfill/rainbow">RAINBOW</option>
+                      <option value="boxfill/occam">OCCAM</option>
+                      <option value="boxfill/alg">ALG</option>
+                      <option value="boxfill/alg2">ALG2</option>
+                      <option value="boxfill/ncview">NC VIEW</option>
+                      <option value="boxfill/redblue">RED BLUE</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="wmslayer-bounds" style="">Set Data Bounds</label>
+                    <input id="wmslayer-bounds" style="width: 100%; margin-bottom: 20px; padding: 5px" value="0,25">
+                  </div>
+                </div>
+
+              </form>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-add-addGroup" class="btn btn-success">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
