@@ -36,41 +36,6 @@ var MAP_PACKAGE = (function(){
       "ESRI Terrain": L.layerGroup([esri_terrain]),
     }
   };
-  var data_layer = function() {
-    try {
-      if (wmsURL.indexOf("http://") != -1) {
-        console.log("Http endpoint found, changing to proxy URL");
-        wmsURL = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
-      }
-      const layer = $('#variable-input').val();
-      const range = $('#wmslayer-bounds').val();
-      const style = $('#wmslayer-style').val();
-      const wmsLayer = L.tileLayer.wms(wmsURL, {
-        layers: layer,
-        dimension: 'time',
-        useCache: true,
-        crossOrigin: false,
-        format: 'image/png',
-        transparent: true,
-        BGCOLOR: '0x000000',
-        styles: style,
-        colorscalerange: range,
-      });
-
-      wmsLayerTime = L.timeDimension.layer.wms(wmsLayer, {
-        name: 'time',
-        requestTimefromCapabilities: true,
-        updateTimeDimension: true,
-        updateTimeDimensionMode: 'replace',
-        cache: 20,
-      });
-      firstlayeradded = true;
-      return wmsLayerTime.addTo(mapObj);
-    } catch(err) {
-      alert('Invalid values.');
-    }
-  }
-
 
   var clickShpLayer = function (e) {
       let coords = e.sourceTarget._bounds;
@@ -118,11 +83,8 @@ var MAP_PACKAGE = (function(){
   }
 
 
-
-
-
   $(function(){
-    let mapObj = map_init();
+    mapObj = map_init();
     var getDataBounds = function() {
         let rectangleDrawer = new L.Draw.Rectangle(mapObj);
         rectangleDrawer.enable();
@@ -138,7 +100,7 @@ var MAP_PACKAGE = (function(){
     }
 
     let basemapObj = basemaps_init(mapObj);
-    let layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
+    layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
     /* Drawing/Layer Controls */
     let drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
     let shpLayer;
@@ -201,6 +163,72 @@ var MAP_PACKAGE = (function(){
   })
 
 })();
+
+var data_layer = function(layernameUI,wmsURL,layer,range,style) {
+  console.log("data  layer");
+  console.log(URL_threddsProxy);
+  let wmsURL2;
+  console.log(wmsURL);
+  try {
+    if (wmsURL.indexOf("http://") != -1) {
+      console.log("Http endpoint found, changing to proxy URL");
+      wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
+    }
+    else{
+      wmsURL2 = wmsURL;
+    }
+    console.log(wmsURL2);
+    // const layer = $('#variable-input').val();
+    // const range = $('#wmslayer-bounds').val();
+    // const style = $('#wmslayer-style').val();
+    const wmsLayer = L.tileLayer.wms(wmsURL2, {
+      layers: layer,
+      dimension: 'time',
+      useCache: true,
+      crossOrigin: false,
+      format: 'image/png',
+      transparent: true,
+      BGCOLOR: '0x000000',
+      styles: style,
+      colorscalerange: range,
+    });
+    wmsLayerTime = L.timeDimension.layer.wms(wmsLayer, {
+      name: `${layernameUI}_check`,
+      requestTimefromCapabilities: true,
+      updateTimeDimension: true,
+      updateTimeDimensionMode: 'replace',
+      cache: 20,
+    });
+    layers_dict[`${layernameUI}_check`] = wmsLayerTime
+    // firstlayeradded = true;
+    return wmsLayerTime.addTo(mapObj);
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+
+var updateWMSLayer = function(layernameUI,wmsURL,layer,range,style,opacity) {
+    // if (firstlayeradded == true) {
+    if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
+        layerControlObj.removeLayer(dataLayerObj);
+        mapObj.removeLayer(dataLayerObj);
+        delete layers_dict[`${layernameUI}_check`]
+    }
+    else{
+      dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+      dataLayerObj.setOpacity(opacity);
+      layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+    }
+
+}
+
+var removeWMSLayer = function() {
+    layerControlObj.removeLayer(dataLayerObj);
+    mapObj.removeLayer(dataLayerObj);
+    // firstlayeradded = false;
+    $("#layer-display-container").css("display", "none");
+}
 
 
 

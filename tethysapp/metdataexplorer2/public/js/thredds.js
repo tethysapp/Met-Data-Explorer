@@ -81,9 +81,18 @@ var load_individual_thredds_for_group = function(group_name){
                      var check_id_var = `${attributes[i]['name']}_${new_title}_check`
                      let input_check = $(`#${check_id_var}`);
                      console.log(input_check);
-                     input_check.on("change", function(){
-                       console.log("HOLA");
+                     let layernameUI = `${attributes[i]['name']}_${new_title}`
+                     layers_style[layernameUI] = {}
 
+                     layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                     layers_style[layernameUI]['wmsURL']= $(`#${new_title}_span`).attr("data-wms-url");
+                     layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+                     layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+                     layers_style[layernameUI]['variable'] = attributes[i]['name'];
+                     // console.log($(`#${new_title}`));
+                     console.log(layers_style[layernameUI]);
+                     input_check.on("change", function(){
+                      updateWMSLayer(layernameUI,layers_style[layernameUI]['wmsURL'],layers_style[layernameUI]['variable'], layers_style[layernameUI]['range'],layers_style[layernameUI]['style'] ,layers_style[layernameUI]['opacity'])
 
                      })
                    }

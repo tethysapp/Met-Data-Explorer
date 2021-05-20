@@ -60,6 +60,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='delete-groups/',
                 controller='metdataexplorer2.groups.delete_groups'
             ),
+            UrlMap(
+                name='threddsProxy',
+                url='threddsProxy/',
+                controller='metdataexplorer2.groups.thredds_proxy'
+            ),
 
         )
 

@@ -15,3 +15,7 @@ let fullArrayTimeseries = {};
 let spatial_shape = false;
 let add_services_list = [];
 let services_layers = {};
+let mapObj;
+let layers_dict = {};
+let layers_style = {};
+let layerControlObj;

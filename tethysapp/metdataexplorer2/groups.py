@@ -15,7 +15,16 @@ from .app import Metdataexplorer2 as app
 log = logging.getLogger('tethys.metdataexplorer2')
 Persistent_Store_Name = 'thredds_db'
 
+def thredds_proxy(request):
+    if 'main_url' in request.GET:
+        request_url = request.GET['main_url']
+        query_params = request.GET.dict()
+        query_params.pop('main_url', None)
+        r = requests.get(request_url, params=query_params)
 
+        return HttpResponse(r.content, content_type="image/png")
+    else:
+        return JsonResponse({})
 
 
 

@@ -1,4 +1,5 @@
 
+var baseURL = "{% static 'metdataexplorer2/images/' %}"
 
 var AUX_PACKAGE = (function(){
     /*
@@ -107,7 +108,10 @@ var html_for_servers = function (title,group_name, variables_array, url_opendap,
       html_vars +=
 `      <li class="ui-state-default buttonAppearance" id="${variables_array[i]['name']}_${title}" variable-layer="${variables_array[i]['name']}_${title}">
           <span class="variable-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${variables_array[i]['name']}">${variables_array[i]['name']}</span>
-          <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox">
+          <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox" data-color= "${variables_array[i]['colors']}" value = "${variables_array[i]['name']}">
+          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+            <i class="fas fa-layer-group"></i>
+          </button>
           <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalVariableInfo">
             <span class=" glyphicon glyphicon-info-sign "></span>
           </button>
@@ -158,11 +162,11 @@ var html_for_servers = function (title,group_name, variables_array, url_opendap,
 
     let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel-heading" role="tab" id="${title}_Heading">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion_${title}" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
           <li class="ui-state-default" layer-name="${title}" id="${title}" >
-            <span data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+            <span id="${title}_span" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
 
             <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
              <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
@@ -178,7 +182,7 @@ var html_for_servers = function (title,group_name, variables_array, url_opendap,
         </a>
       </h4>
     </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{title}_Heading">
       <div class="panel-body">
         ${html_vars}
       </div>

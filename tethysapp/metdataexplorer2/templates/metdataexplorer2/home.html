@@ -59,7 +59,7 @@
   <table id="tableLegend"></table>
 
 <div id ="graph">
-  <img id="graphAddLoading" class="view-file hidden" alt="loading gif" src="{% static 'water_data_explorer/images/loading.gif' %}">
+  <img id="graphAddLoading" class="view-file hidden" alt="loading gif" src="{% static 'metdataexplorer2/images/loading.gif' %}">
   <div id="carouselExampleIndicators" class="carousel slide" data-interval="false" >
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">
@@ -161,9 +161,23 @@
   {% include "metdataexplorer2/modals/addGroupThredds.html" %}
   {% include "metdataexplorer2/modals/addServices.html" %}
   {% include "metdataexplorer2/modals/DeleteGroup.html" %}
+  {% include "metdataexplorer2/modals/configureStyle.html" %}
 
 {% endblock %}
 
+
+
+
+
 {% block app_actions %}
+
+{% endblock %}
+
+{% block scripts %}
+
+  {{ block.super }}
+  <script>
+      let URL_threddsProxy = "{% url 'metdataexplorer2:threddsProxy' %}";
+  </script>
 
 {% endblock %}
