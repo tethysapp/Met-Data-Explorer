@@ -72,7 +72,9 @@
             <h3 id= "siteName_title"> Please select a Station/Platform on the map</h3>
               <p id= "siteDes">
               </p>
-            <div id="table_div"></div>
+            <div id="table_div"  class="table-responsive">
+
+            </div>
           </div>
       </div>
       <div id = "plots_info" class="item">
@@ -129,6 +131,7 @@
 
               </select>
           </div>
+
           </div>
           <div id="plots"></div>
         </div>
@@ -162,6 +165,7 @@
   {% include "metdataexplorer2/modals/addServices.html" %}
   {% include "metdataexplorer2/modals/DeleteGroup.html" %}
   {% include "metdataexplorer2/modals/configureStyle.html" %}
+  {% include "metdataexplorer2/modals/metadata_var.html" %}
 
 {% endblock %}
 

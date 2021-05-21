@@ -90,6 +90,8 @@ var AUX_PACKAGE = (function(){
     $(function(){
       addDefaultBehaviorToAjax();
       $('#sG').change(activate_deactivate_graphs);
+      initialize_graphs([],[],"No data Available","","","","scatter");
+
     })
 
 })()
@@ -99,96 +101,249 @@ var uuidv4 = function () {
     return v.toString(16);
   });
 };
+var options_vars = function(attributes, new_title){
+  try{
+    let variable_select = $("#variables_graph");
+    variable_select.empty();
+    variable_select.selectpicker("refresh");
+    for(var i= 0;  i< attributes.length; ++i){
 
+      let option = `<option value= ${attributes[i]['name']}_${new_title} >${attributes[i]['name']}</option>`;
+      console.log(option);
+      variable_select.append(option);
+      variable_select.selectpicker("refresh");
+    }
+
+
+  }
+  catch(e){
+    console.log(e);
+  }
+  // return html_vars
+
+}
+var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1,type,xArrayIn,yArrayIn){
+  try{
+    let element_graphs=document.getElementById("graph");
+    $("#graphs").empty();
+    let element_map =document.getElementById("map");
+      //make the down part visible and also give the design of the model//
+
+
+
+    if($( window ).width() > 320 && $( window ).width() <= 480){
+      element_graphs.style.cssText=  "display: flex; flex-direction: column;";
+    }
+    else{
+      element_graphs.style.cssText=  "display: flex !important; flex-direction: row;";
+    }
+
+
+
+
+
+    var config = {
+       modeBarButtonsToRemove: ['hoverClosestCartesian', 'hoverCompareCartesian','resetScale2d','toggleSpikelines'],
+       displaylogo: false,
+       responsive:true
+    };
+
+    if(type === "scatter"){
+      var trace1 = {
+        x: xArray,
+        y: yArray,
+        mode: 'lines',
+        type: type,
+        name: legend1,
+        text: [],
+        marker: { size: 5 },
+        line: {color: '#17BECF'}
+      };
+      var interpolation_trace;
+      var data = [];
+      data.push(trace1)
+      if(xArrayIn != undefined && yArrayIn != undefined){
+        interpolation_trace = {
+          x: xArrayIn,
+          y: yArrayIn,
+          mode: 'lines',
+          type: type,
+          name: `Mean Interpolation`,
+
+          text: [],
+          marker: { size: 5 },
+          line: {
+            color: '#FF6347',
+            dash: 'dot',
+          }
+        };
+        data.push(interpolation_trace);
+      }
+
+      var layout = {
+        width: $(".carousel-inner").parent().width(),
+        yaxis: {
+          title: {
+           text: yTitle,
+           font: {
+             size: 15,
+             color: '#7f7f7f'
+           }
+         },
+         automargin: true,
+        },
+        xaxis: {
+         automargin: true,
+        },
+        // title: title_graph,
+        autosize: true,
+        showlegend:true,
+        legend: {
+          "orientation": "h",
+          yanchor: 'top',
+          xanchor:'center',
+          y:-0.15,
+          x:0.5
+        },
+        margin: {
+          l: 40,
+          r: 40,
+          b: 40,
+          t: 40,
+          pad: 10
+        },
+      };
+
+
+      Plotly.newPlot('plots', data, layout, config);
+
+    }
+
+    if(type === "whisker"){
+      let trace1 = {
+        y: yArray,
+        type: 'box',
+        name: 'All Points',
+        marker: {color: '#3D9970'},
+        boxpoints: 'outliers',
+        boxmean: 'sd'
+
+      };
+
+      let data = [trace1];
+
+      let layout = {
+        title: title_graph,
+        autosize: true,
+
+      };
+      Plotly.newPlot('plots', data, layout, config);
+    }
+    // update the layout to expand to the available size
+    // when the window is resized
+    window.onresize = function() {
+        Plotly.relayout('plots', {
+            'xaxis.autorange': true,
+            'yaxis.autorange': true
+        });
+    };
+
+
+  }
+  catch(e){
+    $.notify(
+        {
+            message: `Unable to initialize the graphs`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000
+        }
+    )
+  }
+
+}
 var html_for_servers = function (title,group_name, variables_array, url_opendap, url_wms, url_subset,isNew){
   console.log(url_subset);
   try{
-    let html_vars = '';
-    for(var i= 0;  i< variables_array.length; ++i){
-      html_vars +=
-`      <li class="ui-state-default buttonAppearance" id="${variables_array[i]['name']}_${title}" variable-layer="${variables_array[i]['name']}_${title}">
-          <span class="variable-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${variables_array[i]['name']}">${variables_array[i]['name']}</span>
-          <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox" data-color= "${variables_array[i]['colors']}" value = "${variables_array[i]['name']}">
-          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-            <i class="fas fa-layer-group"></i>
-          </button>
-          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalVariableInfo">
-            <span class=" glyphicon glyphicon-info-sign "></span>
-          </button>
-      </li>`
-    }
+//     let html_vars = '';
+//     for(var i= 0;  i< variables_array.length; ++i){
+//       html_vars +=
+// `      <li class="ui-state-default buttonAppearance" id="${variables_array[i]['name']}_${title}" variable-layer="${variables_array[i]['name']}_${title}">
+//           <span class="variable-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${variables_array[i]['name']}">${variables_array[i]['name']}</span>
+//           <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox" data-color= "${variables_array[i]['colors']}" value = "${variables_array[i]['name']}">
+//           <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+//             <i class="fas fa-layer-group"></i>
+//           </button>
+//           <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalVariableInfo">
+//             <span class=" glyphicon glyphicon-info-sign "></span>
+//           </button>
+//           <button id = "${variables_array[i]['name']}_${title}_plots"" class="btn btn-primary btn-sm">
+//             <i class="fas fa-chart-bar"></i>
+//           </button>
+//       </li>`
+//     }
     let check_var = (( isNew == true ) ? 'checked' : '');
-    // let newHtml = `
-    // <li class="ui-state-default" layer-name="${title}" id="${title}" >
-    // <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
-    // <input data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" ${check_var}>
-    // <button type="button" id="${title}_${group_name}_reload" class="btn btn-sm" >
-    //  <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
-    //  </span>
-    // </button>
-    // <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
-    //  <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
-    // </button>
-    //
-    // <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
-    // </button>
-    //
-    // <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
-    //  <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-    // </button>
-    // </li>
-    // `;
-    // let newHtml =
-    //         `<div class="container">
-    //
-    //         <div class="panel panel-default">
-    //            <div class="panel-heading">
-    //                <h4 class="panel-title"
-    //                    data-toggle="collapse"
-    //                    data-target="#collapseOne">
-    //                    View Content
-    //                </h4>
-    //             </div>
-    //             <div id="collapseOne" class="panel-collapse collapse">
-    //               <div class="panel-body">
-    //                 All the hidden content
-    //               </div>
-    //             </div>
-    //         </div>
-    //
-    //       </div>`
+    let newHtml = `
+    <li class="ui-state-default" layer-name="${title}" id="${title}" >
+      <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+      <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
+
+
+      <button type="button" id="${title}_${group_name}_reload" class="btn btn-sm" >
+       <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
+       </span>
+      </button>
+      <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
+       <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
+      </button>
+
+      <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable">
+      <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
+      </button>
+
+      <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
+       <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+      </button>
+    </li>
+    `;
 
 
 
-    let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="${title}_Heading">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion_${title}" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          <li class="ui-state-default" layer-name="${title}" id="${title}" >
-            <span id="${title}_span" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
-
-            <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
-             <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
-            </button>
-
-            <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
-            </button>
-
-            <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
-             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-            </button>
-          </li>
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{title}_Heading">
-      <div class="panel-body">
-        ${html_vars}
-      </div>
-    </div>
-  </div>
-</div>`
+//     let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">
+//   <div class="panel panel-default">
+//     <div class="panel-heading" role="tab" id="${title}_Heading">
+//       <h4 class="panel-title">
+//           <li class="ui-state-default" layer-name="${title}" id="${title}" >
+//           <a role="button" data-toggle="collapse" data-parent="#accordion_${title}" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+//
+//             <span id="${title}_span" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+//             </a>
+//
+//             <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
+//
+//             <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
+//              <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
+//             </button>
+//
+//             <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
+//             </button>
+//
+//             <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
+//              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+//             </button>
+//           </li>
+//       </h4>
+//     </div>
+//     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{title}_Heading">
+//       <div class="panel-body">
+//         ${html_vars}
+//       </div>
+//     </div>
+//   </div>
+// </div>`
 
 
     return newHtml
