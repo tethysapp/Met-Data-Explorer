@@ -55,47 +55,96 @@ var load_individual_thredds_for_group = function(group_name){
                        spatial,
                        description,
                        timestamp,
-                       attributes
+                       attributes,
+                       metadata_td_file
                    } = server
-                   console.log(server);
                    let unique_id_group = uuidv4();
                    id_dictionary[unique_id_group] = title
-
+                   let layers_style = {}
                    let new_title = unique_id_group;
-                   console.log(url_subset);
 
                    let newHtml = html_for_servers(new_title,group_name_e3, attributes, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
+                   let input_check_serv = $(`#${new_title}_check`);
+
+                   input_check_serv.on("change", function(){
+                     //CLEAN TABLE //
+                     $("#table_div").empty()
+                    //MAKE DROPDOWN MENU FOR VARIABLES//
+                    options_vars(attributes, new_title);
+                    ///MAKE TABLE//
+
+                    let table_content = get_table_vars(attributes,title);
+                    // console.log(table_content);
+                    $(table_content).appendTo("#table_div");
+                    for (let i = 0; i< attributes.length; ++i){
+                      $(`#${attributes[i]['name']}_${title}_info`).on("click", function(){
+                        $("#metadata_vars").empty();
+                        console.log("hola");
+                        let info_content = get_metadata_button(attributes[i]);
+                        $(info_content).appendTo("#metadata_vars");
+                      })
+
+                      var check_id_var = `${attributes[i]['name']}_${title}_check`
+                      let input_check = $(`#${check_id_var}`);
+
+                      input_check.on("change", function(){
+                        let layernameUI = `${attributes[i]['name']}_${title}`
+                        layers_style[layernameUI] = {}
+                        layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                        layers_style[layernameUI]['wmsURL']= url_wms;
+                        layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+                        layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+                        layers_style[layernameUI]['variable'] = attributes[i]['name'];
+                        layers_style[layernameUI]['subset'] = url_subset;
+                        layers_style[layernameUI]['opendap'] = url;
+                        layers_style[layernameUI]['spatial'] = {};
+                        layers_style[layernameUI]['epsg'] = epsg;
+                        layers_style[layernameUI]['selected'] = false;
+                        console.log(layers_style[layernameUI]);
+                        updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                      })
+
+
+                    }
+                  });
+
+
                    //
                    // $(`#${new_title}_variables`).on("click",showVariables2);
                    // $(`#${new_title}_variables_info`).on("click",hydroserver_information);
                    // $(`#${new_title}_${group_name_e3}_reload`).on("click",update_hydroserver);
 
-                   let lis = document.getElementById(`${id_group_separator}`).getElementsByTagName("li");
-                   let li_arrays = Array.from(lis);
-                   let li_arrays2 = Array.from(lis);
-                   console.log(li_arrays);
 
-                   for (let i = 0; i< attributes.length; ++i){
-                     console.log(attributes[i]['name']);
-                     var check_id_var = `${attributes[i]['name']}_${new_title}_check`
-                     let input_check = $(`#${check_id_var}`);
-                     console.log(input_check);
-                     let layernameUI = `${attributes[i]['name']}_${new_title}`
-                     layers_style[layernameUI] = {}
+                   // for (let i = 0; i< attributes.length; ++i){
+                   //   console.log(attributes[i]['name']);
+                   //   var check_id_var = `${attributes[i]['name']}_${new_title}_check`
+                   //   let input_check = $(`#${check_id_var}`);
+                   //   console.log(input_check);
+                   //   let layernameUI = `${attributes[i]['name']}_${new_title}`
+                   //   layers_style[layernameUI] = {}
+                   //
+                   //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                   //   layers_style[layernameUI]['wmsURL']= $(`#${new_title}_span`).attr("data-wms-url");
+                   //   layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+                   //   layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+                   //   layers_style[layernameUI]['variable'] = attributes[i]['name'];
+                   //   layers_style[layernameUI]['subset'] = $(`#${new_title}_span`).attr("data-subset-url");
+                   //   layers_style[layernameUI]['opendap'] = $(`#${new_title}_span`).attr("data-opendap-url");
+                   //   layers_style[layernameUI]['spatial'] = {};
+                   //   layers_style[layernameUI]['epsg'] = epsg;
+                   //   layers_style[layernameUI]['selected'] = false;
+                   //   // array_services.push(layers_style[layernameUI]);
+                   //   // console.log($(`#${new_title}`));
+                   //   console.log(layers_style[layernameUI]);
+                   //   input_check.on("change", function(){
+                   //    updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                   //   })
+                   //
+                   // }
 
-                     layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                     layers_style[layernameUI]['wmsURL']= $(`#${new_title}_span`).attr("data-wms-url");
-                     layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
-                     layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
-                     layers_style[layernameUI]['variable'] = attributes[i]['name'];
-                     // console.log($(`#${new_title}`));
-                     console.log(layers_style[layernameUI]);
-                     input_check.on("change", function(){
-                      updateWMSLayer(layernameUI,layers_style[layernameUI]['wmsURL'],layers_style[layernameUI]['variable'], layers_style[layernameUI]['range'],layers_style[layernameUI]['style'] ,layers_style[layernameUI]['opacity'])
 
-                     })
-                   }
+
                    //
                      // input_check.addEventListener("change", function(){
                      //   let check_box = this;
@@ -249,3 +298,118 @@ var load_individual_thredds_for_group = function(group_name){
            }
        })
  };
+
+
+var get_table_vars = function(attributes,title){
+  let table_content = '<table id = "table_vars" class="table table-hover table-condensed"><thead><tr>'
+
+  let var_metad = attributes[0];
+  // MAKE THE HEADERS FIRST //
+  Object.keys(var_metad).forEach(function(key) {
+    if(key =="name"){
+      table_content += `<th >${key}</th>`;
+      table_content += `<th >Display</th>`;
+    }
+    if(key != "metadata_var" && key != "color" && key != "name" ){
+      table_content += `<th>${key}</th>`;
+    }
+
+  });
+
+  // CLOSE HEADER //
+  table_content += "</tr></thead>"
+    // ADD ROWS //
+    table_content += "<tbody>"
+    for (let i = 0; i< attributes.length; ++i){
+      table_content += "<tr>";
+      let var_metad = attributes[i];
+      // MAKE THE HEADERS FIRST //
+      Object.keys(var_metad).forEach(function(key) {
+        if(key =="name"){
+          let fixed_name = var_metad[key].replace(/_/g, ' ')
+          table_content += `<td >${fixed_name}</td>`;
+          table_content += `<td>
+                    <input id = "${var_metad[key]}_${title}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+                      <i class="fas fa-layer-group"></i>
+                    </button>
+                    <button id = "${var_metad[key]}_${title}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+          </td>`;
+        }
+        if(key != "metadata_var" && key != "color" && key != "name" ){
+
+          table_content += `<td>${var_metad[key]}</td>`;
+        }
+
+          // else{
+          //     table_content += `<td>${var_metad[key]}</td>`;
+          // }
+      });
+
+
+      table_content += "</tr>";
+    }
+
+    table_content += "</tbody> </table>"
+    return table_content
+
+
+}
+
+var get_metadata_button = function(attribute){
+  let table_content = '<table id = "table_metadata" class="table table-hover table-responsive table-sm"><thead><tr>'
+  table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
+  let var_metad = JSON.parse(attribute['metadata_var']);
+  let all_vars_keys = Object.keys(var_metad);
+
+  for(let j = 0; j< all_vars_keys.length; ++j){
+    table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
+  }
+  table_content += "</tbody> </table>"
+  return table_content
+}
+
+var get_all_the_var_metadata = function(attributes){
+  let table_content = '<table id = "table_vars" class="table table-hover table-responsive table-sm"><thead><tr>'
+
+  let unique_headers = [];
+
+  for (let i = 0; i< attributes.length; ++i){
+    let var_metad = JSON.parse(attributes[i]['metadata_var']);
+    // MAKE THE HEADERS FIRST //
+    Object.keys(var_metad).forEach(function(key) {
+      if(unique_headers.includes(key) == false){
+        unique_headers.push(key);
+        table_content += `<th >${key}</th>`;
+      }
+    });
+
+  }
+  // CLOSE HEADER //
+  table_content += "</tr></thead>"
+
+  // ADD ROWS //
+  table_content += "<tbody>"
+  for (let i = 0; i< attributes.length; ++i){
+    table_content += "<tr>";
+    console.log(attributes[i]);
+    let var_metad = JSON.parse(attributes[i]['metadata_var']);
+    // MAKE THE HEADERS FIRST //
+    let all_vars_keys = Object.keys(var_metad);
+    for(let j = 0; j< all_vars_keys.length; ++j ){
+      if(var_metad[all_vars_keys[j]]){
+        table_content += `<td>${var_metad[all_vars_keys[j]]}</td>`
+      }
+      else{
+        table_content += `<td> </td>`
+
+      }
+    }
+    table_content += "</tr>";
+  }
+
+  table_content += "</tbody> </table>"
+  return table_content
+}
