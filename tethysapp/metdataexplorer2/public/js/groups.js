@@ -1033,6 +1033,7 @@ var createDBArray = function() {
         data: {data: JSON.stringify(group_info)},
         type: 'POST',
         success: function (data) {
+          add_services_list = [];
           console.log(data);
           let unique_id_group = uuidv4();
           id_dictionary[unique_id_group] = $('#addGroup-title').val();
@@ -1077,13 +1078,20 @@ var createDBArray = function() {
 
           $.notify(
               {
-                  message: `Successfully Created Group of THREDDS to the database`
+                message: `Successfully Created Group of THREDDS to the database`
               },
               {
-                  type: "success",
+                  type: "sucess",
                   allow_dismiss: true,
                   z_index: 20000,
-                  delay: 5000
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
               }
           )
           $("#modalAddGroupThredds").modal("hide");
@@ -1094,6 +1102,8 @@ var createDBArray = function() {
     })
   }
   catch(error){
+    add_services_list = [];
+
     console.log(error);
     $.notify(
         {
