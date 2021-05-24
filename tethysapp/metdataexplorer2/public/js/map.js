@@ -219,12 +219,20 @@ var updateWMSLayer = function(layernameUI,x) {
   opacity =x['opacity'];
     // if (firstlayeradded == true) {
     if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
-        layerControlObj.removeLayer(dataLayerObj);
-        mapObj.removeLayer(dataLayerObj);
+        layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+        mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+        // layerControlObj.removeLayer(dataLayerObj);
+        // mapObj.removeLayer(dataLayerObj);
         delete layers_dict[`${layernameUI}_check`];
         // x['selected'] = false;
     }
     else{
+      Object.keys(layers_dict).forEach(function(key) {
+        layerControlObj.removeLayer(layers_dict[key]);
+        mapObj.removeLayer(layers_dict[key]);
+        delete layers_dict[key];
+
+      });
       dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
       dataLayerObj.setOpacity(opacity);
       layerControlObj.addOverlay(dataLayerObj, "Data Layer");
@@ -244,10 +252,8 @@ var removeWMSLayer = function() {
 var changeOpacity = function(layernameUI, opacity){
   opacity_new = Math.trunc(opacity * 100);
   $("#opacityValue").html(`${opacity_new} `);
-
   try{
     layers_dict[`${layernameUI}_check`].setOpacity(opacity);
-
   }
   catch(e){
     return
