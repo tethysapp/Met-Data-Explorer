@@ -332,6 +332,7 @@ var load_groups_start = function(){
 
                  let li_object = document.getElementById(`${new_title}`);
                  let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
+
                  load_individual_thredds_for_group(title);
 
                  // let servers_checks = document.getElementById(`${id_group_separator}`).getElementsByClassName("chkbx-layers");
@@ -656,7 +657,7 @@ var addServiceToTable = function(){
       </td>
     </tr>
     `
-    $( "#added_thredds_files").append(html_row);
+    $( "#added_thredds_files_table_body").append(html_row);
     $(`#${$('#addService-title').val()}_vars`).selectpicker('refresh');
   }
   catch(error){
@@ -740,6 +741,7 @@ var updateFilepath = function() {
         console.log(subsetURL);
         wmsURL = $(this).attr("data-wms-url");
         if ($("#groups_variables_div").is(":hidden")) {
+            console.log($("#groups_variables_div").is(":hidden"));
             let variablesAndFileMetadata = getVariablesAndFileMetadata();
             addVariables(variablesAndFileMetadata[0]);
             make_varaibles_appear();
@@ -862,6 +864,7 @@ var getFoldersAndFiles = function() {
         success: function (data) {
             var result = JSON.parse(data);
             console.log(result);
+            $("#folders_structures").show();
 
             var dataTree = result["dataTree"];
             if (dataTree == "Invalid URL") {
@@ -1049,6 +1052,9 @@ var createDBArray = function() {
             // //console.log("HERE NOT CHECKEC")
             load_individual_thredds_for_group(title);
           }
+//           overflow-x: scroll;
+// width: 100%;
+// height: 500px;
           // input_check.addEventListener("change", function(){
           //   change_effect_groups(this,id_group_separator);
           // });
@@ -1057,8 +1063,17 @@ var createDBArray = function() {
           // $("#modalAddGroupServer").modal("hide")
           $("#modalAddGroupServerForm").each(function() {
               this.reset();
-              $("#added_thredds_files_table_body").empty();
           })
+
+          $("#modalAddServiceForm").each(function() {
+              this.reset();
+          });
+          $("#added_thredds_files_table_body").empty();
+          $("#groups_variables_div").hide();
+
+          $("#filetree-div").empty();
+          $("#folders_structures").hide();
+
 
           $.notify(
               {
