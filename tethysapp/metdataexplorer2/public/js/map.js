@@ -91,13 +91,6 @@ var MAP_PACKAGE = (function(){
         /* Controls for when drawing on the maps */
     }
 
-    var getThreddsBounds = function() {
-        // $('#main-body').css('display', 'block');
-        // $('#db-forms').css('display', 'none');
-        // $('#add-shape-resource-modal').modal('hide');
-        let polygonDrawer = new L.Draw.Polygon(mapObj);
-        polygonDrawer.enable();
-    }
 
     let basemapObj = basemaps_init(mapObj);
     layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
@@ -123,6 +116,11 @@ var MAP_PACKAGE = (function(){
 
     /* Add the controls to the map */
     mapObj.addControl(drawControl);
+
+
+
+
+
     $('#draw-on-map-button').click(function(){
       // $('#modalAddGroupThredds').modal('hide');
       urlInfoBox = true;
@@ -150,7 +148,10 @@ var MAP_PACKAGE = (function(){
         } else {
             drawnItems.addLayer(e.layer);
             let coord = e.layer.getLatLngs();
-            getTimeseries(coord);
+            // getFullArray();
+            getSingleTS();
+            // getTimeseries(coord);
+
         }
     });
 
@@ -158,6 +159,13 @@ var MAP_PACKAGE = (function(){
   })
 
 })();
+var getThreddsBounds = function() {
+    // $('#main-body').css('display', 'block');
+    // $('#db-forms').css('display', 'none');
+    // $('#add-shape-resource-modal').modal('hide');
+    let polygonDrawer = new L.Draw.Polygon(mapObj);
+    polygonDrawer.enable();
+}
 
 var data_layer = function(layernameUI,wmsURL,layer,range,style) {
   console.log("data  layer");
@@ -203,17 +211,25 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
 }
 
 
-var updateWMSLayer = function(layernameUI,wmsURL,layer,range,style,opacity) {
+var updateWMSLayer = function(layernameUI,x) {
+  wmsURL = x['wmsURL'];
+  layer = x['variable'];
+  range =x['range'];
+  style = x['style'];
+  opacity =x['opacity'];
     // if (firstlayeradded == true) {
     if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
         layerControlObj.removeLayer(dataLayerObj);
         mapObj.removeLayer(dataLayerObj);
-        delete layers_dict[`${layernameUI}_check`]
+        delete layers_dict[`${layernameUI}_check`];
+        // x['selected'] = false;
     }
     else{
       dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
       dataLayerObj.setOpacity(opacity);
       layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+      // x['selected'] = true;
+
     }
 
 }
@@ -225,7 +241,19 @@ var removeWMSLayer = function() {
     $("#layer-display-container").css("display", "none");
 }
 
+var changeOpacity = function(layernameUI, opacity){
+  opacity_new = Math.trunc(opacity * 100);
+  $("#opacityValue").html(`${opacity_new} `);
 
+  try{
+    layers_dict[`${layernameUI}_check`].setOpacity(opacity);
+
+  }
+  catch(e){
+    return
+  }
+
+}
 
 
 //let insetMapObj = insetMap('inset-map-one');
