@@ -109,6 +109,9 @@ var load_individual_thredds_for_group = function(group_name){
 
                       input_check.on("change", function(){
                         updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                        // only one check box at a time //
+                        $('input[type="checkbox"]').not(this).prop('checked', false);
+
                       });
 
                       // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
@@ -116,8 +119,6 @@ var load_individual_thredds_for_group = function(group_name){
                         changeOpacity(layernameUI,this.value);
                         layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
                       })
-
-
 
 
                     }
