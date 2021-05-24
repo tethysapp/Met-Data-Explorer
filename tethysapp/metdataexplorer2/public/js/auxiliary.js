@@ -432,3 +432,27 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
     console.log(e);
   }
 }
+var check_for_same_names = function(type_level, title_to_check){
+  let check_nene = false;
+  if(type_level == "Group"){
+    console.log("in process");
+    $(".group-name").each(function(){
+      console.log($(this));
+      console.log($(this).html());
+      console.log(title_to_check);
+      if($(this).html().trim() == title_to_check){
+        check_nene = true;
+      }
+    })
+  }
+  if(type_level == "Thredds"){
+    console.log("good type level");
+    add_services_list.forEach(function(single_serv){
+      if(single_serv['title'] == title_to_check){
+        check_nene = true;
+      }
+    })
+  }
+  return check_nene;
+
+}
