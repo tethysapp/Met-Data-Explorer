@@ -77,6 +77,8 @@ var load_individual_thredds_for_group = function(group_name){
                     let table_content = get_table_vars(attributes,title);
                     // console.log(table_content);
                     $(table_content).appendTo("#table_div");
+
+                    // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
                     for (let i = 0; i< attributes.length; ++i){
                       $(`#${attributes[i]['name']}_${title}_info`).on("click", function(){
                         $("#metadata_vars").empty();
@@ -85,25 +87,37 @@ var load_individual_thredds_for_group = function(group_name){
                         $(info_content).appendTo("#metadata_vars");
                       })
 
+                      // DEFINE THE LAYER ATTRIBUTES //
+
+                      let layernameUI = `${attributes[i]['name']}_${title}`
+                      layers_style[layernameUI] = {}
+                      layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                      layers_style[layernameUI]['wmsURL']= url_wms;
+                      layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+                      layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+                      layers_style[layernameUI]['variable'] = attributes[i]['name'];
+                      layers_style[layernameUI]['subset'] = url_subset;
+                      layers_style[layernameUI]['opendap'] = url;
+                      layers_style[layernameUI]['spatial'] = {};
+                      layers_style[layernameUI]['epsg'] = epsg;
+                      layers_style[layernameUI]['selected'] = false;
+                      console.log(layers_style[layernameUI]);
+
+                      // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
                       var check_id_var = `${attributes[i]['name']}_${title}_check`
                       let input_check = $(`#${check_id_var}`);
 
                       input_check.on("change", function(){
-                        let layernameUI = `${attributes[i]['name']}_${title}`
-                        layers_style[layernameUI] = {}
-                        layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                        layers_style[layernameUI]['wmsURL']= url_wms;
-                        layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
-                        layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
-                        layers_style[layernameUI]['variable'] = attributes[i]['name'];
-                        layers_style[layernameUI]['subset'] = url_subset;
-                        layers_style[layernameUI]['opendap'] = url;
-                        layers_style[layernameUI]['spatial'] = {};
-                        layers_style[layernameUI]['epsg'] = epsg;
-                        layers_style[layernameUI]['selected'] = false;
-                        console.log(layers_style[layernameUI]);
                         updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                      });
+
+                      // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                      $("#opacity-slider").on("change", function(){
+                        changeOpacity(layernameUI,this.value);
+                        layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
                       })
+
+
 
 
                     }
