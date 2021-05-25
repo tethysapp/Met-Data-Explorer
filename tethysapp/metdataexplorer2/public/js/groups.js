@@ -79,6 +79,7 @@ var delete_group_of_hydroservers = function(){
           try{
             let groups_to_erase = result.groups;
             let thredds_to_erase = result.thredds;
+            let levels_to_erase = result.levels;
 
             $("#pop-up_description2").empty();
 
@@ -98,6 +99,19 @@ var delete_group_of_hydroservers = function(){
               let group_panel = document.getElementById(group_panel_id);
               group_panel.parentNode.removeChild(group_panel);
               $(`#${group_name_e3}deleteID`).remove();
+              thredds_to_erase.forEach(function(thredd_single){
+                //remove layers for the threeds in the dict and also the display
+                try{
+                  levels_to_erase[`${group}`][`${thredd_single}`].forEach(function(var_name){
+                    removeActiveLayer(`${var_name}_${thredd_single}`);
+                  })
+                }
+                catch(e){
+                  console.log(e);
+                }
+
+              })
+
             });
 
             thredds_to_erase.forEach(function(thredd_single){
@@ -106,12 +120,8 @@ var delete_group_of_hydroservers = function(){
                   if(id_dictionary[key] == thredd_single ){
                     new_title = key;
                   }
+
                 });
-                // map.removeLayer(layersDict[thredd_single]);
-                // if (layersDict.hasOwnProperty(thredd_single)){
-                //   delete layersDict[thredd_single]
-                //   $(`#${new_title}-row-complete`).remove()
-                // }
             });
             // if(layersDict['selectedPointModal']){
             //   map.removeLayer(layersDict['selectedPointModal'])
@@ -334,7 +344,9 @@ var load_groups_start = function(){
                  let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
 
                  load_individual_thredds_for_group(title);
-
+                 $(`#heading_${new_title}`).on("click",function(){
+                   current_Group = id_dictionary[new_title];
+                 });
                  // let servers_checks = document.getElementById(`${id_group_separator}`).getElementsByClassName("chkbx-layers");
                  // input_check.addEventListener("change", function(){
                  //   change_effect_groups(this,id_group_separator);
@@ -464,6 +476,30 @@ var addAttribute = function(attribute, dimensionString, units, color) {
 
 var addServiceToTable = function(){
   try{
+    //CHECK IF WE HAVE A SERVICE WITH THAT NAME ALREADY//
+    if(check_for_same_names("Thredds",$("#addService-title").val()) == true){
+      $.notify(
+          {
+            message: "There is already a Thredds file added with that name, Please Provide other name"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+
     //CHECKS IF THE INPUT IS EMPTY ///
     if($("#addService-title").val() == ""){
       $.notify(
@@ -740,28 +776,30 @@ var updateFilepath = function() {
         subsetURL = $(this).attr("data-subset-url");
         console.log(subsetURL);
         wmsURL = $(this).attr("data-wms-url");
-        if ($("#groups_variables_div").is(":hidden")) {
-            console.log($("#groups_variables_div").is(":hidden"));
-            let variablesAndFileMetadata = getVariablesAndFileMetadata();
-            addVariables(variablesAndFileMetadata[0]);
-            make_varaibles_appear();
-            $(".tables_mul").selectpicker("refresh");
 
-            addFileMetadata(variablesAndFileMetadata[1]);
-            $("#groups_variables_div").show();
+        $("#attributes").empty();
+        let variablesAndFileMetadata = getVariablesAndFileMetadata();
+        addVariables(variablesAndFileMetadata[0]);
+        make_varaibles_appear();
+        $(".tables_mul").selectpicker("refresh");
 
-            // let variableMetadataArray = variableMetadata();
-            // addVariableMetadata(variableMetadataArray);
-            //addDimensions(dimensionsAndVariableMetadata[0]);
-        }
-        else {
-          $("#attributes").empty();
-          $("#groups_variables_div").hide();
+        addFileMetadata(variablesAndFileMetadata[1]);
+        $("#groups_variables_div").show();
 
-            // addContainerAttributesToUserInputItems();
-        }
-        // updateWMSLayer();
-        console.log(URLpath);
+        // if ($("#groups_variables_div").is(":hidden")) {
+        //     console.log($("#groups_variables_div").is(":hidden"));
+        //     let variablesAndFileMetadata = getVariablesAndFileMetadata();
+        //     addVariables(variablesAndFileMetadata[0]);
+        //     make_varaibles_appear();
+        //     $(".tables_mul").selectpicker("refresh");
+        //
+        //     addFileMetadata(variablesAndFileMetadata[1]);
+        //     $("#groups_variables_div").show();
+        // }
+        // else {
+        //   $("#attributes").empty();
+        //   $("#groups_variables_div").hide();
+        // }
 
         $('#loading-group').addClass("hidden");
 
@@ -947,6 +985,27 @@ var getFoldersAndFiles = function() {
 
 var createDBArray = function() {
   try{
+    if(check_for_same_names("Group",$("#addGroup-title").val()) == true){
+      $.notify(
+          {
+            message: "There is already a GRoup with that name, Please Provide other name"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
     //CHECKS IF THE INPUT IS EMPTY ///
     if($("#addGroup-title").val() == ""){
       $.notify(

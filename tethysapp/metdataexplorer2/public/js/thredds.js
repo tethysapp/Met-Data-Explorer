@@ -2,6 +2,7 @@ var THREDDS_PACKAGE = (function(){
 
   $(function(){
 
+    $("#btn-add-addServiceAlone").on("click",addSingleThreddsServer);
   })
 
 })()
@@ -85,7 +86,6 @@ var load_individual_thredds_for_group = function(group_name){
                     for (let i = 0; i< attributes.length; ++i){
                       $(`#${attributes[i]['name']}_${title}_info`).on("click", function(){
                         $("#metadata_vars").empty();
-                        console.log("hola");
                         let info_content = get_metadata_button(attributes[i]);
                         $(info_content).appendTo("#metadata_vars");
                       })
@@ -94,6 +94,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                       let layernameUI = `${attributes[i]['name']}_${title}`
                       layers_style[layernameUI] = {}
+                      layers_style[layernameUI]['title'] = attributes[i]['name'];
                       layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
                       layers_style[layernameUI]['wmsURL']= url_wms;
                       layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
@@ -430,4 +431,243 @@ var get_all_the_var_metadata = function(attributes){
 
   table_content += "</tbody> </table>"
   return table_content
+}
+
+var addSingleThreddsServer = function(){
+
+    //   // if(type_level == "ThreddsGroups"){
+  //   $()
+  //   check
+  // }
+  try{
+    let myThredds = check_tdds_groups(current_Group)['thredds'];
+
+    //CHECKS IF TD IS AVAILABLE///
+    if(check_if_td_contained($("#addService-title").val(),myThredds) == true){
+      $.notify(
+          {
+            message: "There is already a Thredds file added with that name in the Group, Please Provide other name"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+
+    //CHECKS IF THE INPUT IS EMPTY ///
+    if($("#addService-title").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a title. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+    if ($("#addService-title").val() != "") {
+      var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
+      var specials=/[*|\":<>[\]{}`\\()';@&$]/;
+      var title = $("#addService-title").val()
+      if (specials.test(title)){
+        $.notify(
+            {
+              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
+            },
+            {
+                type: "info",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+          return false
+      }
+    }
+
+    //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
+    if($("#addService-description").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a description for this group. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+    var url = $('#url').val();
+    var timestamp = 'false';
+    let units = 'false';
+    let color = 'false';
+    let attr = {};
+    let variables_list = [];
+    $('.attr-checkbox').each(function () {
+        if (this.checked) {
+            let var_string = $(this).val().split('_a_')[0];
+            variables_list.push(var_string);
+            let allDimensions = [];
+            var x = document.getElementById(`${var_string}_time`);
+            if(x != null){
+              var i;
+              for (i = 0; i < x.length; i++) {
+                  allDimensions.push(x.options[i].text);
+              }
+              attr[var_string] = {
+                  dimensions: allDimensions,
+                  units: units,
+                  color: color,
+              }
+            }
+            else{
+              let time = '';
+              let location = '';
+              if ($(`#${var_string}_time`).val() == '') {
+                  time = false;
+              } else {
+                  time = $(`#${var_string}_time`).val();
+              }
+              if ($(`#${var_string}_location`).val() == '') {
+                  location = [false, false];
+              } else {
+                  lat = $(`#${var_string}_location`).val();
+              }
+              attr[var_string] = {
+                  dimensions: `${time},${location[0]},${location[1]}`,
+                  units: units,
+                  color: color,
+              }
+            }
+
+
+        }
+    })
+    if(variables_list.length <= 0){
+      $.notify(
+          {
+            message: "Please select at least one variable."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+
+
+    var groupID = 'user-group-container';
+
+    if ($('#epsg-input').val() == '') {
+        var epsg = false;
+    } else {
+        var epsg = $('#epsg-input').val();
+    }
+    if (spatial_shape == false) {
+        if ($('#spatial-input').val() == '') {
+            spatial_shape = false;
+        } else {
+            spatial_shape = $('#spatial-input').val();
+        }
+    }
+    let databaseInfo = {
+        type: 'file',
+        group: $("#addGroup-title").val(),
+        title: $('#addService-title').val(),
+        url: url,
+        url_wms:wmsURL,
+        url_subset:subsetURL,
+        epsg: epsg,
+        spatial: spatial_shape,
+        description: $('#addService-title').val(),
+        attributes: attr,
+        timestamp: timestamp,
+    };
+    console.log(databaseInfo);
+    $.ajax({
+        url: "add-tdds/",
+        dataType: 'json',
+        data: databaseInfo,
+        type: 'POST',
+        success: function (data) {
+
+        }
+      })
+
+
+  }
+  catch(error){
+    console.log(error);
+    $.notify(
+        {
+          message: `There was an error while adding the THREDDS file and its variables to the Group.`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
+
+
 }

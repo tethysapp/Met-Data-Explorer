@@ -17,5 +17,8 @@ let add_services_list = [];
 let services_layers = {};
 let mapObj;
 let layers_dict = {};
-let layers_style = {};
+// let layers_style = {};
 let layerControlObj;
+let subsetURL_tempt = {}
+let current_Group;
+// let array_services = []

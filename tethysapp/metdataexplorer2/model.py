@@ -16,11 +16,13 @@ class Variables(Base):
     units = Column(String(100))
     color = Column(String(100))
     thredds_servers = relationship("Thredds", back_populates="attributes")
-    def __init__(self, name, dimensions,units,color):
+    metadata_variable = Column(JSON)
+    def __init__(self, name, dimensions,units,color,metadata_variable):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
+        self.metadata_variable = metadata_variable
 
 class Thredds(Base):
     __tablename__ = 'thredds'
@@ -38,8 +40,9 @@ class Thredds(Base):
     description = Column(String(4000))
     attributes = relationship("Variables", back_populates="thredds_servers")
     timestamp = Column(String(2000))
+    metadata_td_file = Column(JSON)
 
-    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp):
+    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp, metadata_td_file):
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -49,6 +52,7 @@ class Thredds(Base):
         self.spatial = spatial
         self.description = description
         self.timestamp = timestamp
+        self.metadata_td_file = metadata_td_file
 
 
 class Groups(Base):

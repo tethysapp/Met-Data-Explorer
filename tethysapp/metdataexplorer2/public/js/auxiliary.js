@@ -296,14 +296,6 @@ var html_for_servers = function (title,group_name, variables_array, url_opendap,
        <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
        </span>
       </button>
-      <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
-       <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
-      </button>
-
-      <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable">
-      <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
-      </button>
-
       <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
       </button>
@@ -376,7 +368,7 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
                 <span class=" glyphicon glyphicon-info-sign "></span>
               </button>
 
-              <button id="load-from-soap" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddSoap">
+              <button id= "add_service" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddServicesAlone">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
               <button id="delete-server" class="btn btn-primary btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDelete">
@@ -437,16 +429,12 @@ var check_for_same_names = function(type_level, title_to_check){
   if(type_level == "Group"){
     console.log("in process");
     $(".group-name").each(function(){
-      console.log($(this));
-      console.log($(this).html());
-      console.log(title_to_check);
       if($(this).html().trim() == title_to_check){
         check_nene = true;
       }
     })
   }
   if(type_level == "Thredds"){
-    console.log("good type level");
     add_services_list.forEach(function(single_serv){
       if(single_serv['title'] == title_to_check){
         check_nene = true;
@@ -454,5 +442,34 @@ var check_for_same_names = function(type_level, title_to_check){
     })
   }
   return check_nene;
+}
 
+var check_if_td_contained = function(td_name,tds_array){
+  let checked = false;
+  tds_array.forEach(function(single_tds){
+    if(td_name == single_tds['title']){
+       checked = true;
+    }
+  })
+  return checked;
+}
+
+var check_tdds_groups = function(group_name){
+  // make ajax request to know the tdds //
+  let group_name_obj={
+    group: group_name
+  };
+  $.ajax({
+      type: "GET",
+      url: `load-group/`,
+      dataType: "JSON",
+      data: group_name_obj,
+      success: result => {
+        return result;
+      },
+      error:function(e){
+        let no_data = {}
+        return no_data
+      }
+    })
 }

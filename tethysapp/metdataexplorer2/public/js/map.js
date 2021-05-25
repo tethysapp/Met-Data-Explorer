@@ -236,9 +236,19 @@ var updateWMSLayer = function(layernameUI,x) {
       dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
       dataLayerObj.setOpacity(opacity);
       layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-      // x['selected'] = true;
-
     }
+
+}
+
+var removeActiveLayer = function(layernameUI){
+  try{
+    layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+    mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+    delete layers_dict[`${layernameUI}_check`];
+  }
+  catch(e){
+    return
+  }
 
 }
 

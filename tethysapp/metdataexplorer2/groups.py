@@ -110,6 +110,23 @@ def add_group(request):
         # hydroservers_group = session.query(Groups).filter(Groups.title == group)[0]
 
         for servi in services:
+            ## File Metadata ##
+            file_tempt_dict = {}
+            # variable_metadata = {}
+
+            try:
+                ds = netCDF4.Dataset(servi['url'])
+
+            except Exception as e:
+                print(e)
+
+            ## INITIALIZING THE THREDDS FILES ##
+            try:
+                for metadata_string in ds.__dict__:
+
+                    file_tempt_dict[metadata_string] = str(ds.__dict__[metadata_string])
+            except Exception as e:
+                print(e)
 
             thredds_one = Thredds(server_type=servi['type'],
                              title=servi['title'],
@@ -119,15 +136,34 @@ def add_group(request):
                              epsg=servi['epsg'],
                              spatial = json.dumps(servi['spatial']),
                              description = servi['description'],
-                             timestamp = servi['timestamp'])
+                             timestamp = servi['timestamp'],
+                             metadata_td_file = json.dumps(file_tempt_dict))
+
+            ## Attributes addition and metadata ##
             for key in servi['attributes']:
+                variable_tempt_dict = {}
+                try:
+                    for metadata_string in ds[key].__dict__:
+                        variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
+                except Exception as e:
+                    print(e)
+                # variable_metadata [key] = variable_tempt_dict
+
+
                 variable_one = Variables(name= key,dimensions =servi['attributes'][key]['dimensions'],
-                                    units = servi['attributes'][key]['units'],color = servi['attributes'][key]['color'])
+                                    units = servi['attributes'][key]['units'],
+                                    color = servi['attributes'][key]['color'],
+                                    metadata_variable = json.dumps(variable_tempt_dict))
 
                 thredds_one.attributes.append(variable_one)
 
             group_thredds.thredds_server.append(thredds_one)
             services_array.append(servi)
+            # print(file_tempt_dict)
+            # print("##############################")
+            # print(variable_metadata)
+
+
         session.add(group_thredds)
         session.commit()
         session.close()
@@ -157,6 +193,7 @@ def load_group(request):
         layer_obj["spatial"] = trds.spatial
         layer_obj["description"] = trds.description
         layer_obj["timestamp"] = trds.timestamp
+        layer_obj["metadata_file"] = trds.metadata_td_file
         layer_obj["attributes"] = []
         for attribute_single in trds.attributes:
             temp_var_td = {}
@@ -164,6 +201,7 @@ def load_group(request):
             temp_var_td['dimensions'] = attribute_single.dimensions
             temp_var_td['units'] = attribute_single.units
             temp_var_td['color'] = attribute_single.color
+            temp_var_td['metadata_var'] = attribute_single.metadata_variable
             print(temp_var_td)
             layer_obj["attributes"].append(temp_var_td)
         td_list.append(layer_obj)
@@ -206,6 +244,7 @@ def delete_groups(request):
     list_catalog = {}
     list_groups ={}
     list_response = {}
+    level_response = {}
     if has_permission(request,"delete_groups"):
 
         SessionMaker = app.get_persistent_store_database(
@@ -221,21 +260,31 @@ def delete_groups(request):
             arrayTitles = []
             # for group in session.query(Groups).all():
             #     print(group.title)
-
+            level_response = {}
             for group in groups:
+                level_response[group] = {}
+
                 thredds_group = session.query(Groups).filter(Groups.name == group)[0].thredds_server
                 for single_thredds in thredds_group:
                     title=single_thredds.title
                     arrayTitles.append(title)
                     i_string=str(i);
                     list_catalog[i_string] = title
+                    level_response[group][title] = []
 
+                    vars_thredds = session.query(Thredds).filter(Thredds.title == single_thredds.title)[0].attributes
+
+                    for single_var in vars_thredds:
+                        title_var = single_var.name
+                        level_response[group][title].append(title_var)
                     i=i+1
                 thredds_group = session.query(Groups).filter(Groups.name == group).first()
                 session.delete(thredds_group)
                 session.commit()
                 session.close()
             list_response['thredds']=arrayTitles
+            list_response['levels']=level_response
+
 
     return JsonResponse(list_response)
 
