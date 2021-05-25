@@ -67,10 +67,15 @@ var load_individual_thredds_for_group = function(group_name){
                    let newHtml = html_for_servers(new_title,group_name_e3, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
 
+                   //EVENTS BUTTONS//
+
+                   //ADDITION SERVICE //
                    $("#add_service").on("click", function(){
                      $("#btn-add-addServiceToTable").hide();
                      $("#btn-add-addService2").removeClass("hidden");
                    })
+
+
                    let input_check_serv = $(`#${new_title}_check`);
 
                    input_check_serv.on("change", function(){
@@ -322,7 +327,6 @@ var load_individual_thredds_for_group = function(group_name){
            }
        })
  };
-
 
 var get_table_vars = function(attributes,title){
   let table_content = '<table id = "table_vars" class="table table-hover table-condensed"><thead><tr>'
@@ -813,3 +817,122 @@ var addSingleThreddsServer = function(){
 
 
 }
+
+var get_tdds_list_for_group = function(){
+  try{
+    let group_name_obj={
+      group: current_Group
+    };
+    // console.log(id_dictionary)
+
+    $.ajax({
+        type: "GET",
+        url: `load-group/`,
+        dataType: "JSON",
+        data:group_name_obj,
+        success: function(result) {
+          try{
+            $modalDelete = $("#modalDelete");
+            //Dynamically generate the list of existing hydroservers
+            var tdds_list = result["thredds"]
+            var HSTableHtml =
+                '<table class="table table-condensed-xs" id="tbl-tdds"><thead><th>Select</th><th>THREDDS File</th></thead><tbody>'
+            if (tdds_list.length === 0) {
+                $modalDelete
+                    .find(".modal-body")
+                    .html(
+                        "<b>There are no THREDDS files in the Group.</b>"
+                    )
+            } else {
+                for (var i = 0; i < tdds_list.length; i++) {
+                    var title = tdds_list[i].title
+                    let new_title;
+                    Object.keys(id_dictionary).forEach(function(key) {
+                      if(id_dictionary[key] == `${title}_join_${current_Group}` ){
+                        new_title = key;
+                      }
+                    });
+                    var url = tdds_list[i].url
+                    HSTableHtml +=
+                        `<tr id="${new_title}deleteID">` +
+                        '<td><input class = "check_hs_delete" type="checkbox" name="server" id="server" value="' +
+                        title +
+                        '"></td>' +
+                        '<td class="hs_title">' +
+                        title +
+                        "</td>" +
+                        "</tr>"
+                }
+                HSTableHtml += "</tbody></table>"
+                $modalDelete.find(".modal-body").html(HSTableHtml)
+            }
+          }
+          catch(e){
+            $.notify(
+                {
+                    message: `We are having an error trying to get the list of servers that are in the group`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
+
+        },
+        error: function(error) {
+            console.log(error);
+            $.notify(
+                {
+                    message: `We are having an error trying to get the list of servers that are in the group`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+        }
+    })
+  }
+  catch(error){
+  $.notify(
+      {
+          message: `We are having an error trying to recognize the actual group`
+      },
+      {
+          type: "danger",
+          allow_dismiss: true,
+          z_index: 20000,
+          delay: 5000,
+          animate: {
+            enter: 'animated fadeInRight',
+            exit: 'animated fadeOutRight'
+          },
+          onShow: function() {
+              this.css({'width':'auto','height':'auto'});
+          }
+      }
+  )
+
+  }
+}
+
+$(document).on("click",'#delete-server', get_tdds_list_for_group);

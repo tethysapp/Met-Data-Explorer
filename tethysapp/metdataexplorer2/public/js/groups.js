@@ -57,48 +57,8 @@ var GROUPS_PACKAGE = (function(){
     $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
 
     // THREDDS LISTENER //
-    $("#btn-check_available_serv2").on("click",function(){
-      getFoldersAndFiles();
-    })
-    $('#btn-uplevel2').click(function () {
-        if (URLpath.length !== 1) {
-            let newURL = URLpath[URLpath.length - 2];
-            $('#url').val(newURL);
-            getFoldersAndFiles();
-            URLpath.pop();
-        }
-    })
-    $("#btn-add-addServiceToTable2").on("click",addServiceToTable);
 
-    $('#btn-add-addGroup2').on("click",function() {
-        if ($('#title-input2').val() == '') {
-            alert('Please specify a name.');
-            return
-        } else if ($('#description-input2').val() == '') {
-            alert('Please include a description.');
-            return
-        } else {
-            createDBArray();
-            urlInfoBox = false;
-        }
-    });
-    $('#select-all-button2').click(function () {
-        if ($('#select-all-button2').attr('data-select') === 'true') {
-            $('#select-all-button2').empty();
-            $('#select-all-button2').html(`<span class="glyphicon glyphicon-check"></span>`);
-            $('#select-all-button2').attr('data-select', 'false');
-            $('.attr-checkbox').each(function () {
-                $(this).prop('checked', false);
-            });
-        } else {
-            $('#select-all-button2').empty();
-            $('#select-all-button2').html(`<span class="glyphicon glyphicon-unchecked"></span>`);
-            $('#select-all-button2').attr('data-select', 'true');
-            $('.attr-checkbox').each(function () {
-                $(this).prop('checked', true);
-            });
-        }
-    });
+    //DELETION SERVICE
 
   })
 
