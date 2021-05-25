@@ -6,9 +6,14 @@ import json
 import requests
 import geopandas as gpd
 from geojson import dump
-
+from .model import Variables, Thredds, Groups
+from siphon.catalog import TDSCatalog
+import requests
+import netCDF4
 from .timestamp import iterate_files
+from .app import Metdataexplorer2 as app
 
+Persistent_Store_Name = 'thredds_db'
 
 def add_tdds(request):
     group_obj={}
@@ -18,11 +23,15 @@ def add_tdds(request):
     tdds_info = json.loads(request.POST["data"])
 
     if request.is_ajax() and request.method == 'POST':
+
         group_thredds = session.query(Groups).filter(Groups.name == tdds_info['group'])[0]
+        for single_tds in group_thredds.thredds_server:
+            if single_tds.title == tdds_info['title']:
+                group_obj['error'] = "There is already a Thredds file added with that name in the Group, Please Provide other name"
+                return JsonResponse(group_obj)
 
         ## File Metadata ##
         file_tempt_dict = {}
-        # variable_metadata = {}
 
         try:
             ds = netCDF4.Dataset(tdds_info['url'])
@@ -43,7 +52,7 @@ def add_tdds(request):
                          url = tdds_info['url'],
                          url_wms = tdds_info['url_wms'],
                          url_subset = tdds_info['url_subset'],
-                         epsg=servi['epsg'],
+                         epsg=tdds_info['epsg'],
                          spatial = json.dumps(tdds_info['spatial']),
                          description = tdds_info['description'],
                          timestamp = tdds_info['timestamp'],

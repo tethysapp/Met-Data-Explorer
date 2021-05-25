@@ -1,8 +1,8 @@
 var THREDDS_PACKAGE = (function(){
 
   $(function(){
+    $("#btn-add-addService2").on("click",addSingleThreddsServer);
 
-    $("#btn-add-addServiceAlone").on("click",addSingleThreddsServer);
   })
 
 })()
@@ -59,13 +59,18 @@ var load_individual_thredds_for_group = function(group_name){
                        attributes,
                        metadata_td_file
                    } = server
-                   let unique_id_group = uuidv4();
-                   id_dictionary[unique_id_group] = title
+                   let unique_id_tds = uuidv4();
+                   id_dictionary[unique_id_tds] = `${title}_join_${group_name}`
                    let layers_style = {}
-                   let new_title = unique_id_group;
+                   let new_title = unique_id_tds;
 
-                   let newHtml = html_for_servers(new_title,group_name_e3, attributes, url, url_wms, url_subset);
+                   let newHtml = html_for_servers(new_title,group_name_e3, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
+
+                   $("#add_service").on("click", function(){
+                     $("#btn-add-addServiceToTable").hide();
+                     $("#btn-add-addService2").removeClass("hidden");
+                   })
                    let input_check_serv = $(`#${new_title}_check`);
 
                    input_check_serv.on("change", function(){
@@ -435,36 +440,7 @@ var get_all_the_var_metadata = function(attributes){
 
 var addSingleThreddsServer = function(){
 
-    //   // if(type_level == "ThreddsGroups"){
-  //   $()
-  //   check
-  // }
   try{
-    let myThredds = check_tdds_groups(current_Group)['thredds'];
-
-    //CHECKS IF TD IS AVAILABLE///
-    if(check_if_td_contained($("#addService-title").val(),myThredds) == true){
-      $.notify(
-          {
-            message: "There is already a Thredds file added with that name in the Group, Please Provide other name"
-          },
-          {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function() {
-                  this.css({'width':'auto','height':'auto'});
-              }
-          }
-      )
-      return false
-    }
-
 
     //CHECKS IF THE INPUT IS EMPTY ///
     if($("#addService-title").val() == ""){
@@ -521,6 +497,48 @@ var addSingleThreddsServer = function(){
       $.notify(
           {
             message: "Please enter a description for this group. This field cannot be blank."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+    if($("#filetree-div").is(':hidden')){
+      $.notify(
+          {
+            message: "Please Provide a THREDDS Endpoint"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+    if($("#attributes_table").is(':hidden')){
+      $.notify(
+          {
+            message: "Please Select a THREDDS File from the given file/folder structure"
           },
           {
               type: "info",
@@ -623,7 +641,7 @@ var addSingleThreddsServer = function(){
     }
     let databaseInfo = {
         type: 'file',
-        group: $("#addGroup-title").val(),
+        group: current_Group,
         title: $('#addService-title').val(),
         url: url,
         url_wms:wmsURL,
@@ -636,13 +654,137 @@ var addSingleThreddsServer = function(){
     };
     console.log(databaseInfo);
     $.ajax({
-        url: "add-tdds/",
+        url: "add-thredds/",
         dataType: 'json',
-        data: databaseInfo,
+        // data: {"data":databaseInfo},
+        data: {data: JSON.stringify(databaseInfo)},
         type: 'POST',
         success: function (data) {
+          console.log(data);
+          try{
+            if(data.hasOwnProperty("error")) {
+              $.notify(
+                  {
+                    message: `There is Already a Thredds File With This Name In The Group ${current_Group}`
+                  },
+                  {
+                      type: "info",
+                      allow_dismiss: true,
+                      z_index: 20000,
+                      delay: 5000,
+                      animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                      },
+                      onShow: function() {
+                          this.css({'width':'auto','height':'auto'});
+                      }
+                  }
+              )
+              return false
+            }
+            else{
+              let group_name_e3;
+              Object.keys(id_dictionary).forEach(function(key) {
+                if(id_dictionary[key] == current_Group ){
+                  group_name_e3 = key;
+                }
+              });
+              let id_group_separator = `${group_name_e3}_list_separator`;
 
+
+              $(`#${group_name_e3}-noGroups`).hide();
+              let unique_id_tds = uuidv4();
+              id_dictionary[unique_id_tds] = `${title}_join_${current_Group}`
+              let layers_style = {}
+              let new_title = unique_id_tds;
+              let newHtml = html_for_servers(new_title,group_name_e3, url, wmsURL, subsetURL);
+              $(newHtml).appendTo(`#${id_group_separator}`);
+              let input_check_serv = $(`#${new_title}_check`);
+
+              input_check_serv.on("change", function(){
+               //ONLY ONE CHECKBOX AT A TIME//
+               $('input[type="checkbox"]').not(this).prop('checked', false);
+
+               //CLEAN TABLE //
+               $("#table_div").empty()
+              //MAKE DROPDOWN MENU FOR VARIABLES//
+              options_vars(attr, new_title);
+              ///MAKE TABLE//
+
+              let table_content = get_table_vars(attr,title);
+              // console.log(table_content);
+              $(table_content).appendTo("#table_div");
+
+              // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
+              for (let i = 0; i< attr.length; ++i){
+                $(`#${attr[i]['name']}_${title}_info`).on("click", function(){
+                  $("#metadata_vars").empty();
+                  let info_content = get_metadata_button(attr[i]);
+                  $(info_content).appendTo("#metadata_vars");
+                })
+
+                // DEFINE THE LAYER ATTRIBUTES //
+
+                let layernameUI = `${attr[i]['name']}_${title}`
+                layers_style[layernameUI] = {}
+                layers_style[layernameUI]['title'] = attr[i]['name'];
+                layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                layers_style[layernameUI]['wmsURL']= url_wms;
+                layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+                layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+                layers_style[layernameUI]['variable'] = attr[i]['name'];
+                layers_style[layernameUI]['subset'] = url_subset;
+                layers_style[layernameUI]['opendap'] = url;
+                layers_style[layernameUI]['spatial'] = {};
+                layers_style[layernameUI]['epsg'] = epsg;
+                layers_style[layernameUI]['selected'] = false;
+                console.log(layers_style[layernameUI]);
+
+                // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
+                var check_id_var = `${attr[i]['name']}_${title}_check`
+                let input_check = $(`#${check_id_var}`);
+                input_check.on("change", function(){
+                  updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                  // only one check box at a time //
+                  $('input[type="checkbox"]').not(this).prop('checked', false);
+                });
+                // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                $("#opacity-slider").on("change", function(){
+                  changeOpacity(layernameUI,this.value);
+                  layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                })
+              }
+              });
+
+            }
+
+          }
+          catch(e){
+            console.log(e);
+          }
+        },
+        error:function(error){
+          $.notify(
+              {
+                message: `There was an error while adding the THREDDS file and its variables to the Group.`
+              },
+              {
+                  type: "danger",
+                  allow_dismiss: true,
+                  z_index: 20000,
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
+              }
+          )
         }
+
       })
 
 

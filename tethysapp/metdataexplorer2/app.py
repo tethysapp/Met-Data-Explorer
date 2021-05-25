@@ -70,6 +70,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='threddsProxy/',
                 controller='metdataexplorer2.groups.thredds_proxy'
             ),
+            UrlMap(
+                name='add-thredds',
+                url='add-thredds/',
+                controller='metdataexplorer2.thredds.add_tdds'
+            ),
             # UrlMap(
             #     name='getBoxValues',
             #     url='getBoxValues/',

@@ -265,9 +265,11 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
   }
 
 }
-var html_for_servers = function (title,group_name, variables_array, url_opendap, url_wms, url_subset,isNew){
+var html_for_servers = function (title,group_name, url_opendap, url_wms, url_subset,isNew){
   console.log(url_subset);
   try{
+    let good_title = id_dictionary[title].split('_join_')[0];
+
 //     let html_vars = '';
 //     for(var i= 0;  i< variables_array.length; ++i){
 //       html_vars +=
@@ -288,7 +290,7 @@ var html_for_servers = function (title,group_name, variables_array, url_opendap,
     let check_var = (( isNew == true ) ? 'checked' : '');
     let newHtml = `
     <li class="ui-state-default" layer-name="${title}" id="${title}" >
-      <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
+      <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
       <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
 
 
@@ -368,7 +370,7 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
                 <span class=" glyphicon glyphicon-info-sign "></span>
               </button>
 
-              <button id= "add_service" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddServicesAlone">
+              <button id= "add_service" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddServices">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
               <button id="delete-server" class="btn btn-primary btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDelete">
@@ -444,32 +446,36 @@ var check_for_same_names = function(type_level, title_to_check){
   return check_nene;
 }
 
-var check_if_td_contained = function(td_name,tds_array){
-  let checked = false;
-  tds_array.forEach(function(single_tds){
-    if(td_name == single_tds['title']){
-       checked = true;
-    }
-  })
-  return checked;
-}
-
-var check_tdds_groups = function(group_name){
-  // make ajax request to know the tdds //
-  let group_name_obj={
-    group: group_name
-  };
-  $.ajax({
-      type: "GET",
-      url: `load-group/`,
-      dataType: "JSON",
-      data: group_name_obj,
-      success: result => {
-        return result;
-      },
-      error:function(e){
-        let no_data = {}
-        return no_data
-      }
-    })
-}
+// var check_if_td_contained = function(td_name,tds_array){
+//   let checked = false;
+//   tds_array.forEach(function(single_tds){
+//     if(td_name == single_tds['title']){
+//        checked = true;
+//     }
+//   })
+//   return checked;
+// }
+//
+// var check_tdds_groups = function(group_name){
+//   // make ajax request to know the tdds //
+//   let group_name_obj={
+//     group: group_name
+//   };
+//   $.ajax({
+//       type: "GET",
+//       url: `load-group/`,
+//       dataType: "JSON",
+//       data: group_name_obj,
+//       success: result => {
+//         console.log(result);
+//         return result;
+//
+//
+//       },
+//       error:function(e){
+//         console.log(e);
+//         let no_data = {}
+//         return no_data
+//       }
+//     })
+// }

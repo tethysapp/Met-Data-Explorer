@@ -99,7 +99,7 @@ def add_group(request):
     if request.is_ajax() and request.method == 'POST':
         # print(request.POST)
         groups_info = json.loads(request.POST["data"])
-        print(groups_info)
+        # print(groups_info)
         description = groups_info['description']
         title = groups_info['title']
         services = groups_info['attributes']
@@ -202,7 +202,7 @@ def load_group(request):
             temp_var_td['units'] = attribute_single.units
             temp_var_td['color'] = attribute_single.color
             temp_var_td['metadata_var'] = attribute_single.metadata_variable
-            print(temp_var_td)
+            # print(temp_var_td)
             layer_obj["attributes"].append(temp_var_td)
         td_list.append(layer_obj)
 
