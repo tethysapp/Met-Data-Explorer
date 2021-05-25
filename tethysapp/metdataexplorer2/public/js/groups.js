@@ -1,6 +1,11 @@
 var GROUPS_PACKAGE = (function(){
 
   $(function(){
+    $("#add_groups").on("click",function(){
+      $("#btn-add-addServiceToTable").show();
+      $("#btn-add-addService2").addClass("hidden");
+    })
+
     $("#btn-check_available_serv").on("click",function(){
       getFoldersAndFiles();
     })
@@ -50,6 +55,50 @@ var GROUPS_PACKAGE = (function(){
 
     // Delete list of Groups in the Delete Groups modal//
     $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
+
+    // THREDDS LISTENER //
+    $("#btn-check_available_serv2").on("click",function(){
+      getFoldersAndFiles();
+    })
+    $('#btn-uplevel2').click(function () {
+        if (URLpath.length !== 1) {
+            let newURL = URLpath[URLpath.length - 2];
+            $('#url').val(newURL);
+            getFoldersAndFiles();
+            URLpath.pop();
+        }
+    })
+    $("#btn-add-addServiceToTable2").on("click",addServiceToTable);
+
+    $('#btn-add-addGroup2').on("click",function() {
+        if ($('#title-input2').val() == '') {
+            alert('Please specify a name.');
+            return
+        } else if ($('#description-input2').val() == '') {
+            alert('Please include a description.');
+            return
+        } else {
+            createDBArray();
+            urlInfoBox = false;
+        }
+    });
+    $('#select-all-button2').click(function () {
+        if ($('#select-all-button2').attr('data-select') === 'true') {
+            $('#select-all-button2').empty();
+            $('#select-all-button2').html(`<span class="glyphicon glyphicon-check"></span>`);
+            $('#select-all-button2').attr('data-select', 'false');
+            $('.attr-checkbox').each(function () {
+                $(this).prop('checked', false);
+            });
+        } else {
+            $('#select-all-button2').empty();
+            $('#select-all-button2').html(`<span class="glyphicon glyphicon-unchecked"></span>`);
+            $('#select-all-button2').attr('data-select', 'true');
+            $('.attr-checkbox').each(function () {
+                $(this).prop('checked', true);
+            });
+        }
+    });
 
   })
 
@@ -113,28 +162,6 @@ var delete_group_of_hydroservers = function(){
               })
 
             });
-
-            thredds_to_erase.forEach(function(thredd_single){
-                let new_title;
-                Object.keys(id_dictionary).forEach(function(key) {
-                  if(id_dictionary[key] == thredd_single ){
-                    new_title = key;
-                  }
-
-                });
-            });
-            // if(layersDict['selectedPointModal']){
-            //   map.removeLayer(layersDict['selectedPointModal'])
-            //   map.updateSize()
-            //
-            // }
-            //
-            // if(layersDict['selectedPoint']){
-            //   map.removeLayer(layersDict['selectedPoint'])
-            //   map.updateSize()
-            // }
-            //
-            // map.updateSize();
 
               $.notify(
                   {
