@@ -2,7 +2,14 @@ var THREDDS_PACKAGE = (function(){
 
   $(function(){
     $("#btn-add-addService2").on("click",addSingleThreddsServer);
-
+    $(document).on("click",'#delete-server', get_tdds_list_for_group);
+    $("#btn-del-server").on("click", delete_single_tdds);
+    //ADDITION SERVICE //
+    $(document).on("click", "#add_service", function(){
+      console.log("button service");
+      $("#btn-add-addServiceToTable").hide();
+      $("#btn-add-addService2").removeClass("hidden");
+    })
   })
 
 })()
@@ -69,11 +76,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                    //EVENTS BUTTONS//
 
-                   //ADDITION SERVICE //
-                   $("#add_service").on("click", function(){
-                     $("#btn-add-addServiceToTable").hide();
-                     $("#btn-add-addService2").removeClass("hidden");
-                   })
+
 
 
                    let input_check_serv = $(`#${new_title}_check`);
@@ -115,7 +118,7 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI]['spatial'] = {};
                       layers_style[layernameUI]['epsg'] = epsg;
                       layers_style[layernameUI]['selected'] = false;
-                      console.log(layers_style[layernameUI]);
+                      // console.log(layers_style[layernameUI]);
 
                       // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
                       var check_id_var = `${attributes[i]['name']}_${title}_check`
@@ -330,7 +333,7 @@ var load_individual_thredds_for_group = function(group_name){
 
 var get_table_vars = function(attributes,title){
   let table_content = '<table id = "table_vars" class="table table-hover table-condensed"><thead><tr>'
-
+  console.log(attributes);
   let var_metad = attributes[0];
   // MAKE THE HEADERS FIRST //
   Object.keys(var_metad).forEach(function(key) {
@@ -565,6 +568,7 @@ var addSingleThreddsServer = function(){
     let units = 'false';
     let color = 'false';
     let attr = {};
+    let attr_array = [];
     let variables_list = [];
     $('.attr-checkbox').each(function () {
         if (this.checked) {
@@ -578,10 +582,12 @@ var addSingleThreddsServer = function(){
                   allDimensions.push(x.options[i].text);
               }
               attr[var_string] = {
+                  name: var_string,
                   dimensions: allDimensions,
                   units: units,
                   color: color,
               }
+              attr_array.push(attr[var_string]);
             }
             else{
               let time = '';
@@ -597,15 +603,19 @@ var addSingleThreddsServer = function(){
                   lat = $(`#${var_string}_location`).val();
               }
               attr[var_string] = {
+                  name: var_string,
                   dimensions: `${time},${location[0]},${location[1]}`,
                   units: units,
                   color: color,
               }
+              attr_array.push(attr[var_string]);
+
             }
 
 
         }
     })
+    console.log(attr);
     if(variables_list.length <= 0){
       $.notify(
           {
@@ -696,7 +706,7 @@ var addSingleThreddsServer = function(){
               });
               let id_group_separator = `${group_name_e3}_list_separator`;
 
-
+              console.log(group_name_e3);
               $(`#${group_name_e3}-noGroups`).hide();
               let unique_id_tds = uuidv4();
               id_dictionary[unique_id_tds] = `${title}_join_${current_Group}`
@@ -713,10 +723,10 @@ var addSingleThreddsServer = function(){
                //CLEAN TABLE //
                $("#table_div").empty()
               //MAKE DROPDOWN MENU FOR VARIABLES//
-              options_vars(attr, new_title);
+              options_vars(attr_array, new_title);
               ///MAKE TABLE//
 
-              let table_content = get_table_vars(attr,title);
+              let table_content = get_table_vars(attr_array,title);
               // console.log(table_content);
               $(table_content).appendTo("#table_div");
 
@@ -848,7 +858,7 @@ var get_tdds_list_for_group = function(){
                     var title = tdds_list[i].title
                     let new_title;
                     Object.keys(id_dictionary).forEach(function(key) {
-                      if(id_dictionary[key] == `${title}_join_${current_Group}` ){
+                      if(id_dictionary[key] == `${title}_join_${current_Group}`){
                         new_title = key;
                       }
                     });
@@ -935,4 +945,153 @@ var get_tdds_list_for_group = function(){
   }
 }
 
-$(document).on("click",'#delete-server', get_tdds_list_for_group);
+var delete_single_tdds = function(){
+  let $modalDelete = $("#modalDelete");
+  try{
+    let group_name_e3;
+    Object.keys(id_dictionary).forEach(function(key) {
+      if(id_dictionary[key] == current_Group ){
+        group_name_e3 = key;
+      }
+    });
+    var datastring = $modalDelete.serialize() //Delete the record in the database
+    datastring += `&actual-group=${current_Group}`
+
+    $.ajax({
+        type: "POST",
+        url: `delete-thredds/`,
+        data: datastring,
+        dataType: "HTML",
+        success: function(result) {
+          try{
+            var json_response = JSON.parse(result);
+            let attributes= json_response['attr_tdds'];
+            let json_titles= json_response['title_tdds'];
+            console.log(json_response);
+            $("#modalDelete").modal("hide")
+            $("#modalDelete").each(function() {
+                this.reset()
+            })
+            for(let i=0; i<Object.keys(json_titles).length; ++i){
+
+              let i_string=i.toString();
+              let title=json_titles[i_string];
+              let new_title;
+              Object.keys(id_dictionary).forEach(function(key) {
+                if(id_dictionary[key] == `${title}_join_${current_Group}` ){
+                  new_title = key;
+                }
+              });
+              $(`#${new_title}-row-complete`).remove()
+
+              let element = document.getElementById(new_title);
+              element.parentNode.removeChild(element);
+
+              //REMOVE MAP //
+
+              for (let i = 0; i< attributes[title].length; ++i){
+                // DEFINE THE LAYER ATTRIBUTES //
+                let layernameUI = `${attributes[title][i]}_${title}`
+                removeActiveLayer(layernameUI)
+
+              }
+
+
+
+
+              let id_group_separator = `${group_name_e3}_list_separator`;
+              let separator_element = document.getElementById(id_group_separator);
+              let children_element = Array.from(separator_element.children);
+              if(children_element.length < 2){
+                $(`#${group_name_e3}-noGroups`).show();
+
+              }
+              $(`#${new_title}deleteID`).remove();
+
+              $.notify(
+                  {
+                      message: `Successfully Deleted the Web Service!`
+                  },
+                  {
+                      type: "success",
+                      allow_dismiss: true,
+                      z_index: 20000,
+                      delay: 5000,
+                      animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                      },
+                      onShow: function() {
+                          this.css({'width':'auto','height':'auto'});
+                      }
+                  }
+              )
+
+            }
+          }
+          catch(e){
+            console.log(e);
+            $.notify(
+                {
+                    message: `We got a problem updating the interface after deleting the Web Service, please reload your page `
+                },
+                {
+                    type: "info",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
+        },
+        error: error => {
+            $.notify(
+                {
+                    message: `Something went wrong while deleting the selected web services`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+        }
+    })
+  }
+  catch(e){
+    $.notify(
+        {
+            message: `We are having problems recognizing the actual group or groups to delete.`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
+
+}

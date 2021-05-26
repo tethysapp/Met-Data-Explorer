@@ -421,7 +421,7 @@ var addAttribute = function(attribute, dimensionString, units, color) {
     if (dimensionString == false) {
       html  += `<tr class="attr-div">
                     <td>
-                      <input type="checkbox" class="attr-checkbox" value="${attribute}_${count}" checked id="attribute-${count}">
+                      <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" checked id="attribute-${count}">
                     </td>
                     <td class = "attrbute_name">
                       <label for="attribute-${count}">${attribute}</label>
@@ -659,7 +659,7 @@ var addServiceToTable = function(){
     console.log(databaseInfo);
     add_services_list.push(databaseInfo);
     let options = '';
-
+    console.log(variables_list);
     for(let i = 0; i< variables_list.length; i++){
       options += `<option>${variables_list[i]}</option>`;
     }
@@ -667,7 +667,7 @@ var addServiceToTable = function(){
     <tr>
       <th scope="row">${add_services_list.length}</th>
       <td>
-        <input type="checkbox" class="attr-checkbox" checked value="${$('#addService-title').val()}">
+        <input type="checkbox" class="attr-checkbox" value="${$('#addService-title').val()}">
       </td>
       <td>
         ${$('#addService-title').val()}
