@@ -12,9 +12,51 @@ import requests
 import netCDF4
 from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
+# http://186.149.199.244/ftp/
 
 Persistent_Store_Name = 'thredds_db'
+######*****************************************************************************************################
+############################## DELETE THE HYDROSERVER OF AN SPECIFIC GROUP ####################################
+######*****************************************************************************************################
+def delete_single_thredd(request):
+    list_catalog = {}
+    list_catalog2 = {}
+    final_list = {}
+    SessionMaker = app.get_persistent_store_database(
+        Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()
 
+    # Query DB for hydroservers
+    if request.is_ajax() and request.method == 'POST':
+        titles=request.POST.getlist('server')
+        group = request.POST.get('actual-group')
+        print(titles)
+        print(group)
+        i=0;
+        for title in titles:
+            # tdds_group = session.query(Thredds).filter(Thredds.title == title).first().delete(
+            #     synchronize_session='evaluate')  # Deleting the record from the local catalog
+            tdds_group = session.query(Thredds).filter(Thredds.title == title).first()
+            if tdds_group:
+                list_my_attr = []
+                for attr_single in tdds_group.attributes:
+                    list_my_attr.append(attr_single.name)
+
+                list_catalog2[title] = list_my_attr
+
+            session.delete(tdds_group)
+            session.commit()
+            session.close()
+
+            # Returning the deleted title. To let the user know that the particular
+            # title is deleted.
+            i_string=str(i);
+            list_catalog[i_string] = title
+            i=i+1
+        final_list['title_tdds'] = list_catalog
+        final_list['attr_tdds'] = list_catalog2
+        print(final_list)
+    return JsonResponse(final_list)
 def add_tdds(request):
     group_obj={}
     services_array = []

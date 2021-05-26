@@ -75,6 +75,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='add-thredds/',
                 controller='metdataexplorer2.thredds.add_tdds'
             ),
+            UrlMap(
+                name='delete-thredds',
+                url='delete-thredds/',
+                controller='metdataexplorer2.thredds.delete_single_thredd'
+            ),
             # UrlMap(
             #     name='getBoxValues',
             #     url='getBoxValues/',
@@ -85,6 +90,7 @@ class Metdataexplorer2(TethysAppBase):
                 url='getFullArray/',
                 controller='metdataexplorer2.thredds.get_full_array'
             ),
+
 
         )
 

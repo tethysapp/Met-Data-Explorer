@@ -38,7 +38,7 @@ class Thredds(Base):
     epsg = Column(String(100))
     spatial = Column(String(2000))
     description = Column(String(4000))
-    attributes = relationship("Variables", back_populates="thredds_servers")
+    attributes = relationship("Variables", back_populates="thredds_servers", cascade = "all,delete, delete-orphan")
     timestamp = Column(String(2000))
     metadata_td_file = Column(JSON)
 
@@ -61,7 +61,7 @@ class Groups(Base):
     id = Column(Integer, primary_key=True)  # Record number.
     name = Column(String(100))
     description = Column(String(2000))
-    thredds_server = relationship("Thredds", back_populates ="group", cascade = "all,delete, delete-orphan" )
+    thredds_server = relationship("Thredds", back_populates ="group", cascade = "all,delete, delete-orphan")
 
     def __init__(self, name, description):
         self.name = name
