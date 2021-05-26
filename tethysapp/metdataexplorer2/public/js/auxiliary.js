@@ -292,14 +292,18 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
       <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
       <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
 
+      <button id= "add_var" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddServices">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+      <button id="delete-var" class="btn btn-default btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDelete">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
 
-      <button type="button" id="${title}_${group_name}_reload" class="btn btn-sm" >
+      <button type="button" id="${title}_${group_name}_reload" class="btn btn-default btn-sm" >
        <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
        </span>
       </button>
-      <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
-       <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-      </button>
+
     </li>
     `;
 
