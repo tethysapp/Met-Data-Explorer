@@ -9,11 +9,58 @@ var THREDDS_PACKAGE = (function(){
       console.log("button service");
       $("#btn-add-addServiceToTable").hide();
       $("#btn-add-addService2").removeClass("hidden");
-    })
+    });
+
+    $(document).on("click", "#add_var", display_vars_from_OpenDabs);
+
   })
 
 })()
 
+
+var display_vars_from_OpenDabs = function(){
+  $('#attributes2').empty();
+
+  isAdding = false;
+  console.log("nboludo");
+  let html = '';
+  let html2 = '';
+  let variables = {};
+  console.log(opendapURL);
+  // (opendapURL.endsWith('.html') === true) ? opendapURL = opendapURL : opendapURL += '.html';
+  let variablesAndFileMetadata = getVariablesAndFileMetadata(opendapURL);
+  console.log(variablesAndFileMetadata);
+  let variables_list = variablesAndFileMetadata[0];
+  let keys = Object.keys(variables_list);
+  keys.sort();
+
+  for (let i = 0; i < keys.length; i++) {
+    let str_dims = "";
+    variables_list[keys[i]]['dimensions'].forEach(function(indiv){
+      str_dims += `${indiv},`
+    })
+    try{
+      str_dims = str_dims.slice(0, str_dims.length - 1);
+    }
+    catch(e){
+      str_dims = "";
+    }
+
+    variables[keys[i]] = str_dims;
+      // variables[keys[i]] = variables_list[keys[i]]['dimensions'];
+  }
+  console.log(variables);
+  for (let variable in variables) {
+      let dimensionString = variables[variable];
+    html2 += addAttribute(variable, dimensionString, '', '');
+  }
+  $(html2).appendTo('#attributes2');
+  $(".tables_mul").selectpicker("refresh");
+  console.log(current_vars);
+
+  $("#groups_variables_div2").show();
+
+};
 
 var load_individual_thredds_for_group = function(group_name){
    let group_name_obj={
@@ -74,10 +121,22 @@ var load_individual_thredds_for_group = function(group_name){
                    let newHtml = html_for_servers(new_title,group_name_e3, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
 
+                   // UPDATE THE DICT VAR //
+                   let array_var_ = []
+                   attributes.forEach(function(att_single){
+                     array_var_.push(att_single['name']);
+                   })
+                   dict_file_vars[new_title] = array_var_;
+
                    //EVENTS BUTTONS//
-
-
-
+                   $(`#${new_title}`).on("click",function(){
+                     current_tdds = id_dictionary[new_title].split('_join_')[0];
+                     current_vars = dict_file_vars[new_title];
+                     // console.log(current_tdds);
+                     opendapURL = $(this).attr("data-opendap-url");
+                     wmsURL = $(this).attr("data-wms-url");
+                     subsetURL = $(this).attr("data-subset-url");
+                   });
 
                    let input_check_serv = $(`#${new_title}_check`);
 
@@ -90,8 +149,9 @@ var load_individual_thredds_for_group = function(group_name){
                     //MAKE DROPDOWN MENU FOR VARIABLES//
                     options_vars(attributes, new_title);
                     ///MAKE TABLE//
-
                     let table_content = get_table_vars(attributes,title);
+
+
                     // console.log(table_content);
                     $(table_content).appendTo("#table_div");
 

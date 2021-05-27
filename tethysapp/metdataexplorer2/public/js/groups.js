@@ -2,6 +2,7 @@ var GROUPS_PACKAGE = (function(){
 
   $(function(){
     $("#add_groups").on("click",function(){
+      isAdding = true;
       $("#btn-add-addServiceToTable").show();
       $("#btn-add-addService2").addClass("hidden");
     })
@@ -418,8 +419,12 @@ var addAttribute = function(attribute, dimensionString, units, color) {
     let dimOptions;
     let html = ''
     let count = $('.attr-checkbox').length;
+    let class_name_ =""
+    if(isAdding == false){
+      class_name_ = (current_vars.includes(attribute)) ? class_name_ = "success" : class_name_ = "";
+    }
     if (dimensionString == false) {
-      html  += `<tr class="attr-div">
+      html  += `<tr class="${class_name_}">
                     <td>
                       <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" checked id="attribute-${count}">
                     </td>
@@ -444,7 +449,7 @@ var addAttribute = function(attribute, dimensionString, units, color) {
       for(let i = 0; i < dimensionList.length; i++) {
           options += `<option>${dimensionList[i]}</option>`;
       }
-      html  += `<tr>
+      html  += `<tr class="${class_name_}">
                     <td >
                       <input type="checkbox" class="attr-checkbox" checked value="${attribute}_a_${count}" id="attribute-${count}">
                     </td>
@@ -723,11 +728,12 @@ var make_varaibles_appear = function () {
         $('#variable-input option').each(function () {
             variables[$(this).val()] = $(this).attr('data-dimensions');
         });
-
+        console.log(variables);
         for (let variable in variables) {
             let dimensionString = variables[variable];
           html2 += addAttribute(variable, dimensionString, '', '');
         }
+
         $(html2).appendTo('#attributes');
 
         let description = $('#metadata-div').attr('data-description');
@@ -761,11 +767,11 @@ var updateFilepath = function() {
         $("#file-info-div").css("display", "flex");
         opendapURL = $(this).attr("data-opendap-url");
         subsetURL = $(this).attr("data-subset-url");
-        console.log(subsetURL);
+        console.log(opendapURL);
         wmsURL = $(this).attr("data-wms-url");
 
         $("#attributes").empty();
-        let variablesAndFileMetadata = getVariablesAndFileMetadata();
+        let variablesAndFileMetadata = getVariablesAndFileMetadata($(this).attr("data-opendap-url"));
         addVariables(variablesAndFileMetadata[0]);
         make_varaibles_appear();
         $(".tables_mul").selectpicker("refresh");
@@ -853,25 +859,6 @@ var addFileMetadata = function(fileMetadata) {
     $(fileMetadata).appendTo("#metadata-div");
 
     $('#file-metadata-button').css("background-color", "#1600F0");
-}
-
-var getVariablesAndFileMetadata = function () {
-    //$("#loading-modal").modal("show");
-    let variables = {};
-    let fileMetadata = '';
-    $.ajax({
-        url: "getVariablesAndFileMetadata/",
-        data: {opendapURL: opendapURL},
-        dataType: "json",
-        contentType: "application/json",
-        method: "GET",
-        async: false,
-        success: function (result) {
-            variables = result["variables_sorted"];
-            fileMetadata = result["file_metadata"];
-        }
-    })
-    return [variables, fileMetadata];
 }
 
 var getFoldersAndFiles = function() {

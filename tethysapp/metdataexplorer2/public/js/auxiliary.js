@@ -95,6 +95,26 @@ var AUX_PACKAGE = (function(){
     })
 
 })()
+
+var getVariablesAndFileMetadata = function (opendapURL) {
+    //$("#loading-modal").modal("show");
+    console.log("getVariablesAndFileMetadata");
+    let variables = {};
+    let fileMetadata = '';
+    $.ajax({
+        url: "getVariablesAndFileMetadata/",
+        data: {opendapURL: opendapURL},
+        dataType: "json",
+        contentType: "application/json",
+        method: "GET",
+        async: false,
+        success: function (result) {
+            variables = result["variables_sorted"];
+            fileMetadata = result["file_metadata"];
+        }
+    })
+    return [variables, fileMetadata];
+}
 var uuidv4 = function () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -288,11 +308,11 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
 //     }
     let check_var = (( isNew == true ) ? 'checked' : '');
     let newHtml = `
-    <li class="ui-state-default" layer-name="${title}" id="${title}" >
+    <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
       <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
       <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
 
-      <button id= "add_var" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddServices">
+      <button id= "add_var" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
         <span class="glyphicon glyphicon-plus"></span>
       </button>
       <button id="delete-var" class="btn btn-default btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDelete">

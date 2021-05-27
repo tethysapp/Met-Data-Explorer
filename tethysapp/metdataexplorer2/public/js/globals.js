@@ -21,4 +21,8 @@ let layers_dict = {};
 let layerControlObj;
 let subsetURL_tempt = {}
 let current_Group;
+let current_tdds;
+let current_vars;
+let dict_file_vars = {};
+let isAdding = true;
 // let array_services = []
