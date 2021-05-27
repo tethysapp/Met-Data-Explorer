@@ -1,4 +1,22 @@
+ul {
+    margin: 20px;
+}
 
+.input-color {
+    position: relative;
+}
+.input-color span {
+    padding-left: 20px;
+}
+.color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: #ccc;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
 /* #table_vars {
     table-layout: fixed;
     word-wrap: break-word;
