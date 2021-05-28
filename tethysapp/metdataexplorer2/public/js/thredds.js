@@ -12,6 +12,7 @@ var THREDDS_PACKAGE = (function(){
     });
 
     $(document).on("click", "#add_var", display_vars_from_OpenDabs);
+    document.getElementById('add-attribute2').addEventListener("keyup", searchGroups_group);
 
   })
 

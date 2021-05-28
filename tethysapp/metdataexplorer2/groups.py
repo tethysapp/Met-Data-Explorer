@@ -64,7 +64,7 @@ def get_variables_and_file_metadata(request):
     url = request.GET['opendapURL']
     variables = {}
     file_metadata = ''
-
+    print(url)
     try:
         ds = netCDF4.Dataset(url)
     except OSError:
