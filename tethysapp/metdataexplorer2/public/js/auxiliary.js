@@ -535,7 +535,7 @@ var addAttribute = function(attribute, dimensionString, units, color) {
     if (dimensionString == false) {
       html  += `<tr class="${class_name_}">
                     <td>
-                      <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" ${isChecked} id="attribute-${count}">
+                      <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" ${isChecked} id="attribute-${count}" name="variable">
                     </td>
                     <td class = "attrbute_name">
                       <label for="attribute-${count}">${attribute}</label>
@@ -560,7 +560,7 @@ var addAttribute = function(attribute, dimensionString, units, color) {
       }
       html  += `<tr class="${class_name_}">
                     <td >
-                      <input type="checkbox" class="attr-checkbox" ${isChecked} value="${attribute}_a_${count}" id="attribute-${count}">
+                      <input type="checkbox" class="attr-checkbox" ${isChecked} value="${attribute}_a_${count}" id="attribute-${count}" name="variable">
                     </td>
                     <td class = "attrbute_name">
                       <label for="attribute-${count}">${attribute}</label>
