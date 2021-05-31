@@ -414,58 +414,6 @@ var load_groups_start = function(){
 
 }
 
-var addAttribute = function(attribute, dimensionString, units, color) {
-    let options = '';
-    let dimOptions;
-    let html = ''
-    let count = $('.attr-checkbox').length;
-    let class_name_ =""
-    if(isAdding == false){
-      class_name_ = (current_vars.includes(attribute)) ? class_name_ = "success" : class_name_ = "";
-    }
-    if (dimensionString == false) {
-      html  += `<tr class="${class_name_}">
-                    <td>
-                      <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" checked id="attribute-${count}">
-                    </td>
-                    <td class = "attrbute_name">
-                      <label for="attribute-${count}">${attribute}</label>
-                    </td>
-                    <td>
-                      <div class = "vertical_buttons">
-                      <div>
-                        <span class ="glyphicon glyphicon-sort-by-attributes"></span>: <input id = "${attribute}_time" class="tables_mul">
-                      </div>
-                      <div>
-                        <span class = "glyphicon glyphicon-map-marker"></span>: <input id = "${attribute}_location" class="tables_mul">
-                      </div>
-                      </div>
-
-                    </td>
-                  </tr>`
-    }
-    else{
-      let dimensionList = dimensionString.split(',');
-      for(let i = 0; i < dimensionList.length; i++) {
-          options += `<option>${dimensionList[i]}</option>`;
-      }
-      html  += `<tr class="${class_name_}">
-                    <td >
-                      <input type="checkbox" class="attr-checkbox" checked value="${attribute}_a_${count}" id="attribute-${count}">
-                    </td>
-                    <td class = "attrbute_name">
-                      <label for="attribute-${count}">${attribute}</label>
-                    </td>
-                    <td>
-                      <select id = "${attribute}_time" class="selectpicker tables_mul" data-live-search="false" data-width="50%" data-size="mini" data-style="btn-info">${options}</select>
-                    </td>
-                  </tr>`
-    }
-
-
-    return html;
-}
-
 var addServiceToTable = function(){
   try{
     //CHECK IF WE HAVE A SERVICE WITH THAT NAME ALREADY//

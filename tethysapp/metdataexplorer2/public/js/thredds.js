@@ -28,7 +28,6 @@ var display_vars_from_OpenDabs = function(){
   let html2 = '';
   let variables = {};
   console.log(opendapURL);
-  // (opendapURL.endsWith('.html') === true) ? opendapURL = opendapURL : opendapURL += '.html';
   let variablesAndFileMetadata = getVariablesAndFileMetadata(opendapURL);
   console.log(variablesAndFileMetadata);
   let variables_list = variablesAndFileMetadata[0];
@@ -48,14 +47,27 @@ var display_vars_from_OpenDabs = function(){
     }
 
     variables[keys[i]] = str_dims;
-      // variables[keys[i]] = variables_list[keys[i]]['dimensions'];
   }
   console.log(variables);
   for (let variable in variables) {
-      let dimensionString = variables[variable];
-    html2 += addAttribute(variable, dimensionString, '', '');
+    let dimensionString = variables[variable];
+    if(!current_vars.includes(variable)){
+      html2 += addAttribute(variable, dimensionString, '', '');
+    }
   }
-  $(html2).appendTo('#attributes2');
+  //check if html2?
+  if(html2 ==''){
+    $(`#table_wrapper2`).hide();
+    html2 += `<p> The thredds file does not have variables to add.</p>`;
+    $('#warning_msg').removeClass("hidden");
+    $(html2).appendTo('#warning_msg');
+
+  }
+  else{
+    $('#warning_msg').addClass("hidden");
+    $(`#table_wrapper2`).show();
+    $(html2).appendTo('#attributes2');
+  }
   $(".tables_mul").selectpicker("refresh");
   console.log(current_vars);
 

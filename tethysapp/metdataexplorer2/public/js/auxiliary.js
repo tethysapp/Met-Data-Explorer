@@ -520,6 +520,61 @@ var check_for_same_names = function(type_level, title_to_check){
   return check_nene;
 }
 
+var addAttribute = function(attribute, dimensionString, units, color) {
+    let options = '';
+    let dimOptions;
+    let html = ''
+    let count = $('.attr-checkbox').length;
+    let class_name_ = "";
+    let isChecked = "checked";
+    if(isAdding == false){
+      class_name_ = (current_vars.includes(attribute)) ? class_name_ = "success" : class_name_ = "";
+      isChecked = "";
+    }
+
+    if (dimensionString == false) {
+      html  += `<tr class="${class_name_}">
+                    <td>
+                      <input type="checkbox" class="attr-checkbox" value="${attribute}_a_${count}" ${isChecked} id="attribute-${count}">
+                    </td>
+                    <td class = "attrbute_name">
+                      <label for="attribute-${count}">${attribute}</label>
+                    </td>
+                    <td>
+                      <div class = "vertical_buttons">
+                      <div>
+                        <span class ="glyphicon glyphicon-sort-by-attributes"></span>: <input id = "${attribute}_time" class="tables_mul">
+                      </div>
+                      <div>
+                        <span class = "glyphicon glyphicon-map-marker"></span>: <input id = "${attribute}_location" class="tables_mul">
+                      </div>
+                      </div>
+
+                    </td>
+                  </tr>`
+    }
+    else{
+      let dimensionList = dimensionString.split(',');
+      for(let i = 0; i < dimensionList.length; i++) {
+          options += `<option>${dimensionList[i]}</option>`;
+      }
+      html  += `<tr class="${class_name_}">
+                    <td >
+                      <input type="checkbox" class="attr-checkbox" ${isChecked} value="${attribute}_a_${count}" id="attribute-${count}">
+                    </td>
+                    <td class = "attrbute_name">
+                      <label for="attribute-${count}">${attribute}</label>
+                    </td>
+                    <td>
+                      <select id = "${attribute}_time" class="selectpicker tables_mul" data-live-search="false" data-width="50%" data-size="mini" data-style="btn-info">${options}</select>
+                    </td>
+                  </tr>`
+    }
+
+
+    return html;
+}
+
 // var check_if_td_contained = function(td_name,tds_array){
 //   let checked = false;
 //   tds_array.forEach(function(single_tds){
