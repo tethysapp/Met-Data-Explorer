@@ -332,7 +332,7 @@ var load_groups_start = function(){
                  let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
 
                  load_individual_thredds_for_group(title);
-                 $(`#heading_${new_title}`).on("click",function(){
+                 $(`#${new_title}_panel`).on("click",function(){
                    current_Group = id_dictionary[new_title];
                  });
                  // let servers_checks = document.getElementById(`${id_group_separator}`).getElementsByClassName("chkbx-layers");
@@ -1055,7 +1055,10 @@ var createDBArray = function() {
 
           $("#filetree-div").empty();
           $("#folders_structures").hide();
-
+          
+          $(`#${new_title}_panel`).on("click",function(){
+            current_Group = id_dictionary[new_title];
+          });
 
           $.notify(
               {
