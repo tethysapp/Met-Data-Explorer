@@ -80,6 +80,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='delete-thredds/',
                 controller='metdataexplorer2.thredds.delete_single_thredd'
             ),
+            UrlMap(
+                name='delete-vars',
+                url='delete-vars/',
+                controller='metdataexplorer2.variables.delete_vars'
+            ),
             # UrlMap(
             #     name='getBoxValues',
             #     url='getBoxValues/',
