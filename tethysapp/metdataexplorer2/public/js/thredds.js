@@ -13,7 +13,23 @@ var THREDDS_PACKAGE = (function(){
 
     $(document).on("click", "#add_var", display_vars_from_OpenDabs);
     document.getElementById('add-attribute2').addEventListener("keyup", searchGroups_group);
-
+    $('#select-all-button2').click(function () {
+        if ($('#select-all-button2').attr('data-select') === 'true') {
+            $('#select-all-button2').empty();
+            $('#select-all-button2').html(`<span class="glyphicon glyphicon-check"></span>`);
+            $('#select-all-button2').attr('data-select', 'false');
+            $('.attr-checkbox').each(function () {
+                $(this).prop('checked', false);
+            });
+        } else {
+            $('#select-all-button2').empty();
+            $('#select-all-button2').html(`<span class="glyphicon glyphicon-unchecked"></span>`);
+            $('#select-all-button2').attr('data-select', 'true');
+            $('.attr-checkbox').each(function () {
+                $(this).prop('checked', true);
+            });
+        }
+    });
   })
 
 })()
