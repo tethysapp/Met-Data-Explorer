@@ -40,7 +40,16 @@ def delete_single_thredd(request):
         for title in titles:
             # tdds_group = session.query(Thredds).filter(Thredds.title == title).first().delete(
             #     synchronize_session='evaluate')  # Deleting the record from the local catalog
+            # tdds_group = session.query(Thredds).filter(Thredds.title == title).first()
+            tdds_objs = session.query(Thredds).filter(Thredds.title == title)
             tdds_group = session.query(Thredds).filter(Thredds.title == title).first()
+            for td_single_obj in tdds_objs:
+                if td_single_obj.group.name == group:
+                    # print(td_single_obj.group.name)
+                    # print(td_single_obj.title)
+                    tdds_group = td_single_obj
+
+
             if tdds_group:
                 list_my_attr = []
                 for attr_single in tdds_group.attributes:
@@ -59,7 +68,7 @@ def delete_single_thredd(request):
             i=i+1
         final_list['title_tdds'] = list_catalog
         final_list['attr_tdds'] = list_catalog2
-        print(final_list)
+        # print(final_list)
     return JsonResponse(final_list)
 def add_tdds(request):
     group_obj={}
