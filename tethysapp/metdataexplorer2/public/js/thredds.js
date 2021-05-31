@@ -21,6 +21,7 @@ var THREDDS_PACKAGE = (function(){
 
 var display_vars_from_OpenDabs = function(){
   $('#attributes2').empty();
+  $('#warning_msg').empty();
 
   isAdding = false;
   console.log("nboludo");
