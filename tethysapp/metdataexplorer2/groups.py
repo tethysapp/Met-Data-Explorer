@@ -26,8 +26,6 @@ def thredds_proxy(request):
     else:
         return JsonResponse({})
 
-
-
 def get_files_and_folders(request):
     url = request.GET['url']
     data_tree = {}
@@ -88,8 +86,6 @@ def get_variables_and_file_metadata(request):
         variables[variable] = array
 
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
-
-
 
 def add_group(request):
     group_obj={}

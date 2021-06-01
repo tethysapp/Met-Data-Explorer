@@ -42,6 +42,8 @@ var display_vars_from_Tdds = function(){
       group: current_Group,
       tdds: current_tdds
     };
+    console.log(current_tdds);
+    console.log(current_Group);
 
     $.ajax({
         type: "POST",
@@ -279,7 +281,6 @@ var load_individual_thredds_for_group = function(group_name){
                    $(`#${new_title}`).on("click",function(){
                      current_tdds = id_dictionary[new_title].split('_join_')[0];
                      current_vars = dict_file_vars[new_title];
-                     // console.log(current_tdds);
                      opendapURL = $(this).attr("data-opendap-url");
                      wmsURL = $(this).attr("data-wms-url");
                      subsetURL = $(this).attr("data-subset-url");
@@ -909,6 +910,17 @@ var addSingleThreddsServer = function(){
               let new_title = unique_id_tds;
               let newHtml = html_for_servers(new_title,group_name_e3, url, wmsURL, subsetURL);
               $(newHtml).appendTo(`#${id_group_separator}`);
+
+
+              $(`#${new_title}`).on("click",function(){
+                current_tdds = id_dictionary[new_title].split('_join_')[0];
+                current_vars = dict_file_vars[new_title];
+                opendapURL = $(this).attr("data-opendap-url");
+                wmsURL = $(this).attr("data-wms-url");
+                subsetURL = $(this).attr("data-subset-url");
+              });
+
+
               let input_check_serv = $(`#${new_title}_check`);
 
               input_check_serv.on("click", function(){
