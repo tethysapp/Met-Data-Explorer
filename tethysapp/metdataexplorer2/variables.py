@@ -122,7 +122,7 @@ def delete_vars(request):
             i=0;
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
             for single_var in variables_tdds:
-                var_row = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).join(Variables).filter(Variables.name == single_var).first()
+                var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
                 print(var_row)
                 # var_row = session.query(Variables).filter(Variables.title == single_var).first()
 
