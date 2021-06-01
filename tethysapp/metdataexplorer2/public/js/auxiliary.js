@@ -574,6 +574,18 @@ var addAttribute = function(attribute, dimensionString, units, color) {
     return html;
 }
 
+var get_metadata_button = function(attribute){
+  let table_content = '<table id = "table_metadata" class="table table-hover table-responsive table-sm"><thead><tr>'
+  table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
+  let var_metad = JSON.parse(attribute['metadata_var']);
+  let all_vars_keys = Object.keys(var_metad);
+
+  for(let j = 0; j< all_vars_keys.length; ++j){
+    table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
+  }
+  table_content += "</tbody> </table>"
+  return table_content
+}
 // var check_if_td_contained = function(td_name,tds_array){
 //   let checked = false;
 //   tds_array.forEach(function(single_tds){
