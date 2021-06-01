@@ -3,30 +3,47 @@ var VARIABLES_PACKAGE = (function(){
 
   $(function(){
     $("#btn-add-addVariables").on("click",addVariablesToTD);
+    $("#btn-del-variables").on("click",deleteVariablesToTD);
 
   })
 
 })()
 
+var deleteVariablesToTD = function(){
+  let $modalAddVars = $("#modalDeleteVariable");
+  var datastring = $modalAddVars.serialize();
+  datastring += `&actual-group=${current_Group}`
+  datastring += `&actual-tdds=${current_tdds}`
+  console.log(datastring);
+  $.ajax({
+      type: "POST",
+      url: `delete-vars/`,
+      data: datastring,
+      dataType: "HTML",
+      success: function(result) {
+
+        console.log(result);
+        let variables_to_del = JSON.parse(result)['var_list'];
+        let new_title;
+        Object.keys(id_dictionary).forEach(function(key) {
+          if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
+            new_title = key;
+          }
+        });
+        variables_to_del.forEach(function(single_var){
+          $(`#${single_var}deleteID`).remove();
+          let layernameUI = `${single_var}_${new_title}`
+          removeActiveLayer(layernameUI);
+        });
+
+      },
+      error:function(e){
+
+      }
+    })
+}
 
 var addVariablesToTD = function(){
-  // let $modalAddVars = $("#modalAddVariablesForm");
-  // var datastring = $modalAddVars.serialize()
-  // datastring += `&actual-group=${current_Group}`
-  // datastring += `&actual-tdds=${current_tdds}`
-  // $.ajax({
-  //     type: "POST",
-  //     url: `add-vars/`,
-  //     data: datastring,
-  //     dataType: "HTML",
-  //     success: function(result) {
-  //       console.log("nola");
-  //
-  //     },
-  //     error:function(e){
-  //
-  //     }
-  //   })
   let units = 'false';
   let color = 'false';
   let attr = {};

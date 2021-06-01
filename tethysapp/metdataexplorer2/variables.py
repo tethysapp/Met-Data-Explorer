@@ -115,20 +115,24 @@ def delete_vars(request):
     # Query DB for hydroservers
     if request.is_ajax() and request.method == 'POST':
         try:
-            variables_tdds =request.POST.getlist('variable')
-            group = request.POST.get('actual-group')
-            tdds = request.POST.get('actual-tdds')
+            variables_tdds =request.POST.getlist('variables_del')
+            actual_group = request.POST.get('actual-group')
+            actual_tdds = request.POST.get('actual-tdds')
 
             i=0;
-            tdds_group = session.query(Thredds).filter(Thredds.title == tdds).first()
+            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
             for single_var in variables_tdds:
-                var_row = session.query(VariableS).filter(Variables.title == single_var).first()
+                var_row = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).join(Variables).filter(Variables.name == single_var).first()
+                print(var_row)
+                # var_row = session.query(Variables).filter(Variables.title == single_var).first()
+
                 session.delete(var_row)
                 session.commit()
                 session.close()
-            final_list['tdds_list'] = variables_tdds
+            final_list['var_list'] = variables_tdds
         except Exception as e:
-            final_list['tdds_list'] = []
+            print(e)
+            final_list['var_list'] = []
 
     return JsonResponse(final_list)
 

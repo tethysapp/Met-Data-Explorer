@@ -1186,7 +1186,7 @@ var delete_single_tdds = function(){
 
               for (let i = 0; i< attributes[title].length; ++i){
                 // DEFINE THE LAYER ATTRIBUTES //
-                let layernameUI = `${attributes[title][i]}_${title}`
+                let layernameUI = `${attributes[title][i]}_${new_title}`
                 removeActiveLayer(layernameUI)
 
               }
