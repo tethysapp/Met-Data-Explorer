@@ -328,8 +328,8 @@ var load_groups_start = function(){
                  $(newHtml).appendTo("#current-GroupThredds");
 
 
-                 let li_object = document.getElementById(`${new_title}`);
-                 let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
+                 // let li_object = document.getElementById(`${new_title}`);
+                 // let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
 
                  load_individual_thredds_for_group(title);
                  $(`#${new_title}_panel`).on("click",function(){
@@ -1027,13 +1027,15 @@ var createDBArray = function() {
           let newHtml = html_for_groups(can_delete_groups, new_title, id_group_separator);
           $(newHtml).appendTo("#current-GroupThredds");
           $(`#${title}-noGroups`).show();
-          let li_object = document.getElementById(`${new_title}`);
-          let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
+          load_individual_thredds_for_group(title);
 
-          if(!input_check.checked){
-            // //console.log("HERE NOT CHECKEC")
-            load_individual_thredds_for_group(title);
-          }
+          // let li_object = document.getElementById(`${new_title}`);
+          // let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
+          //
+          // if(!input_check.checked){
+          //   // //console.log("HERE NOT CHECKEC")
+          //   load_individual_thredds_for_group(title);
+          // }
 //           overflow-x: scroll;
 // width: 100%;
 // height: 500px;
@@ -1055,7 +1057,7 @@ var createDBArray = function() {
 
           $("#filetree-div").empty();
           $("#folders_structures").hide();
-          
+
           $(`#${new_title}_panel`).on("click",function(){
             current_Group = id_dictionary[new_title];
           });

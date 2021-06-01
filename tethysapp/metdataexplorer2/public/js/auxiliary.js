@@ -361,8 +361,9 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
     let newHtml = `
     <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
       <span class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
-      <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
-
+      <button id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="btn btn-default btn-sm" >
+      <span class="glyphicon glyphicon-info-sign"></span>
+      </button>
       <button id= "add_var" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
         <span class="glyphicon glyphicon-plus"></span>
       </button>
@@ -438,8 +439,6 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
             </a>
           </h4>
           <li class="ui-state-default buttonAppearance" id="${title}" layer-name="none">
-
-              <input class="chkbx-layers" type="checkbox">
               <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalInterface">
                 <span class=" glyphicon glyphicon-info-sign "></span>
               </button>

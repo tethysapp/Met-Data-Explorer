@@ -170,9 +170,9 @@ var load_individual_thredds_for_group = function(group_name){
 
                    let input_check_serv = $(`#${new_title}_check`);
 
-                   input_check_serv.on("change", function(){
+                   input_check_serv.on("click", function(){
                      //ONLY ONE CHECKBOX AT A TIME//
-                     $('input[type="checkbox"]').not(this).prop('checked', false);
+                     // $('input[type="checkbox"]').not(this).prop('checked', false);
 
                      //CLEAN TABLE //
                      $("#table_div").empty()
