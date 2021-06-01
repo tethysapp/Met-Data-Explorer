@@ -131,3 +131,39 @@ def delete_vars(request):
             final_list['tdds_list'] = []
 
     return JsonResponse(final_list)
+
+
+def getVariablesTds(request):
+    final_list = {}
+    SessionMaker = app.get_persistent_store_database(
+        Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()
+
+    # Query DB for hydroservers
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            actual_group = request.POST.get('group')
+            actual_tdds = request.POST.get('tdds')
+            print(actual_group)
+            print(actual_tdds)
+            old_attr_arr = []
+            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
+
+            for single_var in tdds_group.attributes:
+                variable_obj = {}
+                variable_obj['name'] = single_var.name
+                variable_obj['dimensions'] = single_var.dimensions
+                variable_obj['units'] = single_var.units
+                variable_obj['color'] = single_var.color
+                variable_obj['metatada'] = single_var.metadata_variable
+
+                old_attr_arr.append(variable_obj)
+
+            final_list['var_list'] = old_attr_arr
+        except Exception as e:
+            print(e)
+            final_list['var_list'] = []
+
+    session.close()
+
+    return JsonResponse(final_list)

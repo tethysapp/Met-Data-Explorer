@@ -12,6 +12,7 @@ var THREDDS_PACKAGE = (function(){
     });
 
     $(document).on("click", "#add_var", display_vars_from_OpenDabs);
+    $(document).on("click", "#delete-var", display_vars_from_Tdds);
     document.getElementById('add-attribute2').addEventListener("keyup", searchGroups_group);
     $('#select-all-button2').click(function () {
         if ($('#select-all-button2').attr('data-select') === 'true') {
@@ -34,13 +35,129 @@ var THREDDS_PACKAGE = (function(){
 
 })()
 
+var display_vars_from_Tdds = function(){
+  try{
+    // make ajax request to know the tdds //
+    let request_obj={
+      group: current_Group,
+      tdds: current_tdds
+    };
+
+    $.ajax({
+        type: "POST",
+        url: `get-vars/`,
+        dataType: "JSON",
+        data: request_obj,
+        success: function(result) {
+          try{
+            $modalDelete = $("#modalDeleteVariable");
+            //Dynamically generate the list of existing hydroservers'
+            console.log(result);
+            var tdds_list = result["var_list"]
+            var HSTableHtml =
+                '<table class="table table-condensed-xs" id="tbl-tdds"><thead><th>Select</th><th>Variable</th></thead><tbody>'
+            if (tdds_list.length === 0) {
+                $modalDelete
+                    .find(".modal-body")
+                    .html(
+                        "<b>There are no Variables in the Thredds file.</b>"
+                    )
+            } else {
+                for (var i = 0; i < tdds_list.length; i++) {
+                    var title = tdds_list[i].name
+
+                    HSTableHtml +=
+                        `<tr id="${title}deleteID">` +
+                        '<td><input class = "check_hs_delete" type="checkbox" name="variables_del" value="' +
+                        title +
+                        '"></td>' +
+                        '<td class="var_title">' +
+                        title +
+                        "</td>" +
+                        "</tr>"
+                }
+                HSTableHtml += "</tbody></table>"
+                $modalDelete.find(".modal-body").html(HSTableHtml)
+            }
+          }
+          catch(e){
+            console.log(e);
+
+            $.notify(
+                {
+                    message: `We are having an error trying to get the list of variables in the current Thredds file`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
+
+        },
+        error: function(error) {
+            console.log(error);
+            $.notify(
+                {
+                  message: `We are having an error trying to get the list of variables in the current Thredds file`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+        }
+    })
+  }
+  catch(error){
+    console.log(error);
+  $.notify(
+      {
+          message: `We are having an error trying to recognize the actual Thedds file`
+      },
+      {
+          type: "danger",
+          allow_dismiss: true,
+          z_index: 20000,
+          delay: 5000,
+          animate: {
+            enter: 'animated fadeInRight',
+            exit: 'animated fadeOutRight'
+          },
+          onShow: function() {
+              this.css({'width':'auto','height':'auto'});
+          }
+      }
+  )
+
+  }
+
+
+};
 
 var display_vars_from_OpenDabs = function(){
   $('#attributes2').empty();
   $('#warning_msg').empty();
 
   isAdding = false;
-  console.log("nboludo");
   let html = '';
   let html2 = '';
   let variables = {};

@@ -367,7 +367,7 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
       <button id= "add_var" class="btn btn-default btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
         <span class="glyphicon glyphicon-plus"></span>
       </button>
-      <button id="delete-var" class="btn btn-default btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDelete">
+      <button id="delete-var" class="btn btn-default btn-sm" data-toggle="modal"  data-dismiss="modal" data-target="#modalDeleteVariable">
         <span class="glyphicon glyphicon-trash"></span>
       </button>
 

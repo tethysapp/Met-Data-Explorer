@@ -90,6 +90,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='add-vars/',
                 controller='metdataexplorer2.variables.add_vars'
             ),
+            UrlMap(
+                name='get-vars',
+                url='get-vars/',
+                controller='metdataexplorer2.variables.getVariablesTds'
+            ),
             # UrlMap(
             #     name='getBoxValues',
             #     url='getBoxValues/',
