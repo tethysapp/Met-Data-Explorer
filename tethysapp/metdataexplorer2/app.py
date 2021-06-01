@@ -85,6 +85,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='delete-vars/',
                 controller='metdataexplorer2.variables.delete_vars'
             ),
+            UrlMap(
+                name='add-vars',
+                url='add-vars/',
+                controller='metdataexplorer2.variables.add_vars'
+            ),
             # UrlMap(
             #     name='getBoxValues',
             #     url='getBoxValues/',

@@ -1,4 +1,131 @@
 
+var VARIABLES_PACKAGE = (function(){
+
+  $(function(){
+    $("#btn-add-addVariables").on("click",addVariablesToTD);
+
+  })
+
+})()
+
+
+var addVariablesToTD = function(){
+  // let $modalAddVars = $("#modalAddVariablesForm");
+  // var datastring = $modalAddVars.serialize()
+  // datastring += `&actual-group=${current_Group}`
+  // datastring += `&actual-tdds=${current_tdds}`
+  // $.ajax({
+  //     type: "POST",
+  //     url: `add-vars/`,
+  //     data: datastring,
+  //     dataType: "HTML",
+  //     success: function(result) {
+  //       console.log("nola");
+  //
+  //     },
+  //     error:function(e){
+  //
+  //     }
+  //   })
+  let units = 'false';
+  let color = 'false';
+  let attr = {};
+  $('.attr-checkbox').each(function () {
+      if (this.checked) {
+          let var_string = $(this).val().split('_a_')[0];
+          let allDimensions = [];
+          var x = document.getElementById(`${var_string}_time`);
+          if(x != null){
+            var i;
+            for (i = 0; i < x.length; i++) {
+                allDimensions.push(x.options[i].text);
+            }
+            attr[var_string] = {
+                name: var_string,
+                dimensions: allDimensions,
+                units: units,
+                color: color,
+            }
+          }
+          else{
+            let time = '';
+            let location = '';
+            if ($(`#${var_string}_time`).val() == '') {
+                time = false;
+            } else {
+                time = $(`#${var_string}_time`).val();
+            }
+            if ($(`#${var_string}_location`).val() == '') {
+                location = [false, false];
+            } else {
+                lat = $(`#${var_string}_location`).val();
+            }
+            attr[var_string] = {
+                name: var_string,
+                dimensions: `${time},${location[0]},${location[1]}`,
+                units: units,
+                color: color,
+            }
+          }
+      }
+  })
+  let json_request = {
+    attributes: JSON.stringify(attr),
+    current_tdds: current_tdds,
+    current_group:current_Group
+  }
+  $.ajax({
+      type: "POST",
+      url: `add-vars/`,
+      data: json_request,
+      dataType: "json",
+      success: function(result) {
+        
+        $.notify(
+            {
+              message: `The Addition of Variables was Sucessful.`
+            },
+            {
+                type: "success",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      },
+      error:function(e){
+        console.log(e);
+        $.notify(
+            {
+              message: `There was an error while adding the variables to the Tredds file.`
+            },
+            {
+                type: "danger",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      }
+    })
+}
+
+
+
 var getTimeseries = function(coord, subsetURL_tempt) {
      if (subsetURL_tempt['opendapURL'] == '') {
          console.log('Please select a data layer.');
