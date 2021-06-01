@@ -30,8 +30,8 @@ def add_vars(request):
         file_tempt_dict = {}
         # tdds_objects = session.query(Thredds).filter(Thredds.title == actual_tdds)
         tdds_object = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
-        # print(tdds_object.__dict__)
-        # print(tdds_object.group.__dict__)
+        print(tdds_object.__dict__)
+        print(tdds_object.group.__dict__)
         # for td_single_obj in tdds_objects:
         #     if td_single_obj.group.name == actual_group and td_single_obj.title == actual_tdds:
         #         print(td_single_obj.group.name)
@@ -55,7 +55,7 @@ def add_vars(request):
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
             tdds_var_query = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).join(Variables).filter(Variables.name == key).count()
-            # print(tdds_var_query)
+            print(tdds_var_query)
             if tdds_var_query == 0:
                 variable_one = Variables(name= key,dimensions =tdds_info[key]['dimensions'],
                                     units = tdds_info[key]['units'],
@@ -82,10 +82,26 @@ def add_vars(request):
                 # tdds_object.attributes.append(unique_var)
 
         services_array.append(tdds_info)
-
         session.add(tdds_object)
         session.commit()
         session.close()
+
+        session = SessionMaker()
+        tdds_object2 = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
+        old_attr_arr = []
+        for old_attr in tdds_object2.attributes:
+            variable_obj = {}
+            variable_obj['name'] = old_attr.name
+            variable_obj['dimensions'] = old_attr.dimensions
+            variable_obj['units'] = old_attr.units
+            variable_obj['color'] = old_attr.color
+            variable_obj['metatada'] = old_attr.metadata_variable
+
+            old_attr_arr.append(variable_obj)
+        session.commit()
+        session.close()
+
+        group_obj['all_attr'] = old_attr_arr
         group_obj['services'] = services_array
 
     return JsonResponse(group_obj)

@@ -80,7 +80,146 @@ var addVariablesToTD = function(){
       data: json_request,
       dataType: "json",
       success: function(result) {
-        
+
+        let attr2 = JSON.parse(result['all_attr']);
+        let current_tdds_id;
+        Object.keys(id_dictionary).forEach(function(key) {
+            if(id_dictionary[key].split('_join_')[0] == current_tdds){
+              current_tdds_id = key;
+            }
+        })
+
+
+        if( current_tdds_id == tdds_displaying_metadata){
+          let table_content = $('#table_var_body').html().split('</tbody>')[0];
+          Object.keys(attr).forEach(function(single_att_key) {
+
+          // for (let i = 0; i< attr.length; ++i){
+            table_content += "<tr>";
+            // let var_metad = attr[i];
+            let var_metad = attr[single_att_key];
+            // MAKE THE HEADERS FIRST //
+            Object.keys(var_metad).forEach(function(key) {
+              if(key =="name"){
+                let fixed_name = var_metad[key].replace(/_/g, ' ')
+                table_content += `<td >${fixed_name}</td>`;
+                table_content += `<td>
+                          <input id = "${var_metad[key]}_${current_tdds}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
+                          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+                            <i class="fas fa-layer-group"></i>
+                          </button>
+                          <button id = "${var_metad[key]}_${current_tdds}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+                              <i class="fas fa-info-circle"></i>
+                          </button>
+                </td>`;
+              }
+              if(key != "metadata_var" && key != "color" && key != "name" ){
+
+                table_content += `<td>${var_metad[key]}</td>`;
+              }
+
+                // else{
+                //     table_content += `<td>${var_metad[key]}</td>`;
+                // }
+            });
+
+
+            table_content += "</tr>";
+          })
+          table_content += "</tbody>"
+          console.log(table_content)
+          $("#table_var_body").empty();
+
+          $(table_content).appendTo("#table_var_body");
+
+        }
+        // for (let i = 0; i< attr.length; ++i){
+        Object.keys(attr).forEach(function(single_att_key) {
+
+          $(`#${attr[single_att_key]['name']}_${new_title}_info`).on("click", function(){
+            $("#metadata_vars").empty();
+            let info_content = get_metadata_button(attr[single_att_key]);
+            $(info_content).appendTo("#metadata_vars");
+          })
+
+          // DEFINE THE LAYER ATTRIBUTES //
+
+          let layernameUI = `${attr[single_att_key]['name']}_${current_tdds_id}`
+          layers_style[layernameUI] = {}
+          layers_style[layernameUI]['title'] = attr[single_att_key]['name'];
+          layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+          layers_style[layernameUI]['wmsURL']= url_wms;
+          layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+          layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+          layers_style[layernameUI]['variable'] = attr[single_att_key]['name'];
+          layers_style[layernameUI]['subset'] = url_subset;
+          layers_style[layernameUI]['opendap'] = url;
+          layers_style[layernameUI]['spatial'] = {};
+          layers_style[layernameUI]['epsg'] = epsg;
+          layers_style[layernameUI]['selected'] = false;
+          // console.log(layers_style[layernameUI]);
+
+          // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
+          var check_id_var = `${attr[single_att_key]['name']}_${current_tdds_id}_check`
+          let input_check = $(`#${check_id_var}`);
+
+          input_check.on("change", function(){
+            updateWMSLayer(layernameUI,layers_style[layernameUI]);
+            // only one check box at a time //
+            $('input[type="checkbox"]').not(this).prop('checked', false);
+
+          });
+
+          // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+          $("#opacity-slider").on("change", function(){
+            changeOpacity(layernameUI,this.value);
+            layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+          })
+
+
+        });
+
+        //ADD event listener to display the modality after each click in the info logo///
+        let input_check_serv = $(`#${new_title}_check`);
+        input_check_serv.on("click", function(){
+           //CLEAN TABLE //
+           $("#table_div").empty()
+          //MAKE DROPDOWN MENU FOR VARIABLES//
+          options_vars(attr_array, new_title);
+          ///MAKE TABLE//
+
+          let table_content = get_table_vars(attr_array,new_title);
+          // console.log(table_content);
+          $(table_content).appendTo("#table_div");
+
+          // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
+          for (let i = 0; i< attr2.length; ++i){
+            $(`#${attr2[i]['name']}_${new_title}_info`).on("click", function(){
+              $("#metadata_vars").empty();
+              let info_content = get_metadata_button(attr2[i]);
+              $(info_content).appendTo("#metadata_vars");
+            })
+
+            // DEFINE THE LAYER ATTRIBUTES //
+
+            let layernameUI = `${attr[i]['name']}_${new_title}`;
+
+            // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
+            var check_id_var = `${attr2[i]['name']}_${new_title}_check`
+            let input_check = $(`#${check_id_var}`);
+            input_check.on("change", function(){
+              updateWMSLayer(layernameUI,layers_style[layernameUI]);
+              // only one check box at a time //
+              $('input[type="checkbox"]').not(this).prop('checked', false);
+            });
+            // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+            $("#opacity-slider").on("change", function(){
+              changeOpacity(layernameUI,this.value);
+              layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+            })
+          }
+        });
+
         $.notify(
             {
               message: `The Addition of Variables was Sucessful.`

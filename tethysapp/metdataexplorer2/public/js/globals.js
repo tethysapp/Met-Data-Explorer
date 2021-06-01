@@ -25,4 +25,5 @@ let current_tdds;
 let current_vars;
 let dict_file_vars = {};
 let isAdding = true;
+let tdds_displaying_metadata;
 // let array_services = []

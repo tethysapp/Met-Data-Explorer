@@ -171,15 +171,16 @@ var load_individual_thredds_for_group = function(group_name){
                    let input_check_serv = $(`#${new_title}_check`);
 
                    input_check_serv.on("click", function(){
+                     tdds_displaying_metadata = new_title;
                      //ONLY ONE CHECKBOX AT A TIME//
                      // $('input[type="checkbox"]').not(this).prop('checked', false);
 
                      //CLEAN TABLE //
-                     $("#table_div").empty()
+                     $("#table_div").empty();
                     //MAKE DROPDOWN MENU FOR VARIABLES//
                     options_vars(attributes, new_title);
                     ///MAKE TABLE//
-                    let table_content = get_table_vars(attributes,title);
+                    let table_content = get_table_vars(attributes,new_title);
 
 
                     // console.log(table_content);
@@ -187,7 +188,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                     // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
                     for (let i = 0; i< attributes.length; ++i){
-                      $(`#${attributes[i]['name']}_${title}_info`).on("click", function(){
+                      $(`#${attributes[i]['name']}_${new_title}_info`).on("click", function(){
                         $("#metadata_vars").empty();
                         let info_content = get_metadata_button(attributes[i]);
                         $(info_content).appendTo("#metadata_vars");
@@ -195,7 +196,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                       // DEFINE THE LAYER ATTRIBUTES //
 
-                      let layernameUI = `${attributes[i]['name']}_${title}`
+                      let layernameUI = `${attributes[i]['name']}_${new_title}`
                       layers_style[layernameUI] = {}
                       layers_style[layernameUI]['title'] = attributes[i]['name'];
                       layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
@@ -211,7 +212,7 @@ var load_individual_thredds_for_group = function(group_name){
                       // console.log(layers_style[layernameUI]);
 
                       // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                      var check_id_var = `${attributes[i]['name']}_${title}_check`
+                      var check_id_var = `${attributes[i]['name']}_${new_title}_check`
                       let input_check = $(`#${check_id_var}`);
 
                       input_check.on("change", function(){
@@ -440,7 +441,7 @@ var get_table_vars = function(attributes,title){
   // CLOSE HEADER //
   table_content += "</tr></thead>"
     // ADD ROWS //
-    table_content += "<tbody>"
+    table_content += `<tbody id= "table_var_body">`
     for (let i = 0; i< attributes.length; ++i){
       table_content += "<tr>";
       let var_metad = attributes[i];
@@ -477,19 +478,6 @@ var get_table_vars = function(attributes,title){
     return table_content
 
 
-}
-
-var get_metadata_button = function(attribute){
-  let table_content = '<table id = "table_metadata" class="table table-hover table-responsive table-sm"><thead><tr>'
-  table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
-  let var_metad = JSON.parse(attribute['metadata_var']);
-  let all_vars_keys = Object.keys(var_metad);
-
-  for(let j = 0; j< all_vars_keys.length; ++j){
-    table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
-  }
-  table_content += "</tbody> </table>"
-  return table_content
 }
 
 var get_all_the_var_metadata = function(attributes){
@@ -806,7 +794,7 @@ var addSingleThreddsServer = function(){
               $(newHtml).appendTo(`#${id_group_separator}`);
               let input_check_serv = $(`#${new_title}_check`);
 
-              input_check_serv.on("change", function(){
+              input_check_serv.on("click", function(){
                //ONLY ONE CHECKBOX AT A TIME//
                $('input[type="checkbox"]').not(this).prop('checked', false);
 
@@ -816,13 +804,13 @@ var addSingleThreddsServer = function(){
               options_vars(attr_array, new_title);
               ///MAKE TABLE//
 
-              let table_content = get_table_vars(attr_array,title);
+              let table_content = get_table_vars(attr_array,new_title);
               // console.log(table_content);
               $(table_content).appendTo("#table_div");
 
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
               for (let i = 0; i< attr.length; ++i){
-                $(`#${attr[i]['name']}_${title}_info`).on("click", function(){
+                $(`#${attr[i]['name']}_${new_title}_info`).on("click", function(){
                   $("#metadata_vars").empty();
                   let info_content = get_metadata_button(attr[i]);
                   $(info_content).appendTo("#metadata_vars");
@@ -830,7 +818,7 @@ var addSingleThreddsServer = function(){
 
                 // DEFINE THE LAYER ATTRIBUTES //
 
-                let layernameUI = `${attr[i]['name']}_${title}`
+                let layernameUI = `${attr[i]['name']}_${new_title}`
                 layers_style[layernameUI] = {}
                 layers_style[layernameUI]['title'] = attr[i]['name'];
                 layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
@@ -846,7 +834,7 @@ var addSingleThreddsServer = function(){
                 console.log(layers_style[layernameUI]);
 
                 // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                var check_id_var = `${attr[i]['name']}_${title}_check`
+                var check_id_var = `${attr[i]['name']}_${new_title}_check`
                 let input_check = $(`#${check_id_var}`);
                 input_check.on("change", function(){
                   updateWMSLayer(layernameUI,layers_style[layernameUI]);
