@@ -213,6 +213,7 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
 
 var updateWMSLayer = function(layernameUI,x) {
   wmsURL = x['wmsURL'];
+  console.log(wmsURL);
   layer = x['variable'];
   range =x['range'];
   style = x['style'];

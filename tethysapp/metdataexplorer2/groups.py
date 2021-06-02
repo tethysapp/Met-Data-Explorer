@@ -41,6 +41,7 @@ def get_files_and_folders(request):
         return JsonResponse({'dataTree': exception})
 
     folders = ds.catalog_refs
+    print(folders)
     for x in enumerate(folders):
         try:
             TDSCatalog(folders[x[0]].href)
@@ -49,6 +50,7 @@ def get_files_and_folders(request):
             print(e)
 
     files = ds.datasets
+    print(files)
     for x in enumerate(files):
         files_dict[files[x[0]].name] = files[x[0]].access_urls
 
