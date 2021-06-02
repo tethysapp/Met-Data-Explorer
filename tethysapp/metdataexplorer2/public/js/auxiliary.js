@@ -96,6 +96,27 @@ var AUX_PACKAGE = (function(){
 
 })()
 
+
+var metadata_button_modal = function(infoService){
+  let table_content = '<table id = "table_metadata_file2" class="table table-hover table-condensed"><thead><tr>'
+  table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
+  // let var_metad = JSON.parse(attribute['metadata_var']);
+  let mtda_objt = infoService;
+
+  let all_file_keys = Object.keys(mtda_objt);
+
+  for(let j = 0; j< all_file_keys.length; ++j){
+    if(all_file_keys[j] != 'attributes'){
+      table_content += `<tr><td>${all_file_keys[j]}</td><td>${mtda_objt[all_file_keys[j]]}</td></tr>`;
+    }
+    else {
+      table_content += `<tr><td>${all_file_keys[j]}</td><td>${Object.keys(mtda_objt[all_file_keys[j]]).length}</td></tr>`;
+    }
+  }
+  table_content += "</tbody> </table>"
+  return table_content
+
+}
 var make_metadata_file_table = function(metadata_string){
   let table_content = '<table id = "table_metadata_file" class="table table-hover table-condensed"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'

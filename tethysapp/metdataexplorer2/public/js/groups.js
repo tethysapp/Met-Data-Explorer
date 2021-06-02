@@ -629,23 +629,24 @@ var addServiceToTable = function(){
     }
     let html_row = `
     <tr>
-      <th scope="row">${add_services_list.length}</th>
+      <th class = "hidden" scope="row">${add_services_list.length}</th>
       <td>
         <input type="checkbox" class="attr-checkbox" value="${$('#addService-title').val()}">
       </td>
       <td>
         ${$('#addService-title').val()}
+        <button id= "btn-metadata-service" type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#modalMetaDataServiceInfo"><span class="glyphicon glyphicon-question-sign"></button>
       </td>
       <td>
         <select id= "${$('#addService-title').val()}_vars" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini" data-style="btn-info">${options}</select>
       </td>
-      <td>
-        ${url}
-      </td>
     </tr>
     `
-    $( "#added_thredds_files_table_body").append(html_row);
+    $("#added_thredds_files_table_body").append(html_row);
     $(`#${$('#addService-title').val()}_vars`).selectpicker('refresh');
+    let table_sign = metadata_button_modal(databaseInfo);
+    $('#metadata_service_info').empty();
+    $(table_sign).appendTo("#metadata_service_info");
   }
   catch(error){
     console.log(error);
@@ -821,16 +822,23 @@ var addFileMetadata = function(fileMetadata) {
 }
 
 var getFoldersAndFiles = function() {
-  let elementForm= $("#modalAddServiceForm");
-  let datastring= elementForm.serialize();
-  let form_elements = datastring.split("&");
-  let url_alone = form_elements[form_elements.length -1]
+  // let elementForm= $("#modalAddServiceForm");
+  // let datastring= elementForm.serialize();
+  // console.log(datastring);
+  // let form_elements = datastring.split("&");
+  // let url_alone = form_elements[form_elements.length -1]
+  console.log($("#url").val())
+  let url_alone = {
+    url:$("#url").val()
+  }
+  // let url_alone =  encodeURIComponent($("#url").val());
+  // console.log(url_alone);
   $('#name-in-form').attr('data-type', 'folder');
   $('#loading-group').removeClass("hidden");
     $.ajax({
         url: 'getFilesAndFolders/',
         data: url_alone,
-        dataType: "HTML",
+        dataType: "json",
         type: "GET",
         success: function (data) {
             var result = JSON.parse(data);
@@ -893,6 +901,7 @@ var getFoldersAndFiles = function() {
 
         },
         error: function(error){
+          console.log(error);
           $('#loading-group').addClass("hidden");
           $.notify(
               {
