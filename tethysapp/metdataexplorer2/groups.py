@@ -27,7 +27,8 @@ def thredds_proxy(request):
         return JsonResponse({})
 
 def get_files_and_folders(request):
-    url = request.GET['url']
+    url = request.POST.get('url')
+    print(url)
     data_tree = {}
     folders_dict = {}
     files_dict = {}
@@ -58,6 +59,7 @@ def get_files_and_folders(request):
     data_tree['files'] = files_dict
 
     correct_url = ds.catalog_url
+    print(correct_url)
     return JsonResponse({'dataTree': data_tree, 'correct_url': correct_url})
 
 def get_variables_and_file_metadata(request):

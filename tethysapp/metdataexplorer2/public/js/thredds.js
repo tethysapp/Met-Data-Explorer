@@ -230,7 +230,7 @@ var load_individual_thredds_for_group = function(group_name){
            data: group_name_obj,
            success: result => {
              try{
-               console.log(result);
+               // console.log(result);
                let servers = result["thredds"]
                //USE A FUNCTION TO FIND THE LI ASSOCIATED WITH THAT GROUP  AND DELETE IT FROM THE MAP AND MAKE ALL
                // THE CHECKBOXES VISIBLE //
@@ -262,7 +262,7 @@ var load_individual_thredds_for_group = function(group_name){
                        attributes,
                        metadata_file
                    } = server
-                   console.log(metadata_file);
+                   // console.log(metadata_file);
                    let unique_id_tds = uuidv4();
                    id_dictionary[unique_id_tds] = `${title}_join_${group_name}`
                    let layers_style = {}

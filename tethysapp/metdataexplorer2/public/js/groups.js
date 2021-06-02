@@ -828,7 +828,7 @@ var getFoldersAndFiles = function() {
   // let form_elements = datastring.split("&");
   // let url_alone = form_elements[form_elements.length -1]
   console.log($("#url").val())
-  let url_alone = {
+  let request_obj = {
     url:$("#url").val()
   }
   // let url_alone =  encodeURIComponent($("#url").val());
@@ -837,9 +837,9 @@ var getFoldersAndFiles = function() {
   $('#loading-group').removeClass("hidden");
     $.ajax({
         url: 'getFilesAndFolders/',
-        data: url_alone,
+        data: request_obj,
         dataType: "json",
-        type: "GET",
+        type: "POST",
         success: function (data) {
             var result = JSON.parse(data);
             console.log(result);

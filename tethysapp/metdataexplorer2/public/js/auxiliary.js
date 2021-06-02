@@ -373,7 +373,7 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
 
 }
 var html_for_servers = function (title,group_name, url_opendap, url_wms, url_subset,isNew){
-  console.log(url_subset);
+  // console.log(url_subset);
   try{
     let good_title = id_dictionary[title].split('_join_')[0];
 
