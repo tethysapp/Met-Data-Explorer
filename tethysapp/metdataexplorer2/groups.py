@@ -89,6 +89,7 @@ def get_variables_and_file_metadata(request):
 
 def add_group(request):
     group_obj={}
+    single_obj={}
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
@@ -154,11 +155,9 @@ def add_group(request):
                 thredds_one.attributes.append(variable_one)
 
             group_thredds.thredds_server.append(thredds_one)
-            services_array.append(servi)
-            # print(file_tempt_dict)
-            # print("##############################")
-            # print(variable_metadata)
-
+            single_obj = servi
+            single_obj['metadata_file'] = json.dumps(file_tempt_dict)
+            services_array.append(single_obj)
 
         session.add(group_thredds)
         session.commit()

@@ -260,8 +260,9 @@ var load_individual_thredds_for_group = function(group_name){
                        description,
                        timestamp,
                        attributes,
-                       metadata_td_file
+                       metadata_file
                    } = server
+                   console.log(metadata_file);
                    let unique_id_tds = uuidv4();
                    id_dictionary[unique_id_tds] = `${title}_join_${group_name}`
                    let layers_style = {}
@@ -295,11 +296,15 @@ var load_individual_thredds_for_group = function(group_name){
 
                      //CLEAN TABLE //
                      $("#table_div").empty();
+                     $("#siteDes").empty();
+
                     //MAKE DROPDOWN MENU FOR VARIABLES//
                     options_vars(attributes, new_title);
                     ///MAKE TABLE//
                     let table_content = get_table_vars(attributes,new_title);
 
+                    let info_file = make_metadata_file_table(metadata_file);
+                    $(info_file).appendTo("#siteDes");
 
                     // console.log(table_content);
                     $(table_content).appendTo("#table_div");
@@ -309,6 +314,7 @@ var load_individual_thredds_for_group = function(group_name){
                       $(`#${attributes[i]['name']}_${new_title}_info`).on("click", function(){
                         $("#metadata_vars").empty();
                         let info_content = get_metadata_button(attributes[i]);
+                        console.log();
                         $(info_content).appendTo("#metadata_vars");
                       })
 
@@ -928,7 +934,9 @@ var addSingleThreddsServer = function(){
                $('input[type="checkbox"]').not(this).prop('checked', false);
 
                //CLEAN TABLE //
-               $("#table_div").empty()
+               $("#table_div").empty();
+               $("#siteDes").empty();
+
               //MAKE DROPDOWN MENU FOR VARIABLES//
               options_vars(attr_array, new_title);
               ///MAKE TABLE//
@@ -936,6 +944,8 @@ var addSingleThreddsServer = function(){
               let table_content = get_table_vars(attr_array,new_title);
               // console.log(table_content);
               $(table_content).appendTo("#table_div");
+              let info_file = make_metadata_file_table(data['services'][0]['metadata_file']);
+              $(info_file).appendTo("#siteDes");
 
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
               for (let i = 0; i< attr.length; ++i){

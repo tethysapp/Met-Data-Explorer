@@ -95,6 +95,22 @@ var AUX_PACKAGE = (function(){
     })
 
 })()
+
+var make_metadata_file_table = function(metadata_string){
+  let table_content = '<table id = "table_metadata_file" class="table table-hover table-condensed"><thead><tr>'
+  table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
+  // let var_metad = JSON.parse(attribute['metadata_var']);
+  let mtda_objt = JSON.parse(metadata_string);
+
+  let all_file_keys = Object.keys(mtda_objt);
+
+  for(let j = 0; j< all_file_keys.length; ++j){
+    table_content += `<tr><td>${all_file_keys[j]}</td><td>${mtda_objt[all_file_keys[j]]}</td></tr>`
+  }
+  table_content += "</tbody> </table>"
+  return table_content
+
+}
 var general_search = function(id_search_input, id_table){
   try{
     input = document.getElementById(`${id_search_input}`);

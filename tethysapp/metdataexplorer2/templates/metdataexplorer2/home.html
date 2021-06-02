@@ -62,22 +62,12 @@
   <img id="graphAddLoading" class="view-file hidden" alt="loading gif" src="{% static 'metdataexplorer2/images/loading.gif' %}">
   <div id="carouselExampleIndicators" class="carousel slide" data-interval="false" >
     <ol class="carousel-indicators">
-      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">
-      </li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
       <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
-      <div id = "tables_info" class="item active">
-          <div id="options">
-            <h3 id= "siteName_title"> Please select a Station/Platform on the map</h3>
-              <p id= "siteDes">
-              </p>
-            <div id="table_div"  class="table-responsive">
-
-            </div>
-          </div>
-      </div>
-      <div id = "plots_info" class="item">
+      <div id = "plots_info" class="item active">
         <div id="plots2">
           <h3></h3>
           <div id= "ipad_lay_contr">
@@ -94,8 +84,6 @@
                   <option> Whisker and Box </option>
               </optgroup>
               </select>
-
-
             </div>
             <div id= "timeControllers" class="containerTime">
                 <div class='col-md-5'>
@@ -135,9 +123,22 @@
           </div>
           <div id="plots"></div>
         </div>
-
-
       </div>
+
+      <div id = "table_metadata_info" class="item">
+            <h3 id= "siteName_title"> Thredds File Metadata</h3>
+            <div id= "siteDes"></div>
+      </div>
+      <div id = "tables_info" class="item">
+          <div id="options">
+            <h3 id= "siteName_title"> Variables Metadata</h3>
+
+            <div id="table_div"  class="table-responsive">
+
+            </div>
+          </div>
+      </div>
+
     </div>
     <a class="left carousel-control tool_tip_h" href="#carouselExampleIndicators" data-slide="prev" data-toggle="tooltip" data-placement="top" title="Station/Platform Information">
       <span class="golang glyphicon glyphicon-list-alt"></span>

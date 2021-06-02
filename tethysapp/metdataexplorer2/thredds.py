@@ -132,6 +132,7 @@ def add_tdds(request):
             thredds_one.attributes.append(variable_one)
 
         group_thredds.thredds_server.append(thredds_one)
+        tdds_info['metadata_file'] = json.dumps(file_tempt_dict)
         services_array.append(tdds_info)
 
         session.add(group_thredds)
