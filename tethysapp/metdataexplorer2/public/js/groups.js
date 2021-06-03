@@ -839,65 +839,89 @@ var getFoldersAndFiles = function() {
         url: 'getFilesAndFolders/',
         data: request_obj,
         dataType: "json",
-        type: "POST",
-        success: function (data) {
-            var result = JSON.parse(data);
+        contentType: "application/json",
+        method: "GET",
+        success: function (result) {
+          try{
             console.log(result);
-            $("#folders_structures").show();
+              $("#folders_structures").show();
 
-            var dataTree = result["dataTree"];
-            if (dataTree == "Invalid URL") {
-                console.log(dataTree);
-            }
-            else {
-                $("#filetree-div").css("display", "block");
-                // $("#file-info-div").css("display", "none");
-                var correctURL = result["correct_url"];
-                let html =
-                `<tbody>`
+              var dataTree = result["dataTree"];
+              if (dataTree == "Invalid URL") {
+                  console.log(dataTree);
+              }
+              else {
+                  $("#filetree-div").css("display", "block");
+                  // $("#file-info-div").css("display", "none");
+                  var correctURL = result["correct_url"];
+                  let html =
+                  `<tbody>`
 
-                console.log(dataTree);
-                console.log(Object.keys(dataTree["files"]).length );
-                if(Object.keys(dataTree["files"]).length !== 0){
-                  for (var file in dataTree["files"]) {
-                      html += `
-                      <tr>
-                      <td>
-                      <div data-wms-url="${dataTree["files"][file]["WMS"]}"
-                                data-subset-url="${dataTree["files"][file]["NetcdfSubset"]}"
-                                data-opendap-url="${dataTree["files"][file]["OPENDAP"]}"
-                                class="file" onclick="updateFilepath.call(this)">
-                                <span class="glyphicon glyphicon-file" style="height: 20px; margin: 5px 10px 5px 10px"></span>
-                                <p style="padding: 5px 5px 5px 0px">${file}</p></div>
-                        </td>
-                      </tr>`
+                  console.log(dataTree);
+                  console.log(Object.keys(dataTree["files"]).length );
+                  if(Object.keys(dataTree["files"]).length !== 0){
+                    for (var file in dataTree["files"]) {
+                        html += `
+                        <tr>
+                        <td>
+                        <div data-wms-url="${dataTree["files"][file]["WMS"]}"
+                                  data-subset-url="${dataTree["files"][file]["NetcdfSubset"]}"
+                                  data-opendap-url="${dataTree["files"][file]["OPENDAP"]}"
+                                  class="file" onclick="updateFilepath.call(this)">
+                                  <span class="glyphicon glyphicon-file" style="height: 20px; margin: 5px 10px 5px 10px"></span>
+                                  <p style="padding: 5px 5px 5px 0px">${file}</p></div>
+                          </td>
+                        </tr>`
+                    }
+
                   }
 
-                }
+                  for (var folder in dataTree["folders"]) {
+                      html += `
+                      <tr>
+                      <td> <div data-url="${dataTree["folders"][folder]}" class="folder"
+                       onclick="updateFilepath.call(this)">
+                       <span class="glyphicon glyphicon-folder-open" style="height: 20px; margin: 5px 10px 5px 10px"></span>
+                       <p style="padding: 5px 5px 5px 0px">${folder}</p></div>
+                      </td>
+                      </tr>
+                      `
+                  }
+                  html += `</tbody>`
+                  $("#available_services").removeClass("hidden");
+                  $("#filetree-div").empty();
+                  // .append(html);
+                  $(html).appendTo(`#filetree-div`);
+                  $("#url").val(correctURL);
+                  if (URLpath[URLpath.length - 1] !== correctURL) {
+                      URLpath.push(correctURL);
+                  }
+              }
+              // $("#loading-modal").modal("hide");
+              $('#loading-group').addClass("hidden");
 
-                for (var folder in dataTree["folders"]) {
-                    html += `
-                    <tr>
-                    <td> <div data-url="${dataTree["folders"][folder]}" class="folder"
-                     onclick="updateFilepath.call(this)">
-                     <span class="glyphicon glyphicon-folder-open" style="height: 20px; margin: 5px 10px 5px 10px"></span>
-                     <p style="padding: 5px 5px 5px 0px">${folder}</p></div>
-                    </td>
-                    </tr>
-                    `
-                }
-                html += `</tbody>`
-                $("#available_services").removeClass("hidden");
-                $("#filetree-div").empty();
-                // .append(html);
-                $(html).appendTo(`#filetree-div`);
-                $("#url").val(correctURL);
-                if (URLpath[URLpath.length - 1] !== correctURL) {
-                    URLpath.push(correctURL);
-                }
-            }
-            // $("#loading-modal").modal("hide");
+          }
+          catch(e){
             $('#loading-group').addClass("hidden");
+            $.notify(
+                {
+                    message: `Not able to identify the THREDDS endpoint`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
 
         },
         error: function(error){

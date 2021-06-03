@@ -27,7 +27,7 @@ def thredds_proxy(request):
         return JsonResponse({})
 
 def get_files_and_folders(request):
-    url = request.POST.get('url')
+    url = request.GET.get('url')
     print(url)
     data_tree = {}
     folders_dict = {}
@@ -42,7 +42,6 @@ def get_files_and_folders(request):
         return JsonResponse({'dataTree': exception})
 
     folders = ds.catalog_refs
-    print(folders)
     for x in enumerate(folders):
         try:
             TDSCatalog(folders[x[0]].href)
@@ -51,7 +50,6 @@ def get_files_and_folders(request):
             print(e)
 
     files = ds.datasets
-    print(files)
     for x in enumerate(files):
         files_dict[files[x[0]].name] = files[x[0]].access_urls
 
@@ -59,8 +57,11 @@ def get_files_and_folders(request):
     data_tree['files'] = files_dict
 
     correct_url = ds.catalog_url
-    print(correct_url)
-    return JsonResponse({'dataTree': data_tree, 'correct_url': correct_url})
+    final_obj = {}
+    final_obj['dataTree'] = data_tree
+    final_obj['correct_url'] = correct_url
+    print(final_obj)
+    return JsonResponse(final_obj)
 
 def get_variables_and_file_metadata(request):
     url = request.GET['opendapURL']
