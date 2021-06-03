@@ -848,7 +848,24 @@ var getFoldersAndFiles = function() {
 
               var dataTree = result["dataTree"];
               if (dataTree == "Invalid URL") {
-                  console.log(dataTree);
+                  $.notify(
+                      {
+                          message: `Invalid THREDDS Endpoint`
+                      },
+                      {
+                          type: "danger",
+                          allow_dismiss: true,
+                          z_index: 20000,
+                          delay: 5000,
+                          animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                          },
+                          onShow: function() {
+                              this.css({'width':'auto','height':'auto'});
+                          }
+                      }
+                  )
               }
               else {
                   $("#filetree-div").css("display", "block");

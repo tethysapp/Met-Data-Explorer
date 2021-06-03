@@ -226,6 +226,7 @@ var updateWMSLayer = function(layernameUI,x) {
         // mapObj.removeLayer(dataLayerObj);
         delete layers_dict[`${layernameUI}_check`];
         // x['selected'] = false;
+        console.log("taking off");
     }
     else{
       Object.keys(layers_dict).forEach(function(key) {
@@ -237,6 +238,7 @@ var updateWMSLayer = function(layernameUI,x) {
       dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
       dataLayerObj.setOpacity(opacity);
       layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+      console.log("showing");
     }
 
 }
