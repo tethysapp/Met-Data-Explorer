@@ -95,7 +95,7 @@ var MAP_PACKAGE = (function(){
     let basemapObj = basemaps_init(mapObj);
     layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
     /* Drawing/Layer Controls */
-    let drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
+    drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
     let shpLayer;
 
     let drawControl = new L.Control.Draw({
@@ -118,7 +118,7 @@ var MAP_PACKAGE = (function(){
     mapObj.addControl(drawControl);
 
 
-
+    $(".leaflet-draw-section").hide();
 
 
     $('#draw-on-map-button').click(function(){
@@ -133,6 +133,7 @@ var MAP_PACKAGE = (function(){
     drawnItems.on('click', function (e) {
         let coord = e.layer.getLatLngs();
         getTimeseries(coord);
+        console.log("draw item");
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
@@ -147,9 +148,12 @@ var MAP_PACKAGE = (function(){
 
         } else {
             drawnItems.addLayer(e.layer);
-            let coord = e.layer.getLatLngs();
+            console.log(e.layer);
+            // let coord = e.layer.getLatLngs();
+            input_spatial = JSON.stringify(e.layer.toGeoJSON());
+            console.log(input_spatial);
             // getFullArray();
-            getSingleTS();
+            // getSingleTS();
             // getTimeseries(coord);
 
         }

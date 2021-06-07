@@ -108,6 +108,21 @@
                 </div>
             </div>
           </div>
+          <div id= "thirdContainer">
+            <select id= "spatial_input" class="selectpicker" data-live-search="false" data-size="mini">
+                <option value="sptial_in">Spatial Input</option>
+                  <option value="up_shp" >Upload ShapeFile </option>
+                  <option value = "draw_map"> Draw on Map</option>
+                  <option value = "geosev_wmf"> Geoserver WMF Service</option>
+            </select>
+            <select id= "epsg_options" class="selectpicker" data-live-search="false" data-size="mini">
+                <option value="epsg_option">EPSG Options</option>
+                  <option value="up_shp" >Upload ShapeFile </option>
+                  <option value = "draw_map"> Draw on Map</option>
+                  <option value = "geosev_wmf"> Geoserver WMF Service</option>
+            </select>
+
+          </div>
           <div id= "secondContainer" class="controlGraphs2">
               <button type="button" id= "update_graphs" class="btn btn-success">Plot Time Series</button>
               <select id= "download_dropdown" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini">
@@ -116,10 +131,8 @@
                     <option value = "WaterML1.0">WaterML 1.0</option>
                     <option value = "WaterML2.0">WaterML 2.0</option>
                     <option value = "NetCDF">NetCDF</option>
-
               </select>
           </div>
-
           </div>
           <div id="plots"></div>
         </div>

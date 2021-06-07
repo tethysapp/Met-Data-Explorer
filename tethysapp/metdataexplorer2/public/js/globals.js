@@ -26,4 +26,5 @@ let current_vars;
 let dict_file_vars = {};
 let isAdding = true;
 let tdds_displaying_metadata;
+let input_spatial;
 // let array_services = []

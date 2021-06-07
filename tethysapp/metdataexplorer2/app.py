@@ -66,11 +66,6 @@ class Metdataexplorer2(TethysAppBase):
                 controller='metdataexplorer2.groups.thredds_proxy'
             ),
             UrlMap(
-                name='threddsProxy',
-                url='threddsProxy/',
-                controller='metdataexplorer2.groups.thredds_proxy'
-            ),
-            UrlMap(
                 name='add-thredds',
                 url='add-thredds/',
                 controller='metdataexplorer2.thredds.add_tdds'
@@ -103,7 +98,7 @@ class Metdataexplorer2(TethysAppBase):
             UrlMap(
                 name='getFullArray',
                 url='getFullArray/',
-                controller='metdataexplorer2.thredds.get_full_array'
+                controller='metdataexplorer2.variables.get_full_array'
             ),
 
 

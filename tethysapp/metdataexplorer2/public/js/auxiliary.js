@@ -216,7 +216,7 @@ var options_vars = function(attributes, new_title){
     variable_select.selectpicker("refresh");
     for(var i= 0;  i< attributes.length; ++i){
 
-      let option = `<option value= ${attributes[i]['name']}_${new_title} >${attributes[i]['name']}</option>`;
+      let option = `<option value= ${attributes[i]['name']}>${attributes[i]['name']}</option>`;
       variable_select.append(option);
       variable_select.selectpicker("refresh");
     }

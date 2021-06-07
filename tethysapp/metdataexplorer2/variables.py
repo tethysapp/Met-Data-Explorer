@@ -136,7 +136,6 @@ def delete_vars(request):
 
     return JsonResponse(final_list)
 
-
 def getVariablesTds(request):
     final_list = {}
     SessionMaker = app.get_persistent_store_database(
@@ -171,3 +170,123 @@ def getVariablesTds(request):
     session.close()
 
     return JsonResponse(final_list)
+
+def get_full_array(request):
+    SessionMaker = app.get_persistent_store_database(
+        Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()
+    attribute_array = {}
+    # attribute_array = json.loads(request.GET['containerAttributes'])
+    actual_group = request.GET['group']
+    actual_tdds = request.GET['tds']
+    single_var = request.GET['attr_name']
+    input_spatial = request.GET['input_sptl']
+
+    tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
+
+    attribute_array['title'] = tdds_group.title
+    attribute_array['description'] = tdds_group.description
+    attribute_array['timestamp'] = tdds_group.timestamp
+    attribute_array['epsg'] = tdds_group.epsg
+    attribute_array['type'] = 'file'
+    attribute_array['url'] = tdds_group.url
+    attribute_array['url_wms'] = tdds_group.url_wms
+    attribute_array['url_netcdf'] = tdds_group.url_subset
+    attribute_array['spatial'] = json.loads(input_spatial)
+
+    var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
+    attr_variable = {}
+    attr_variable['color'] = var_row.color
+    attr_variable['dimensions'] = var_row.dimensions
+    attr_variable['units'] = var_row.units
+    attr_variable['name'] = var_row.name
+
+    attribute_array['attributes'] = attr_variable
+
+    data = organize_array(attribute_array)
+    #print(data)
+    return JsonResponse({'result': data})
+
+
+def organize_array(attribute_array):
+    access_urls = {}
+    variables = ''
+    if attribute_array['timestamp'] == 'true':
+        access_urls, file_name = iterate_files(attribute_array['url'])
+    else:
+        access_urls['OPENDAP'] = attribute_array['url']
+        access_urls['WMS'] = attribute_array['url_wms']
+        access_urls['NetcdfSubset'] = attribute_array['url_netcdf']
+
+    variable = attribute_array['attributes']['name']
+    # variables += 'var=' + variable + '&'
+
+    # for variable in attribute_array['attributes']:
+    #     variables += 'var=' + variable + '&'
+
+    epsg = attribute_array['epsg']
+    geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
+    print(geojson_path)
+    data = {}
+    # for variable in attribute_array['attributes']:
+    print(attribute_array['attributes']['dimensions'])
+    dims = attribute_array['attributes']['dimensions']
+    dim_order = ("time", "lat", "lon")
+    # dim_order = (dims[0], dims[1], dims[2])
+    stats_value = 'mean'
+    feature_label = 'id'
+    timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
+    print(timeseries)
+    data[variable] = timeseries
+    # for variable in attribute_array['attributes']:
+    #     # print(variable)
+    #     dims = attribute_array['attributes'][variable]['dimensions'].split(',')
+    #     dim_order = (dims[0], dims[1], dims[2])
+    #     stats_value = 'mean'
+    #     feature_label = 'id'
+    #     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
+    #     data[variable] = timeseries
+
+    os.remove(geojson_path)
+    return data
+
+
+def get_geojson_and_data(spatial, epsg):
+    geojson_path = os.path.join(tempfile.gettempdir(), 'temp.json')
+    print(type(spatial))
+    if type(spatial) == dict:
+        spatial['properties']['id'] = 'Shape'
+        data = os.path.join(tempfile.gettempdir(), 'new_geo_temp.json')
+        with open(data, 'w') as f:
+            dump(spatial, f)
+        geojson_geometry = gpd.read_file(data)
+        os.remove(data)
+    elif spatial[:4] == 'http':
+        data = requests.Request('GET', spatial).url
+        geojson_geometry = gpd.read_file(data)
+    else:
+        data = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', spatial + '.geojson')
+        geojson_geometry = gpd.read_file(data)
+
+    if not str(epsg) == 'false':
+        if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
+            geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
+        if len(epsg) > 4:
+            shift_lat = int(epsg.split(',')[2][2:])
+            shift_lon = int(epsg.split(',')[1][2:])
+            geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
+
+    geojson_geometry.to_file(geojson_path, driver="GeoJSON")
+
+    return geojson_path
+
+
+def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label, stats):
+    #print('Getting TimeSeries')
+    print(var)
+    print(files)
+    series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
+    #series.interp_units = True
+    timeseries_array = series.shape(vector=geojson_path)
+    timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+    return timeseries_array
