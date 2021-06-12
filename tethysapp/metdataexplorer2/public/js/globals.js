@@ -9,7 +9,7 @@ let containerAttributes = false;
 //timeseries.js
 let chartdata = {};
 //databases.js
-let editing = false;
+let isEditing = false;
 let urlInfoBox = false;
 let fullArrayTimeseries = {};
 let spatial_shape = false;

@@ -1,0 +1,59 @@
+{% load staticfiles %}
+
+<div id="modalEditServices" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit the Thredds Server File</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modalEditServiceForm">
+
+                <br>
+                <label for="editService-title">Title:</label>
+                <input type="text" class="form-control" name="editService-title" id="editService-title" placeholder="Please enter a valid Title">
+                <label for="editService-description"> Description: </label>
+                <textarea name="textarea" rows="10" cols="50" class="form-control" name="editService-description" id="editService-description" placeholder="Please enter a valid Description"></textarea>
+                <label for="url2">Endpoint/URL:</label>
+                <input type="text" class="form-control" name="url" id="url2">
+                <br>
+                <div>
+                  <label for="epsg-input2" style="float: left;">EPSG Code:
+                    <button id= "btn-info-epsg2" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-info-sign"></span></button>
+                  </label>
+                  <input id="epsg-input2" class="form-control">
+                  <p id="info-epsg2" class="hidden">
+                    <em>The EPSG Code input bar you can define a shift in coordinates. First, add the EPSG code (eg. 4326) followed by “,x:” amount to shift in x “,y:” amount to shift in y.
+                      So a fully formatted EPSG code with a shift defined would look like this: 4326,x:360,y:180. This would shift all the coordinates in your geojson feature 360 degrees to
+                      the right and 180 degrees up. Be careful when computing the amount by which to shift your coordinates. For example, longitude coordinates from -180 to 180
+                      to match a gridded dataset with longitude coordinates from 0 to 360, the coordinates would need to be shifted by 360 and not just by 180.</em>
+                  </p>
+
+
+                  <label for="spatial-input2" style="float: left;">Spatial Extents: </label>
+                  <br>
+                  <input id="spatial-input2" class="form-control">
+
+                  <div class = "buttons_spatial">
+                      <button id="upload-shape-resource" type="button" class="btn btn-info button_h">Upload Shapefile</button>
+                      <button id="draw-on-map-button2" type="button" class="btn btn-info button_h">Draw on Map</button>
+                      <button id="link-geoserver" type="button" class="btn btn-info button_h">Geoserver</button>
+                  </div>
+                </div>
+
+                <div class="loading_id">
+                </div>
+                <div class="warning"> </div>
+
+              </form>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-edit-service" class="btn btn-success hidden"> Edit Thredds File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

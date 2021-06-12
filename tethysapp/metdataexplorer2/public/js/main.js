@@ -10,6 +10,15 @@ var MET_DATA_EXPLORER_PACKAGE = (function(){
       }
 
     })
+    $("#btn-info-epsg2").on("click", function(){
+      if($("#info-epsg2").attr("class") == "hidden"){
+        $("#info-epsg2").removeClass("hidden");
+      }
+      else{
+        $("#info-epsg2").addClass("hidden");
+      }
+
+    })
 
     load_groups_start();
   })

@@ -128,6 +128,11 @@ var MAP_PACKAGE = (function(){
       $('#modalAddServices').modal('hide');
       getThreddsBounds();
     });
+    $('#draw-on-map-button2').click(function(){
+      isEditing = true;
+      $('#modalEditServices').modal('hide');
+      getThreddsBounds();
+    });
     $('#get-data-button').click(getDataBounds);
 
     drawnItems.on('click', function (e) {
@@ -137,6 +142,7 @@ var MAP_PACKAGE = (function(){
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
+      if (!isEditing) {
         if (urlInfoBox == true) {
 
           let coord = e.layer.toGeoJSON();
@@ -157,6 +163,15 @@ var MAP_PACKAGE = (function(){
             // getTimeseries(coord);
 
         }
+      }
+      else{
+        isEditing = false;
+        let coord = e.layer.toGeoJSON();
+        $('#spatial-input2').val(JSON.stringify(coord));
+        $('#modalEditServices').modal('show');
+
+      }
+
     });
 
 
