@@ -57,8 +57,18 @@
                     </div>
                 </div>
                 <div>
-                  <label for="epsg-input" style="float: left;">EPSG Code:</label>
+                  <label for="epsg-input" style="float: left;">EPSG Code:
+                    <button id= "btn-info-epsg" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-info-sign"></span></button>
+                  </label>
                   <input id="epsg-input" class="form-control">
+                  <p id="info-epsg" class="hidden">
+                    <em>The EPSG Code input bar you can define a shift in coordinates. First, add the EPSG code (eg. 4326) followed by “,x:” amount to shift in x “,y:” amount to shift in y.
+                      So a fully formatted EPSG code with a shift defined would look like this: 4326,x:360,y:180. This would shift all the coordinates in your geojson feature 360 degrees to
+                      the right and 180 degrees up. Be careful when computing the amount by which to shift your coordinates. For example, longitude coordinates from -180 to 180
+                      to match a gridded dataset with longitude coordinates from 0 to 360, the coordinates would need to be shifted by 360 and not just by 180.</em>
+                  </p>
+
+
                   <label for="spatial-input" style="float: left;">Spatial Extents: </label>
                   <br>
                   <input id="spatial-input" class="form-control">
