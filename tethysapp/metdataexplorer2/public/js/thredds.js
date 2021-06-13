@@ -31,6 +31,8 @@ var THREDDS_PACKAGE = (function(){
             });
         }
     });
+
+    $('#btn-edit-service').on("click", edit_single_tdds)
   })
 
 })()
@@ -1310,5 +1312,123 @@ var delete_single_tdds = function(){
         }
     )
   }
+
+}
+
+var edit_single_tdds = function(){
+  let serviceTitle = '';
+  let serviceDescription = '';
+  let epsg_edit = '';
+  let spatial_edit = '';
+  if($("#editService-title").val() != ""){
+    serviceTitle = $("#editService-title").val();
+  }
+  if ($("#editService-description").val() != ""){
+    serviceDescription = $("#editService-description").val();
+  }
+  if ($('#epsg-input2').val() != '') {
+    epsg_edit = $('#epsg-input2').val();
+  }
+  if ($('#spatial-input2').val() != '') {
+    spatial_edit = $('#spatial-input2').val();
+  }
+
+  let request_objt = {
+    new_title: serviceTitle,
+    old_title: current_tdds,
+    group: current_Group,
+    description: serviceDescription,
+    epsg: epsg_edit,
+    spatial: spatial_edit
+  }
+  console.log(request_objt);
+  console.log(id_dictionary)
+  $.ajax({
+      url: "edit-thredds/",
+      dataType: 'json',
+      // data: {"data":databaseInfo},
+      data: request_objt,
+      type: 'POST',
+      success: function (data) {
+        try{
+          if(request_objt['new_title'] != '' ){
+            console.log(`${request_objt['old_title']}_join_${request_objt['group']}`);
+            let title_e3;
+            Object.keys(id_dictionary).forEach(function(key) {
+              if(id_dictionary[key] == `${request_objt['old_title']}_join_${request_objt['group']}` ){
+                title_e3 = key;
+                id_dictionary[key] = `${request_objt['new_title']}_join_${request_objt['group']}`;
+                console.log(id_dictionary[key]);
+              }
+            });
+            console.log($(`#${title_e3}_span`));
+            $(`#${title_e3}_span`).html(`${request_objt['new_title']}`);
+            $(`#${title_e3}_span`).attr('title', `${request_objt['new_title']}`);
+          }
+          $.notify(
+              {
+                message: `Updating the ${request_objt['old_title']} was Sucessful`
+              },
+              {
+                  type: "success",
+                  allow_dismiss: true,
+                  z_index: 20000,
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
+              }
+          )
+
+
+        }
+        catch(e){
+          console.log(e);
+          $.notify(
+              {
+                message: `There was an error while editing the THREDDS file and its variables to the Group.`
+              },
+              {
+                  type: "danger",
+                  allow_dismiss: true,
+                  z_index: 20000,
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
+              }
+          )
+        }
+      },
+      error: function(error){
+        console.log(error);
+        $.notify(
+            {
+              message: `There was an error while editing the THREDDS file and its variables to the Group.`
+            },
+            {
+                type: "danger",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      }
+  })
 
 }

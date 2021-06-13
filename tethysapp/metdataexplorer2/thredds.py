@@ -20,7 +20,42 @@ Persistent_Store_Name = 'thredds_db'
 ######*****************************************************************************************################
 
 
+def edit_tdds(request):
+    return_objt = {}
+    SessionMaker = app.get_persistent_store_database(
+        Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()
 
+    # Query DB for hydroservers
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            # print(request.POST)
+            title_old =request.POST.get('old_title')
+            # print(title_old)
+            title_new = request.POST.get('new_title')
+            # print(title_new)
+
+            group = request.POST.get('group')
+            description = request.POST.get('description')
+            epsg = request.POST.get('epsg')
+            spatial = request.POST.get('spatial')
+            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group).filter(Thredds.title == title_old).first()
+            if title_new != '':
+                tdds_group.title = title_new
+            if description != '' :
+                tdds_group.description = description
+            if epsg != '' :
+                tdds_group.epsg = epsg
+            if spatial != '':
+                tdds_group.spatial = spatial
+            session.commit()
+            session.close()
+            return_objt['message'] = "updated tdds"
+        except Exception as e:
+            print(e)
+            return_objt['message'] = "failed to update tdds"
+
+    return JsonResponse(return_objt)
 
 def delete_single_thredd(request):
     list_catalog = {}
