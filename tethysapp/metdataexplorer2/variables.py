@@ -12,7 +12,7 @@ import requests
 import netCDF4
 from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
-
+import xarray
 Persistent_Store_Name = 'thredds_db'
 
 def add_vars(request):
@@ -188,6 +188,7 @@ def get_full_array(request):
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     attribute_array['epsg'] = tdds_group.epsg
+    # attribute_array['epsg'] = '4326,x:360,y:0'
     attribute_array['type'] = 'file'
     attribute_array['url'] = tdds_group.url
     attribute_array['url_wms'] = tdds_group.url_wms
@@ -202,9 +203,13 @@ def get_full_array(request):
     attr_variable['name'] = var_row.name
 
     attribute_array['attributes'] = attr_variable
-
+    xds = xarray.open_dataset(tdds_group.url)
+    # print(xds)
+    # print(xds.coords['lon'].to_dict())
+    # print(xds.coords['lat'].to_dict())
     data = organize_array(attribute_array)
     #print(data)
+
     return JsonResponse({'result': data})
 
 
@@ -226,13 +231,13 @@ def organize_array(attribute_array):
 
     epsg = attribute_array['epsg']
     geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
-    print(geojson_path)
+    # print(geojson_path)
     data = {}
     # for variable in attribute_array['attributes']:
-    print(attribute_array['attributes']['dimensions'])
+    # print(attribute_array['attributes']['dimensions'])
     dims = attribute_array['attributes']['dimensions']
-    dim_order = ("time", "lat", "lon")
-    # dim_order = (dims[0], dims[1], dims[2])
+    # dim_order = ("time", "lat", "lon")
+    dim_order = (dims[0], dims[1], dims[2])
     stats_value = 'mean'
     feature_label = 'id'
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
@@ -253,7 +258,7 @@ def organize_array(attribute_array):
 
 def get_geojson_and_data(spatial, epsg):
     geojson_path = os.path.join(tempfile.gettempdir(), 'temp.json')
-    print(type(spatial))
+    # print(type(spatial))
     if type(spatial) == dict:
         spatial['properties']['id'] = 'Shape'
         data = os.path.join(tempfile.gettempdir(), 'new_geo_temp.json')
@@ -269,11 +274,16 @@ def get_geojson_and_data(spatial, epsg):
         geojson_geometry = gpd.read_file(data)
 
     if not str(epsg) == 'false':
+        # print(len(epsg))
+        # print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
+
         if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
             geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
         if len(epsg) > 4:
             shift_lat = int(epsg.split(',')[2][2:])
             shift_lon = int(epsg.split(',')[1][2:])
+            # print(shift_lat, shift_lon)
+            print(geojson_geometry['geometry'])
             geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
 
     geojson_geometry.to_file(geojson_path, driver="GeoJSON")
@@ -283,10 +293,12 @@ def get_geojson_and_data(spatial, epsg):
 
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label, stats):
     #print('Getting TimeSeries')
-    print(var)
-    print(files)
+    # print(var)
+    # print(files)
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     #series.interp_units = True
-    timeseries_array = series.shape(vector=geojson_path)
+    # timeseries_array = series.shape(vector=geojson_path, )
+    timeseries_array = series.shape(vector=geojson_path, behavior='features', labelby=feature_label, statistics=stats)
+
     timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
     return timeseries_array

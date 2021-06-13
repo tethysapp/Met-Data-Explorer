@@ -437,7 +437,7 @@ var getFullArray= function() {
       input_sptl: input_spatial
     }
     console.log(request_obj);
-   // $('#loading-modal').modal('show');
+   $('#GeneralLoading').removeClass('hidden');
    $.ajax({
        url: "getFullArray/",
        data: request_obj,
@@ -452,31 +452,41 @@ var getFullArray= function() {
            for (let key in data) {
                timeseries[key] = JSON.parse(data[key])
                console.log(timeseries[key]);
-               if (i == 1) {
-                   htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${key}</p></div>`;
-               } else {
-                   htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="false"><p>${key}</p></div>`;
-               }
-               i += 1;
+               console.log(timeseries[key]['Shape-mean']);
+               let xArray = [];
+               let yArray = [];
+               Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
+                   xArray.push(timeseries[key]['Shape-mean'][key2]);
+                   yArray.push(timeseries[key]['datetime'][key2]);
+                });
+                initialize_graphs(yArray,xArray,$("#variables_graph").val(),"","","","scatter")
+               // if (i == 1) {
+               //     htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${key}</p></div>`;
+               // } else {
+               //     htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="false"><p>${key}</p></div>`;
+               // }
+               // i += 1;
            }
-           i = 1;
-           let htmlFeatures = '';
-           for (let feature in timeseries[Object.keys(timeseries)[0]]) {
-             console.log(feature);
-               if (feature !== 'datetime') {
-                   if (i == 1) {
-                       htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${feature}</p></div>`;
-                   } else {
-                       htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="false"><p>${feature}</p></div>`;
-                   }
-                   i += 1;
-               }
-           }
-           fullArrayTimeseries = timeseries;
-           $('#timeseries-variable-div').empty().append(htmlVariables);
-           $('#timeseries-feature-div').empty().append(htmlFeatures);
-           $('#full-array-modal').modal('show');
-           $('#loading-modal').modal('hide');
+           $('#GeneralLoading').addClass('hidden');
+
+           // i = 1;
+           // let htmlFeatures = '';
+           // for (let feature in timeseries[Object.keys(timeseries)[0]]) {
+           //   console.log(feature);
+           //     if (feature !== 'datetime') {
+           //         if (i == 1) {
+           //             htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${feature}</p></div>`;
+           //         } else {
+           //             htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="false"><p>${feature}</p></div>`;
+           //         }
+           //         i += 1;
+           //     }
+           // }
+           // fullArrayTimeseries = timeseries;
+           // $('#timeseries-variable-div').empty().append(htmlVariables);
+           // $('#timeseries-feature-div').empty().append(htmlFeatures);
+           // $('#full-array-modal').modal('show');
+           // $('#loading-modal').modal('hide');
            // drawGraphTwo();
        },
    });
