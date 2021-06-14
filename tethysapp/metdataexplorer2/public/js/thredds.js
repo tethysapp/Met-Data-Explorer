@@ -1320,6 +1320,7 @@ var edit_single_tdds = function(){
   let serviceDescription = '';
   let epsg_edit = '';
   let spatial_edit = '';
+  let url_edit = '';
   if($("#editService-title").val() != ""){
     serviceTitle = $("#editService-title").val();
   }
@@ -1332,6 +1333,10 @@ var edit_single_tdds = function(){
   if ($('#spatial-input2').val() != '') {
     spatial_edit = $('#spatial-input2').val();
   }
+  if ($('#url2').val() != '') {
+    url_edit = $('#url2').val();
+  }
+  console.log($('#url2').val());
 
   let request_objt = {
     new_title: serviceTitle,
@@ -1339,7 +1344,8 @@ var edit_single_tdds = function(){
     group: current_Group,
     description: serviceDescription,
     epsg: epsg_edit,
-    spatial: spatial_edit
+    spatial: spatial_edit,
+    url: url_edit,
   }
   console.log(request_objt);
   console.log(id_dictionary)
