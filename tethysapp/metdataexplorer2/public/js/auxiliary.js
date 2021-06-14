@@ -91,11 +91,9 @@ var AUX_PACKAGE = (function(){
       addDefaultBehaviorToAjax();
       $('#sG').change(activate_deactivate_graphs);
       initialize_graphs([],[],"No data Available","","","","scatter");
-
     })
 
 })()
-
 
 var metadata_button_modal = function(infoService){
   let table_content = '<table id = "table_metadata_file2" class="table table-hover table-condensed"><thead><tr>'

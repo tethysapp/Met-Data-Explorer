@@ -9,10 +9,32 @@ var VARIABLES_PACKAGE = (function(){
       let method_draw = $(this).val();
       chosen_method_spatial(method_draw)
     })
+    $("#show_wms").change(myWMS_display);
+    $("#variables_graph").on("change", function(){
+      let actual_state=$("#show_wms").prop('checked');
+      if(actual_state){
+        myWMS_display();
+      }
+    })
   })
 
 })()
 
+var myWMS_display = function(){
+  let tdds_e3;
+  console.log(current_tdds);
+  console.log(id_dictionary);
+  Object.keys(id_dictionary).forEach(function(key) {
+    if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
+      tdds_e3 = key;
+    }
+  });
+  let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
+  console.log(layernameUI);
+  updateWMSLayer(layernameUI,layers_dict_wms[layernameUI]);
+
+  console.log(layers_dict_wms);
+}
 var chosen_method_spatial = function(method_draw){
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
