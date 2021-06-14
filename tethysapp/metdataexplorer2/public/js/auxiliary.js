@@ -227,25 +227,117 @@ var options_vars = function(attributes, new_title){
   // return html_vars
 
 }
+var getRandomColor =  function() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+var graphs_features =  function(timeseries, yTitle){
+    let xArray = [];
+    let yArray = [];
+    let dataArray = [];
+    Object.keys(timeseries).forEach(function(key2) {
+        if(key2 == "datetime"){
+          Object.keys(timeseries[key2]).forEach(function(key3) {
+            xArray.push(timeseries[key2][key3]);
+          })
+        }
+        else{
+          let temp_dict = {};
+          temp_dict[key2] = timeseries[key2]
+          yArray.push(temp_dict);
+          // yArray.push(one_attr);
+        }
+     });
+     console.log(xArray);
+     console.log(yArray);
+     yArray.forEach(function(sinlge_attr){
+       let one_attr = [];
+       let title_un;
+       Object.keys(sinlge_attr).forEach(function(key3) {
+         title_un = key3;
+         Object.keys(sinlge_attr[key3]).forEach(function(key4) {
+           one_attr.push(sinlge_attr[key3][key4]);
+         })
+       })
+       let trace = {
+         x: xArray,
+         y: one_attr,
+         mode: 'lines',
+         type: 'scatter',
+         name: title_un,
+         text: [],
+         marker: { size: 5 },
+         line: {color: getRandomColor()}
+       };
+       dataArray.push(trace);
+     });
+
+     var layout = {
+       width: $(".carousel-inner").parent().width(),
+       yaxis: {
+         title: {
+          text: yTitle,
+          font: {
+            size: 15,
+            color: '#7f7f7f'
+          }
+        },
+        automargin: true,
+       },
+       xaxis: {
+        automargin: true,
+       },
+       // title: title_graph,
+       autosize: true,
+       showlegend:true,
+       legend: {
+         "orientation": "h",
+         yanchor: 'top',
+         xanchor:'center',
+         y:-0.15,
+         x:0.5
+       },
+       margin: {
+         l: 40,
+         r: 40,
+         b: 40,
+         t: 40,
+         pad: 10
+       },
+     };
+
+     var config = {
+        modeBarButtonsToRemove: ['hoverClosestCartesian', 'hoverCompareCartesian','resetScale2d','toggleSpikelines'],
+        displaylogo: false,
+        responsive:true
+     };
+     Plotly.newPlot('plots', dataArray, layout, config);
+
+     window.onresize = function() {
+         Plotly.relayout('plots', {
+             'xaxis.autorange': true,
+             'yaxis.autorange': true
+         });
+     };
+}
+
 var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1,type,xArrayIn,yArrayIn){
   try{
     let element_graphs=document.getElementById("graph");
     $("#graphs").empty();
     let element_map =document.getElementById("map");
       //make the down part visible and also give the design of the model//
-
-
-
     if($( window ).width() > 320 && $( window ).width() <= 480){
       element_graphs.style.cssText=  "display: flex; flex-direction: column;";
     }
     else{
       element_graphs.style.cssText=  "display: flex !important; flex-direction: row;";
     }
-
-
-
-
 
     var config = {
        modeBarButtonsToRemove: ['hoverClosestCartesian', 'hoverCompareCartesian','resetScale2d','toggleSpikelines'],

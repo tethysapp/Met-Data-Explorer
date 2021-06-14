@@ -193,7 +193,10 @@ def get_full_array(request):
     attribute_array['url'] = tdds_group.url
     attribute_array['url_wms'] = tdds_group.url_wms
     attribute_array['url_netcdf'] = tdds_group.url_subset
-    attribute_array['spatial'] = json.loads(input_spatial)
+    try:
+        attribute_array['spatial'] = json.loads(input_spatial)
+    except Exception as e:
+        attribute_array['spatial'] = input_spatial
 
     var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
     attr_variable = {}

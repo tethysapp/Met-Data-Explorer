@@ -33,6 +33,11 @@ var VARIABLES_PACKAGE = (function(){
         $(info_content).appendTo("#metadata_vars");
     });
 
+    $("#btn-geo_link").on("click", function(){
+      input_spatial = $("#geoServer_link").val();
+      console.log(input_spatial);
+    })
+
   })
 
 })()
@@ -480,6 +485,7 @@ var getFullArray= function() {
       attr_name:$("#variables_graph").val(),
       input_sptl: input_spatial
     }
+
     console.log(request_obj);
    $('#GeneralLoading').removeClass('hidden');
    $.ajax({
@@ -489,6 +495,7 @@ var getFullArray= function() {
        contentType: "application/json",
        method: 'GET',
        success: function (result) {
+         try{
            let data = result['result'];
            let timeseries = {};
            let htmlVariables = '';
@@ -496,20 +503,50 @@ var getFullArray= function() {
            for (let key in data) {
                timeseries[key] = JSON.parse(data[key])
                console.log(timeseries[key]);
-               console.log(timeseries[key]['Shape-mean']);
-               let xArray = [];
-               let yArray = [];
-               Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
-                   xArray.push(timeseries[key]['Shape-mean'][key2]);
-                   yArray.push(timeseries[key]['datetime'][key2]);
-                });
-                initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,"scatter")
-
+               console.log(Object.keys(timeseries[key]).length);
+               if(Object.keys(timeseries[key]).length < 2 ){
+                 let xArray = [];
+                 let yArray = [];
+                 Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
+                     xArray.push(timeseries[key]['Shape-mean'][key2]);
+                     yArray.push(timeseries[key]['datetime'][key2]);
+                  });
+                  initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,"scatter");
+               }
+               else{
+                 console.log("holaaa");
+                 graphs_features(timeseries[key],request_obj['attr_name'] );
+               }
            }
            $('#GeneralLoading').addClass('hidden');
+         }
+         catch(e){
+           console.log(e);
+           $('#GeneralLoading').addClass('hidden');
+           $.notify(
+               {
+                 message: `There was an error while retrieving the data from the ${$("#variables_graph").val()} `
+               },
+               {
+                   type: "danger",
+                   allow_dismiss: true,
+                   z_index: 20000,
+                   delay: 5000,
+                   animate: {
+                     enter: 'animated fadeInRight',
+                     exit: 'animated fadeOutRight'
+                   },
+                   onShow: function() {
+                       this.css({'width':'auto','height':'auto'});
+                   }
+               }
+           )
+         }
+
 
        },
        error: function(e){
+         console.log(e);
          $('#GeneralLoading').addClass('hidden');
          $.notify(
              {
