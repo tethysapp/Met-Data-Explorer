@@ -50,7 +50,7 @@ def edit_tdds(request):
                 tdds_group.epsg = epsg
             if spatial != '':
                 tdds_group.spatial = spatial
-            if spatial != '':
+            if url != '':
                 ds = TDSCatalog(url)
                 files = ds.datasets
                 files_dict = {}
