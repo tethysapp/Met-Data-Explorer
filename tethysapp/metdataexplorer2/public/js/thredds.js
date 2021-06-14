@@ -292,6 +292,8 @@ var load_individual_thredds_for_group = function(group_name){
                    let input_check_serv = $(`#${new_title}_check`);
 
                    input_check_serv.on("click", function(){
+                     $("#GeneralLoading").removeClass("hidden");
+
                      tdds_displaying_metadata = new_title;
                      //ONLY ONE CHECKBOX AT A TIME//
                      // $('input[type="checkbox"]').not(this).prop('checked', false);
@@ -335,6 +337,7 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI]['spatial'] = {};
                       layers_style[layernameUI]['epsg'] = epsg;
                       layers_style[layernameUI]['selected'] = false;
+                      layers_dict_wms = layers_style;
                       // console.log(layers_style[layernameUI]);
 
                       // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
@@ -356,6 +359,8 @@ var load_individual_thredds_for_group = function(group_name){
 
 
                     }
+                    $("#GeneralLoading").addClass("hidden");
+
                   });
 
 
@@ -556,9 +561,9 @@ var get_table_vars = function(attributes,title){
   Object.keys(var_metad).forEach(function(key) {
     if(key =="name"){
       table_content += `<th >${key}</th>`;
-      table_content += `<th >Display</th>`;
+      table_content += `<th > Metadata</th>`;
     }
-    if(key != "metadata_var" && key != "color" && key != "name" ){
+    if(key != "metadata_var" && key != "color" && key != "name" && key != "units" ){
       table_content += `<th>${key}</th>`;
     }
 
@@ -577,16 +582,22 @@ var get_table_vars = function(attributes,title){
           let fixed_name = var_metad[key].replace(/_/g, ' ')
           table_content += `<td >${fixed_name}</td>`;
           table_content += `<td>
-                    <input id = "${var_metad[key]}_${title}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
-                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-                      <i class="fas fa-layer-group"></i>
-                    </button>
-                    <button id = "${var_metad[key]}_${title}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+                    <button id = "${var_metad[key]}_${title}_info" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
                         <i class="fas fa-info-circle"></i>
                     </button>
           </td>`;
         }
-        if(key != "metadata_var" && key != "color" && key != "name" ){
+        //   table_content += `<td>
+        //             <input id = "${var_metad[key]}_${title}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
+        //             <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+        //               <i class="fas fa-layer-group"></i>
+        //             </button>
+        //             <button id = "${var_metad[key]}_${title}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+        //                 <i class="fas fa-info-circle"></i>
+        //             </button>
+        //   </td>`;
+        // }
+        if(key != "metadata_var" && key != "color" && key != "name" && key != "units"){
 
           table_content += `<td>${var_metad[key]}</td>`;
         }
@@ -973,6 +984,8 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI]['epsg'] = epsg;
                 layers_style[layernameUI]['selected'] = false;
                 console.log(layers_style[layernameUI]);
+                layers_dict_wms = layers_style;
+
 
                 // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
                 var check_id_var = `${attr[i]['name']}_${new_title}_check`

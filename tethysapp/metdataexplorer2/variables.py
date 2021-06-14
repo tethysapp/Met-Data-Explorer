@@ -203,8 +203,8 @@ def get_full_array(request):
     attr_variable['name'] = var_row.name
 
     attribute_array['attributes'] = attr_variable
-    # xds = xarray.open_dataset(tdds_group.url)
-    # print(xds)
+    xds = xarray.open_dataset(tdds_group.url)
+    print(xds)
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
     data = organize_array(attribute_array)
@@ -248,8 +248,10 @@ def organize_array(attribute_array):
         if dim_single.startswith("lon"):
             dims2.append(dim_single)
     dim_order = (dims2[0], dims2[1], dims2[2] )
+    print(dim_order)
     stats_value = 'mean'
     feature_label = 'id'
+    print(variable)
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
     print(timeseries)
     data[variable] = timeseries

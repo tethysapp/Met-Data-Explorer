@@ -13,9 +13,26 @@ var VARIABLES_PACKAGE = (function(){
     $("#variables_graph").on("change", function(){
       let actual_state=$("#show_wms").prop('checked');
       if(actual_state){
-        myWMS_display();
+        myWMS_display()
       }
     })
+    $("#variable_met_info").on("click", function(){
+      let tdds_e3;
+      console.log(current_tdds);
+      console.log(id_dictionary);
+      Object.keys(id_dictionary).forEach(function(key) {
+        if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
+          tdds_e3 = key;
+        }
+      });
+      let id_vari = `${$("#variables_graph").val()}_${tdds_e3}_info`;
+
+      // $(`#${id_vari}`).on("click", function(){
+        $("#metadata_vars").empty();
+        let info_content = get_metadata_button(attr[i]);
+        $(info_content).appendTo("#metadata_vars");
+    });
+
   })
 
 })()
@@ -36,17 +53,22 @@ var myWMS_display = function(){
   console.log(layers_dict_wms);
 }
 var chosen_method_spatial = function(method_draw){
+  console.log(method_draw);
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
 
   }
-  if(method_draw == 'up_shp'){
+  if(method_draw == 'upload_shp'){
+    $(".leaflet-draw-section").hide();
+    $('#externalSPTL_modal').modal("show");
 
   }
-  if(method_draw == 'geosev_wmf'){
+  if(method_draw == 'geoserv_link'){
+    console.log("holis");
+    $(".leaflet-draw-section").hide();
+    $('#Geo_link_modal').modal("show");
 
   }
-
 
 
 }
