@@ -1,3 +1,10 @@
+
+#display_wms_graphs{
+  display:flex;
+  flex-direction: row;
+  width: 100%;
+}
+
 ul {
     margin: 30px;
 }
@@ -964,19 +971,16 @@ tr:hover {
     order:3;
     display: flex;
     flex-direction: column;
-    flex: 1 1 15%;
   }
   #thirdContainer{
     order:2;
     display: flex;
     flex-direction: column;
-    flex: 1 1 15%;
   }
   #firstContainer{
     order:1;
     display: flex;
     flex-direction: row;
-    flex: 1 1 70%;
   }
 
   #select-graphs{
@@ -1026,18 +1030,22 @@ tr:hover {
     display: flex;
     width: 100%;
     max-width: 100%;
-    flex: 1 1 30%;
   }
 
   #secondContainer{
     display: flex;
     flex-direction: column;
-    flex: 1 1 30%;
+    padding: 0.25em;
   }
   #firstContainer{
     display: flex;
     flex-direction: row;
-    flex: 1 1 70%;
+    padding: 0.25em;
+  }
+  #thirdContainer{
+    display: flex;
+    flex-direction: column;
+    padding: 0.25em;
   }
 
   #select-graphs{

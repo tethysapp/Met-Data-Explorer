@@ -1,0 +1,32 @@
+{% load staticfiles %}
+
+<div id="Geo_link_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Submit a GeoServer WMF Service</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modalFormGeo" action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="modal-text-container">
+                <h4>Upload a Shapefile</h4>
+                <br>
+                <label for="geoServer_link">WMF Geoserver URL</label>
+                <input type="text" class="form-control" name="geoServer_link" id="geoServer_link" placeholder="Please enter a valid WMF Endpoint">
+                <br>
+                <div>
+                </div>
+              </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-add-addVariables" class="btn btn-success"> Submit GeoServer URL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

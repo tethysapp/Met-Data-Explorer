@@ -71,67 +71,48 @@
         <div id="plots2">
           <h3></h3>
           <div id= "ipad_lay_contr">
-          <div id= "firstContainer" class="controlGraphs2">
-            <div id= "select-graphs">
-              <select id= "variables_graph" class="selectpicker" data-dropup-auto="false" data-live-search="true" data-style="btn-info" data-width="100%">
-                <option > Select Variable</option>
-              </select>
+            <div id= "firstContainer" class="controlGraphs2">
+              <div id= "select-graphs">
+                <select id= "variables_graph" class="selectpicker" data-dropup-auto="false" data-live-search="true" data-style="btn-info" data-width="100%">
+                  <option > Select Variable</option>
+                </select>
 
-              <select id="type_graph_select2" class="selectpicker" data-width="100%">
+                <select id="type_graph_select2" class="selectpicker" data-width="100%">
 
-                <optgroup label="Individual Variable Plots">
-                  <option> Scatter </option>
-                  <option> Whisker and Box </option>
-              </optgroup>
+                  <optgroup label="Individual Variable Plots">
+                    <option> Scatter </option>
+                    <option> Whisker and Box </option>
+                </optgroup>
+                </select>
+              </div>
+            </div>
+            <div id= "thirdContainer">
+              <div id ="display_wms_graphs">
+                <input id="show_wms" type="checkbox"  data-toggle="toggle" data-on='<i class="far fa-eye"></i>' data-off='<i class="far fa-eye-slash"></i>' data-onstyle = "danger"></input>
+                <button class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
+                  <i class="fas fa-sliders-h"> Display Settings</i>
+                </button>
+                <!-- <button id = "variable_met_info" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+                    <i class="fas fa-info-circle"> Metadata</i>
+                </button> -->
+              </div>
+              <select id= "spatial_input" class="selectpicker" data-live-search="false" data-size="mini">
+                    <option value="sptial_in"> Select Spatial Input</option>
+                    <option value = "draw_map"> Draw on Map</option>
+                    <option value="upload_shp" >Use a Shapefile</option>
+                    <option value="geoserv_link" >WMF GeoServer Link</option>
               </select>
             </div>
-            <div id= "timeControllers" class="containerTime">
-                <div class='col-md-5'>
-                    <div class="form-group">
-                        <div class='input-group date' id='datetimepicker6' data-provide="datepicker">
-                            <input type='text' class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class='col-md-5'>
-                    <div class="form-group">
-                        <div class='input-group date' id='datetimepicker7' data-provide="datepicker">
-                            <input type='text' class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div id= "secondContainer" class="controlGraphs2">
+                <button type="button" id= "update_graphs" class="btn btn-success"><i class="far fa-chart-bar"></i> Plot Time Series</button>
+                <select id= "download_dropdown" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini">
+                    <option value="Download">Download</option>
+                      <option value="CSV" >CSV</option>
+                      <option value = "WaterML1.0">WaterML 1.0</option>
+                      <option value = "WaterML2.0">WaterML 2.0</option>
+                      <option value = "NetCDF">NetCDF</option>
+                </select>
             </div>
-          </div>
-          <div id= "thirdContainer">
-            <div id ="display_wms_graphs">
-              <input id="show_wms" type="checkbox"  data-toggle="toggle" data-on='<i class="far fa-eye"></i>' data-off='<i class="far fa-eye-slash"></i>' data-onstyle = "danger"></input>
-              <button class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-                <i class="fas fa-layer-group"></i> Display Settings
-              </button>
-            </div>
-            <select id= "spatial_input" class="selectpicker" data-live-search="false" data-size="mini">
-                <option value="sptial_in">Spatial Input</option>
-                  <option value="up_shp" >Upload ShapeFile </option>
-                  <option value = "draw_map"> Draw on Map</option>
-                  <option value = "geosev_wmf"> Geoserver WMF Service</option>
-            </select>
-          </div>
-          <div id= "secondContainer" class="controlGraphs2">
-              <button type="button" id= "update_graphs" class="btn btn-success">Plot Time Series</button>
-              <select id= "download_dropdown" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini">
-                  <option value="Download">Download</option>
-                    <option value="CSV" >CSV</option>
-                    <option value = "WaterML1.0">WaterML 1.0</option>
-                    <option value = "WaterML2.0">WaterML 2.0</option>
-                    <option value = "NetCDF">NetCDF</option>
-              </select>
-          </div>
           </div>
           <div id="plots"></div>
         </div>
@@ -143,7 +124,7 @@
       </div>
       <div id = "tables_info" class="item">
           <div id="options">
-            <h3 id= "siteName_title"> Variables Metadata</h3>
+            <h3 id= "siteName_title"> Variables List</h3>
 
             <div id="table_div"  class="table-responsive">
 
@@ -185,6 +166,8 @@
   {% include "metdataexplorer2/modals/deleteVariable.html" %}
   {% include "metdataexplorer2/modals/info_service_table.html" %}
   {% include "metdataexplorer2/modals/edit_tdds.html" %}
+  {% include "metdataexplorer2/modals/submit_shp.html" %}
+  {% include "metdataexplorer2/modals/submit_geo_link.html" %}
 
 {% endblock %}
 

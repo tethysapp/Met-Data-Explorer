@@ -1,0 +1,36 @@
+{% load staticfiles %}
+
+<div id="externalSPTL_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Submit a ShapeFile</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modalFormSHP" action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="modal-text-container">
+                <h4>Upload a Shapefile</h4>
+                <br>
+                  <input class= "btn btn-default" type="file" class="local-file-upload" id="shapefile-upload"
+                         accept=".shp,.prj,.shx,.dbf," multiple>
+                   <br>
+                <div>
+                  <br>
+                  <p>
+                    Select four files with the endings '.shp', '.shx', '.prj', and '.dbf'.
+                  </p>
+                </div>
+              </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-add-addVariables" class="btn btn-success"> Submit Shapefile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
