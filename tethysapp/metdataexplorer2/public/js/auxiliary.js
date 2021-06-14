@@ -255,7 +255,9 @@ var graphs_features =  function(timeseries, yTitle){
      });
      console.log(xArray);
      console.log(yArray);
+     let i = 0 ;
      yArray.forEach(function(sinlge_attr){
+       let displayOption = i > 0 ? 'legendonly' : true
        let one_attr = [];
        let title_un;
        Object.keys(sinlge_attr).forEach(function(key3) {
@@ -272,9 +274,11 @@ var graphs_features =  function(timeseries, yTitle){
          name: title_un,
          text: [],
          marker: { size: 5 },
-         line: {color: getRandomColor()}
+         line: {color: getRandomColor()},
+         visible: displayOption
        };
        dataArray.push(trace);
+       i = i +1 ;
      });
 
      var layout = {
@@ -299,7 +303,7 @@ var graphs_features =  function(timeseries, yTitle){
          "orientation": "h",
          yanchor: 'top',
          xanchor:'center',
-         y:-0.15,
+         y:-0.20,
          x:0.5
        },
        margin: {
