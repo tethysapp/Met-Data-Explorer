@@ -145,22 +145,23 @@ var download_Methods = function(method_download){
 
   }
   if(method_download == 'xml'){
-    console.log("xml");
-    console.log(values_donwload_json);
-    var dataStr = parser.parse(values_donwload_json);
-    console.log(dataStr);
-    var blob = new Blob([dataStr], { type: 'application/octet-stream;' });
-    var link = document.createElement("a");
-    var url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", $("#variables_graph").val() + ".json");
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // console.log("xml");
+    // console.log(values_donwload_json);
+    // var dataStr = parser.parse(values_donwload_json);
+    // console.log(dataStr);
+    // var blob = new Blob([dataStr], { type: 'application/octet-stream;' });
+    // var link = document.createElement("a");
+    // var url = URL.createObjectURL(blob);
+    // link.setAttribute("href", url);
+    // link.setAttribute("download", $("#variables_graph").val() + ".json");
+    // link.style.visibility = 'hidden';
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
     $.notify(
         {
-            message: `Download completed for the ${$("#variables_graph").val()} variable in XML format`
+            message: `We are still working in these feature :)`
+            // message: `Download completed for the ${$("#variables_graph").val()} variable in XML format`
         },
         {
             type: "sucess",
@@ -629,7 +630,7 @@ var getFullArray= function() {
    let var_val = $("#variables_graph").val();
    if(type_drawing != "sptial_in" &&  var_val != "select_val"){
      $('#GeneralLoading').removeClass('hidden');
-     
+
      $.ajax({
          url: "getFullArray/",
          data: request_obj,
@@ -647,18 +648,18 @@ var getFullArray= function() {
                  values_donwload_json = timeseries[key];
                  console.log(timeseries[key]);
                  console.log(Object.keys(timeseries[key]).length);
-                 if(Object.keys(timeseries[key]).length < 2 ){
+                 if(Object.keys(timeseries[key]).length <= 2 ){
                    let xArray = [];
                    let yArray = [];
                    Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
                        xArray.push(timeseries[key]['Shape-mean'][key2]);
                        yArray.push(timeseries[key]['datetime'][key2]);
                     });
-                    initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,"scatter");
+                    console.log($("#type_graph_select2").val());
+                    initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,$("#type_graph_select2").val());
                  }
                  else{
-                   console.log("holaaa");
-                   graphs_features(timeseries[key],request_obj['attr_name'] );
+                   graphs_features(timeseries[key],request_obj['attr_name'],$("#type_graph_select2").val());
                  }
              }
              $('#GeneralLoading').addClass('hidden');
