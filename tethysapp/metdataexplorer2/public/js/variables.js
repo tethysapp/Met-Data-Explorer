@@ -48,10 +48,70 @@ var VARIABLES_PACKAGE = (function(){
 })()
 
 var download_Methods = function(method_download){
-  if(method_download == 'CSV' && values_donwload_json != {} ){
+  if(method_download == 'CSV'){
     console.log("csv");
+    var csvData = [];
+    // var csvData_temp = [];
+
+    var header = [] //main header.
+    Object.keys(values_donwload_json).forEach(function(key) {
+        header.push(key);
+        // let temp_arr = [];
+        // Object.key(values_donwload_json[key]).forEach(function(key2){
+        //   temp_arr.push(values_donwload_json[key][key2]);
+        // })
+        // csvData_temp.push(temp_arr);
+    });
+    csvData.push(header);
+    // for (let i= 0; i< csvData_temp.length; ++i){
+    //   var line = [];
+    //   for (let j= 0; j< csvData_temp[i].length; ++j){
+    //     csvData_temp[i][j]
+    //   }
+    // }
+
+    for (let i = 0; i < Object.keys(values_donwload_json['datetime']).length; i++) {
+      let row = []
+      for (let r = 0; r < header.length; r++) {
+          row.push(values_donwload_json[header[r]][i]);
+      }
+      csvData.push(row);
+
+    }
+
+    var csvFile = csvData.map(e=>e.map(a=>'"'+((a||"").toString().replace(/"/gi,'""'))+'"').join(",")).join("\r\n"); //quote all fields, escape quotes by doubling them.
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement("a");
+    var url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${$("#variables_graph").val()}` + ".csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    $.notify(
+        {
+            message: `Download completed for the ${$("#variables_graph").val()} variable in CSV format`
+        },
+        {
+            type: "sucess",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+
+
+
   }
-  if(method_download == 'JSON' && values_donwload_json != {}){
+  if(method_download == 'JSON'){
 
     var dataStr = JSON.stringify(values_donwload_json,null,2);
 
@@ -84,8 +144,38 @@ var download_Methods = function(method_download){
     )
 
   }
-  if(method_download == 'xml'&& values_donwload_json != {}){
+  if(method_download == 'xml'){
     console.log("xml");
+    console.log(values_donwload_json);
+    var dataStr = parser.parse(values_donwload_json);
+    console.log(dataStr);
+    var blob = new Blob([dataStr], { type: 'application/octet-stream;' });
+    var link = document.createElement("a");
+    var url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", $("#variables_graph").val() + ".json");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    $.notify(
+        {
+            message: `Download completed for the ${$("#variables_graph").val()} variable in XML format`
+        },
+        {
+            type: "sucess",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
   }
 }
 
