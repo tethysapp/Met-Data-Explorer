@@ -293,7 +293,10 @@ var load_individual_thredds_for_group = function(group_name){
 
                    input_check_serv.on("click", function(){
                      $("#GeneralLoading").removeClass("hidden");
-
+                     $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
+                     console.log(last_selected_id);
+                     $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
+                     console.log(new_title);
                      tdds_displaying_metadata = new_title;
                      //ONLY ONE CHECKBOX AT A TIME//
                      // $('input[type="checkbox"]').not(this).prop('checked', false);
@@ -360,7 +363,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                     }
                     $("#GeneralLoading").addClass("hidden");
-
+                    last_selected_id = new_title;
                   });
 
 

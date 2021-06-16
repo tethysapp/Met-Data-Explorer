@@ -29,4 +29,5 @@ let tdds_displaying_metadata;
 let input_spatial;
 let layers_dict_wms = {};
 let values_donwload_json ={};
+let last_selected_id;
 // let array_services = []
