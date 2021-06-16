@@ -624,41 +624,71 @@ var getFullArray= function() {
     }
 
     console.log(request_obj);
-   $('#GeneralLoading').removeClass('hidden');
-   $.ajax({
-       url: "getFullArray/",
-       data: request_obj,
-       dataType: 'json',
-       contentType: "application/json",
-       method: 'GET',
-       success: function (result) {
-         try{
-           let data = result['result'];
-           let timeseries = {};
-           let htmlVariables = '';
-           let i = 1;
-           for (let key in data) {
-               timeseries[key] = JSON.parse(data[key]);
-               values_donwload_json = timeseries[key];
-               console.log(timeseries[key]);
-               console.log(Object.keys(timeseries[key]).length);
-               if(Object.keys(timeseries[key]).length < 2 ){
-                 let xArray = [];
-                 let yArray = [];
-                 Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
-                     xArray.push(timeseries[key]['Shape-mean'][key2]);
-                     yArray.push(timeseries[key]['datetime'][key2]);
-                  });
-                  initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,"scatter");
-               }
-               else{
-                 console.log("holaaa");
-                 graphs_features(timeseries[key],request_obj['attr_name'] );
-               }
+
+   let type_drawing = $("#spatial_input").val();
+   let var_val = $("#variables_graph").val();
+   if(type_drawing != "sptial_in" &&  var_val != "select_val"){
+     $('#GeneralLoading').removeClass('hidden');
+     
+     $.ajax({
+         url: "getFullArray/",
+         data: request_obj,
+         dataType: 'json',
+         contentType: "application/json",
+         method: 'GET',
+         success: function (result) {
+           try{
+             let data = result['result'];
+             let timeseries = {};
+             let htmlVariables = '';
+             let i = 1;
+             for (let key in data) {
+                 timeseries[key] = JSON.parse(data[key]);
+                 values_donwload_json = timeseries[key];
+                 console.log(timeseries[key]);
+                 console.log(Object.keys(timeseries[key]).length);
+                 if(Object.keys(timeseries[key]).length < 2 ){
+                   let xArray = [];
+                   let yArray = [];
+                   Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
+                       xArray.push(timeseries[key]['Shape-mean'][key2]);
+                       yArray.push(timeseries[key]['datetime'][key2]);
+                    });
+                    initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,"scatter");
+                 }
+                 else{
+                   console.log("holaaa");
+                   graphs_features(timeseries[key],request_obj['attr_name'] );
+                 }
+             }
+             $('#GeneralLoading').addClass('hidden');
            }
-           $('#GeneralLoading').addClass('hidden');
-         }
-         catch(e){
+           catch(e){
+             console.log(e);
+             $('#GeneralLoading').addClass('hidden');
+             $.notify(
+                 {
+                   message: `There was an error while retrieving the data from the ${$("#variables_graph").val()} `
+                 },
+                 {
+                     type: "danger",
+                     allow_dismiss: true,
+                     z_index: 20000,
+                     delay: 5000,
+                     animate: {
+                       enter: 'animated fadeInRight',
+                       exit: 'animated fadeOutRight'
+                     },
+                     onShow: function() {
+                         this.css({'width':'auto','height':'auto'});
+                     }
+                 }
+             )
+           }
+
+
+         },
+         error: function(e){
            console.log(e);
            $('#GeneralLoading').addClass('hidden');
            $.notify(
@@ -681,32 +711,57 @@ var getFullArray= function() {
            )
          }
 
+     });
+   }
+   if(var_val != "select_val" && type_drawing == "sptial_in"){
+     $('#GeneralLoading').addClass('hidden');
 
-       },
-       error: function(e){
-         console.log(e);
-         $('#GeneralLoading').addClass('hidden');
-         $.notify(
-             {
-               message: `There was an error while retrieving the data from the ${$("#variables_graph").val()} `
+     $.notify(
+         {
+           message: `Please select a Spatial Input Mask to retrieve time series`
+         },
+         {
+             type: "info",
+             allow_dismiss: true,
+             z_index: 20000,
+             delay: 5000,
+             animate: {
+               enter: 'animated fadeInRight',
+               exit: 'animated fadeOutRight'
              },
-             {
-                 type: "danger",
-                 allow_dismiss: true,
-                 z_index: 20000,
-                 delay: 5000,
-                 animate: {
-                   enter: 'animated fadeInRight',
-                   exit: 'animated fadeOutRight'
-                 },
-                 onShow: function() {
-                     this.css({'width':'auto','height':'auto'});
-                 }
+             onShow: function() {
+                 this.css({'width':'auto','height':'auto'});
              }
-         )
-       }
+         }
+     )
+   }
+   if(var_val == "select_val" && type_drawing != "sptial_in"){
+     $('#GeneralLoading').addClass('hidden');
 
-   });
+     $.notify(
+         {
+           message: `Please select a Thredds file to be able to see the variables associated to it`
+         },
+         {
+             type: "info",
+             allow_dismiss: true,
+             z_index: 20000,
+             delay: 5000,
+             animate: {
+               enter: 'animated fadeInRight',
+               exit: 'animated fadeOutRight'
+             },
+             onShow: function() {
+                 this.css({'width':'auto','height':'auto'});
+             }
+         }
+     )
+   }
+
+
+
+
+
 }
 
  var create_table = function(){
