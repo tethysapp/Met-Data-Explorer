@@ -27,5 +27,6 @@ let dict_file_vars = {};
 let isAdding = true;
 let tdds_displaying_metadata;
 let input_spatial;
-let layers_dict_wms = {}
+let layers_dict_wms = {};
+let values_donwload_json ={};
 // let array_services = []

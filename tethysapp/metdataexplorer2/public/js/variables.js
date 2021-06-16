@@ -37,10 +37,57 @@ var VARIABLES_PACKAGE = (function(){
       input_spatial = $("#geoServer_link").val();
       console.log(input_spatial);
     })
+    $("#download_dropdown").on("change", function(){
+      let method_download = $(this).val();
+      console.log(method_download);
+      download_Methods(method_download);
+    })
 
   })
 
 })()
+
+var download_Methods = function(method_download){
+  if(method_download == 'CSV' && values_donwload_json != {} ){
+    console.log("csv");
+  }
+  if(method_download == 'JSON' && values_donwload_json != {}){
+
+    var dataStr = JSON.stringify(values_donwload_json,null,2);
+
+    var blob = new Blob([dataStr], { type: 'text/json;charset=utf-8;' });
+    var link = document.createElement("a");
+    var url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", $("#variables_graph").val() + ".json");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    $.notify(
+        {
+            message: `Download completed for the ${$("#variables_graph").val()} variable in JSON format`
+        },
+        {
+            type: "sucess",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+
+  }
+  if(method_download == 'xml'&& values_donwload_json != {}){
+    console.log("xml");
+  }
+}
 
 var myWMS_display = function(){
   let tdds_e3;
@@ -501,7 +548,8 @@ var getFullArray= function() {
            let htmlVariables = '';
            let i = 1;
            for (let key in data) {
-               timeseries[key] = JSON.parse(data[key])
+               timeseries[key] = JSON.parse(data[key]);
+               values_donwload_json = timeseries[key];
                console.log(timeseries[key]);
                console.log(Object.keys(timeseries[key]).length);
                if(Object.keys(timeseries[key]).length < 2 ){
