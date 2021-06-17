@@ -105,6 +105,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='getFullArray/',
                 controller='metdataexplorer2.variables.get_full_array'
             ),
+            UrlMap(
+                name='getAvailableAttributes',
+                url='getAvailableAttributes/',
+                controller='metdataexplorer2.groups.give_all_attributes'
+            ),
 
 
         )

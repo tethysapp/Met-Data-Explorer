@@ -15,6 +15,21 @@ from .app import Metdataexplorer2 as app
 log = logging.getLogger('tethys.metdataexplorer2')
 Persistent_Store_Name = 'thredds_db'
 
+
+
+def give_all_attributes(request):
+    return_objt = {}
+    SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()  # Initiate a session
+    variables = session.query(Variables).all()
+    list_vars = []
+
+    for variable in variables:
+        list_vars.append(variable.name)
+    return_objt['attrs'] = list_vars
+    return JsonResponse(return_objt)
+
+
 def thredds_proxy(request):
     if 'main_url' in request.GET:
         request_url = request.GET['main_url']

@@ -57,7 +57,7 @@ var GROUPS_PACKAGE = (function(){
     // Delete list of Groups in the Delete Groups modal//
     $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
     $("#remove_varaible").on("click", remove_var_from_table);
-
+    $("#btn-filter-groups-f").on("click", give_all_variables);
     // THREDDS LISTENER //
 
     //DELETION SERVICE
@@ -66,6 +66,16 @@ var GROUPS_PACKAGE = (function(){
 
 })()
 
+var give_all_variables = function(){
+  $.ajax({
+    type: "POST",
+    url: `getAvailableAttributes/`,
+    success: function(result){
+      console.log(result);
+    }
+  })
+
+}
 var remove_var_from_table = function(){
   var selected = [];
   $('#added_thredds_files_table_body input:checked').each(function() {
