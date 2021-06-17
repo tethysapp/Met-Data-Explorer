@@ -251,7 +251,6 @@ var graphs_features =  function(timeseries, yTitle, type){
             let temp_dict = {};
             temp_dict[key2] = timeseries[key2]
             yArray.push(temp_dict);
-            // yArray.push(one_attr);
           }
        });
        console.log(xArray);
@@ -297,14 +296,11 @@ var graphs_features =  function(timeseries, yTitle, type){
          xaxis: {
           automargin: true,
          },
-         // title: title_graph,
          autosize: true,
          showlegend:true,
          legend: {
-           "orientation": "h",
-           traceorder: 'reversed',
-           // x: -.1,
-           y: 1.5
+           "orientation": "v",
+           traceorder: 'reversed'
 
          },
          margin: {
@@ -349,14 +345,12 @@ var graphs_features =  function(timeseries, yTitle, type){
             })
           })
           let trace = {
-            y: one_attr,
+            x: one_attr,
             type: 'box',
             name: title_un,
-            marker: {color: getRandomColor()},
-            // boxpoints: 'outliers',
-            // boxmean: 'sd',
+            boxpoints: 'outliers',
+            boxmean: 'sd',
             visible: displayOption,
-            orientation: 'v'
           };
 
           dataArray.push(trace);
@@ -378,15 +372,11 @@ var graphs_features =  function(timeseries, yTitle, type){
           xaxis: {
            automargin: true,
           },
-          // title: title_graph,
           autosize: true,
           showlegend:true,
           legend: {
-            "orientation": "h",
-            traceorder: 'reversed',
-            // x: -.1,
-            y: 1.5
-
+            "orientation": "v",
+            traceorder: 'reversed'
           },
           margin: {
             l: 40,
@@ -480,15 +470,12 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
         xaxis: {
          automargin: true,
         },
-        // title: title_graph,
         autosize: true,
-        showlegend:true,
+        // showlegend:true,
         legend: {
           "orientation": "h",
-          yanchor: 'top',
-          xanchor:'center',
-          y:-0.15,
-          x:0.5
+          traceorder: 'reversed'
+
         },
         margin: {
           l: 40,
@@ -509,19 +496,50 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
         y: yArray,
         type: 'box',
         name: 'All Points',
-        marker: {color: '#3D9970'},
         boxpoints: 'outliers',
         boxmean: 'sd'
-
       };
 
       let data = [trace1];
 
-      let layout = {
-        title: title_graph,
-        autosize: true,
+      // let layout = {
+      //   title: title_graph,
+      //   autosize: true,
+      // };
 
+      var layout = {
+        title: title_graph,
+        width: $(".carousel-inner").parent().width(),
+        yaxis: {
+          title: {
+           text: yTitle,
+           font: {
+             size: 15,
+             color: '#7f7f7f'
+           }
+         },
+         automargin: true,
+        },
+        xaxis: {
+         automargin: true,
+        },
+        autosize: true,
+        // showlegend:true,
+        legend: {
+          "orientation": "h",
+          traceorder: 'reversed'
+
+        },
+        margin: {
+          l: 40,
+          r: 40,
+          b: 40,
+          t: 40,
+          pad: 10
+        },
       };
+
+
       Plotly.newPlot('plots', data, layout, config);
     }
     // update the layout to expand to the available size
@@ -577,12 +595,9 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
     <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
       <span id= "${title}_span" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
 
+
       <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">
         <span class="glyphicon glyphicon-pencil"></span>
-      </button>
-
-      <button id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="btn btn-default btn-xs" >
-      <span class="glyphicon glyphicon-info-sign"></span>
       </button>
       <button id= "add_var" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
         <span class="glyphicon glyphicon-plus"></span>
@@ -591,14 +606,11 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
         <span class="glyphicon glyphicon-trash"></span>
       </button>
 
-      <button type="button" id="${title}_${group_name}_reload" class="btn btn-default btn-xs" >
-       <span  class="glyphicon glyphicon-refresh tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Update View">
-       </span>
-      </button>
-
     </li>
     `;
-
+    // <button id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="btn btn-default btn-xs" >
+    // <span class="glyphicon glyphicon-info-sign"></span>
+    // </button>
 
 
 //     let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">

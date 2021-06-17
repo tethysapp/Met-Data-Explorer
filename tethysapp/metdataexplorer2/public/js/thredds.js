@@ -281,17 +281,23 @@ var load_individual_thredds_for_group = function(group_name){
                    dict_file_vars[new_title] = array_var_;
 
                    //EVENTS BUTTONS//
+                   // $(`#${new_title}`).on("click",function(){
+                   //   current_tdds = id_dictionary[new_title].split('_join_')[0];
+                   //   current_vars = dict_file_vars[new_title];
+                   //   opendapURL = $(this).attr("data-opendap-url");
+                   //   wmsURL = $(this).attr("data-wms-url");
+                   //   subsetURL = $(this).attr("data-subset-url");
+                   // });
+                   //
+                   // let input_check_serv = $(`#${new_title}_check`);
+
+                   // input_check_serv.on("click", function(){
                    $(`#${new_title}`).on("click",function(){
                      current_tdds = id_dictionary[new_title].split('_join_')[0];
                      current_vars = dict_file_vars[new_title];
                      opendapURL = $(this).attr("data-opendap-url");
                      wmsURL = $(this).attr("data-wms-url");
                      subsetURL = $(this).attr("data-subset-url");
-                   });
-
-                   let input_check_serv = $(`#${new_title}_check`);
-
-                   input_check_serv.on("click", function(){
                      $("#GeneralLoading").removeClass("hidden");
                      $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
                      console.log(last_selected_id);
