@@ -1,8 +1,13 @@
-
+.modal-body {
+    overflow : auto;
+}
 #display_wms_graphs{
   display:flex;
   flex-direction: row;
   width: 100%;
+}
+#groups_variables{
+  height: 500px;
 }
 
 ul {

@@ -29,7 +29,7 @@
           <button id="btn-del-groups-f" class="btn btn-danger"  data-toggle="modal" data-target="#modalDeleteGroups"> <span class="glyphicon glyphicon-trash"></span></button>
         {% endif %}
 
-          <button id="btn-filter-groups-f" class="btn btn-success" data-toggle="modal" data-target="#modalVariableFilter">
+          <button id="btn-filter-groups-f" class="btn btn-success" data-toggle="modal" data-target="#modalVariablesFilter">
             <span class="glyphicon glyphicon-filter"></span>
           </button>
           <button type="button" id="btn-r-reset" class="btn btn-danger">Reset</button>
@@ -179,6 +179,7 @@
   {% include "metdataexplorer2/modals/edit_tdds.html" %}
   {% include "metdataexplorer2/modals/submit_shp.html" %}
   {% include "metdataexplorer2/modals/submit_geo_link.html" %}
+  {% include "metdataexplorer2/modals/vars_filters.html" %}
 
 {% endblock %}
 

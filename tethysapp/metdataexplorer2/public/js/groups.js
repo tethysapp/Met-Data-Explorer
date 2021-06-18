@@ -72,6 +72,56 @@ var give_all_variables = function(){
     url: `getAvailableAttributes/`,
     success: function(result){
       console.log(result);
+      try{
+        let variables_groups = result['attrs'];
+
+        // countries_available = data['countries']
+        const chunk = (arr, size) =>
+          Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+            arr.slice(i * size, i * size + size)
+          );
+        let arr=chunk(variables_groups, 2);
+
+        var HSTableHtml =
+            `<table id="data-table" class="table table-striped table-bordered table-condensed"><tbody>`
+
+          arr.forEach(l_arr => {
+            HSTableHtml +=  '<tr class="odd gradeX">'
+            l_arr.forEach(i =>{
+              let new_i = i.replace(/ /g,"_");
+              HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="countries" value=${i} /> ${new_i}</td>`;
+            })
+
+                HSTableHtml += '</tr>';
+          })
+
+          HSTableHtml += "</tbody></table>"
+        $("#modalVariablesFilter").find("#groups_variables").html(HSTableHtml);
+        // $("#KeywordLoading").addClass("hidden");
+      }
+      catch(e){
+        // $("#KeywordLoading").addClass("hidden");
+        $.notify(
+            {
+                message: `There was an error trying to retrieve the different countries contained by the web services in the app`
+            },
+            {
+                type: "danger",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      }
+
+
     }
   })
 
