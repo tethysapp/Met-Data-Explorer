@@ -182,6 +182,17 @@ var searchGroups_group = function() {
     console.log(error);
   }
 }
+
+//for the attr in the variables filter
+var searchVariables_func = function() {
+
+  try{
+    general_search("search_attr","data-table");
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 var getVariablesAndFileMetadata = function (opendapURL) {
     //$("#loading-modal").modal("show");
     console.log("getVariablesAndFileMetadata");

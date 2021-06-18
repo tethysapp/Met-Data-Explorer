@@ -58,6 +58,10 @@ var GROUPS_PACKAGE = (function(){
     $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
     $("#remove_varaible").on("click", remove_var_from_table);
     $("#btn-filter-groups-f").on("click", give_all_variables);
+
+
+    document.getElementById('search_attr').addEventListener("keyup", searchVariables_func);
+
     // THREDDS LISTENER //
 
     //DELETION SERVICE
