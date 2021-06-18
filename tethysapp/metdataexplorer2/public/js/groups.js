@@ -58,6 +58,7 @@ var GROUPS_PACKAGE = (function(){
     $("#btn-del-hydro-groups").on("click", delete_group_of_hydroservers);
     $("#remove_varaible").on("click", remove_var_from_table);
     $("#btn-filter-groups-f").on("click", give_all_variables);
+    $("#btn-attr-search").on("click", apply_var_filter);
 
 
     document.getElementById('search_attr').addEventListener("keyup", searchVariables_func);
@@ -69,6 +70,71 @@ var GROUPS_PACKAGE = (function(){
   })
 
 })()
+
+var apply_var_filter = function(){
+    try{
+      let elementForm= $("#modalKeyWordSearch");
+      let datastring= elementForm.serialize();
+      console.log(datastring);
+
+      // $.ajax({
+      //     type: "POST",
+      //     url: `filterTddsByVariable/`,
+      //     dataType: "HTML",
+      //     data: datastring,
+      //     success: function(result) {
+      //
+      //
+      //     },
+      //     error: function(error){
+      //       $.notify(
+      //           {
+      //               message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
+      //           },
+      //           {
+      //               type: "danger",
+      //               allow_dismiss: true,
+      //               z_index: 20000,
+      //               delay: 5000,
+      //               animate: {
+      //                 enter: 'animated fadeInRight',
+      //                 exit: 'animated fadeOutRight'
+      //               },
+      //               onShow: function() {
+      //                   this.css({'width':'auto','height':'auto'});
+      //               }
+      //           }
+      //       )
+      //     }
+      // })
+    }
+    catch(e){
+      $.notify(
+          {
+              message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
+          },
+          {
+              type: "danger",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+    }
+
+
+
+
+
+}
+
 
 var give_all_variables = function(){
   $.ajax({
@@ -92,8 +158,8 @@ var give_all_variables = function(){
           arr.forEach(l_arr => {
             HSTableHtml +=  '<tr class="odd gradeX">'
             l_arr.forEach(i =>{
-              let new_i = i.replace(/ /g,"_");
-              HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="countries" value=${i} /> ${new_i}</td>`;
+              // let new_i = i.replace(/ /g,"_");
+              HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="servers" value = "${i}" /> ${i}</td>`;
             })
 
                 HSTableHtml += '</tr>';
