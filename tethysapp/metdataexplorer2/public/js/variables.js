@@ -204,13 +204,14 @@ var chosen_method_spatial = function(method_draw){
   if(method_draw == 'upload_shp'){
     $(".leaflet-draw-section").hide();
     $('#externalSPTL_modal').modal("show");
+    drawnItems.clearLayers();
 
   }
   if(method_draw == 'geoserv_link'){
     console.log("holis");
     $(".leaflet-draw-section").hide();
     $('#Geo_link_modal').modal("show");
-
+    drawnItems.clearLayers();
   }
 
 
