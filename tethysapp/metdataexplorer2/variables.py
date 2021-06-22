@@ -310,6 +310,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label
     #print('Getting TimeSeries')
     # print(var)
     # print(files)
+    print(dim_order)
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     #series.interp_units = True
     # timeseries_array = series.shape(vector=geojson_path, )
