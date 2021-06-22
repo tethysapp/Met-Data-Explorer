@@ -324,7 +324,31 @@ var load_individual_thredds_for_group = function(group_name){
 
                     // console.log(table_content);
                     $(table_content).appendTo("#table_div");
+                    //make the layers to display
 
+                    let layernameUI2 = `${attributes[0]['name']}_${new_title}`
+                    layers_style[layernameUI2] = {}
+                    layers_style[layernameUI2]['title'] = attributes[0]['name'];
+                    layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+                    layers_style[layernameUI2]['wmsURL']= url_wms;
+                    layers_style[layernameUI2]['style'] = $('#wmslayer-style').val();
+                    layers_style[layernameUI2]['range'] = $('#wmslayer-bounds').val();
+                    layers_style[layernameUI2]['variable'] = attributes[0]['name'];
+                    layers_style[layernameUI2]['subset'] = url_subset;
+                    layers_style[layernameUI2]['opendap'] = url;
+                    layers_style[layernameUI2]['spatial'] = {};
+                    layers_style[layernameUI2]['epsg'] = epsg;
+                    layers_style[layernameUI2]['selected'] = false;
+                    layers_dict_wms = layers_style;
+
+                    console.log(layernameUI2);
+                    console.log(layers_style[layernameUI2]);
+
+
+                    setTimeout(updateWMSLayer(layernameUI2,layers_style[layernameUI2]), 3000);
+
+
+                    $('#show_wms').bootstrapToggle('on')
                     // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
                     for (let i = 0; i< attributes.length; ++i){
                       $(`#${attributes[i]['name']}_${new_title}_info`).on("click", function(){
@@ -837,6 +861,28 @@ var addSingleThreddsServer = function(){
               $(table_content).appendTo("#table_div");
               let info_file = make_metadata_file_table(data['services'][0]['metadata_file']);
               $(info_file).appendTo("#siteDes");
+
+
+              let layernameUI2 = `${attributes[0]['name']}_${new_title}`
+              layers_style[layernameUI2] = {}
+              layers_style[layernameUI2]['title'] = attributes[0]['name'];
+              layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+              layers_style[layernameUI2]['wmsURL']= url_wms;
+              layers_style[layernameUI2]['style'] = $('#wmslayer-style').val();
+              layers_style[layernameUI2]['range'] = $('#wmslayer-bounds').val();
+              layers_style[layernameUI2]['variable'] = attributes[0]['name'];
+              layers_style[layernameUI2]['subset'] = url_subset;
+              layers_style[layernameUI2]['opendap'] = url;
+              layers_style[layernameUI2]['spatial'] = {};
+              layers_style[layernameUI2]['epsg'] = epsg;
+              layers_style[layernameUI2]['selected'] = false;
+              layers_dict_wms = layers_style;
+
+              console.log(layernameUI2);
+              console.log(layers_style[layernameUI2]);
+
+
+              setTimeout(updateWMSLayer(layernameUI2,layers_style[layernameUI2]), 3000);
 
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
               for (let i = 0; i< attr.length; ++i){

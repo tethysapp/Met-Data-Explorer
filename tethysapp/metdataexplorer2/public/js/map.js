@@ -118,7 +118,7 @@ var MAP_PACKAGE = (function(){
     mapObj.addControl(drawControl);
 
 
-    $(".leaflet-draw-section").hide();
+    // $(".leaflet-draw-section").hide();
 
 
     $('#draw-on-map-button').click(function(){
@@ -231,34 +231,45 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
 
 
 var updateWMSLayer = function(layernameUI,x) {
-  wmsURL = x['wmsURL'];
-  console.log(wmsURL);
-  layer = x['variable'];
-  range =x['range'];
-  style = x['style'];
-  opacity =x['opacity'];
-    // if (firstlayeradded == true) {
-    if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
-        layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-        mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-        // layerControlObj.removeLayer(dataLayerObj);
-        // mapObj.removeLayer(dataLayerObj);
-        delete layers_dict[`${layernameUI}_check`];
-        // x['selected'] = false;
-        console.log("taking off");
-    }
-    else{
-      Object.keys(layers_dict).forEach(function(key) {
-        layerControlObj.removeLayer(layers_dict[key]);
-        mapObj.removeLayer(layers_dict[key]);
-        delete layers_dict[key];
+  try{
+    wmsURL = x['wmsURL'];
+    console.log(wmsURL);
+    layer = x['variable'];
+    console.log(layer);
+    range =x['range'];
+    console.log(range);
+    style = x['style'];
+    console.log(style);
+    opacity =x['opacity'];
+    console.log(opacity);
+    console.log(layernameUI);
+      // if (firstlayeradded == true) {
+      if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
+          layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+          mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+          // layerControlObj.removeLayer(dataLayerObj);
+          // mapObj.removeLayer(dataLayerObj);
+          delete layers_dict[`${layernameUI}_check`];
+          // x['selected'] = false;
+          console.log("taking off");
+      }
+      else{
+        Object.keys(layers_dict).forEach(function(key) {
+          layerControlObj.removeLayer(layers_dict[key]);
+          mapObj.removeLayer(layers_dict[key]);
+          delete layers_dict[key];
 
-      });
-      dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
-      dataLayerObj.setOpacity(opacity);
-      layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-      console.log("showing");
-    }
+        });
+        dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+        dataLayerObj.setOpacity(opacity);
+        layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+        console.log("showing");
+      }
+  }
+  catch(e){
+    console.log(e);
+  }
+
 
 }
 
