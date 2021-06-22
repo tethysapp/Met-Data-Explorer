@@ -604,7 +604,7 @@ var html_for_servers = function (title,group_name, url_opendap, url_wms, url_sub
     let check_var = (( isNew == true ) ? 'checked' : '');
     let newHtml = `
     <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
-      <span id= "${title}_span" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
+      <span id= "${title}_span" layer-name="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
 
 
       <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">

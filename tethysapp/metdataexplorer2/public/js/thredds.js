@@ -281,22 +281,25 @@ var load_individual_thredds_for_group = function(group_name){
                    dict_file_vars[new_title] = array_var_;
 
                    //EVENTS BUTTONS//
-                   // $(`#${new_title}`).on("click",function(){
-                   //   current_tdds = id_dictionary[new_title].split('_join_')[0];
-                   //   current_vars = dict_file_vars[new_title];
-                   //   opendapURL = $(this).attr("data-opendap-url");
-                   //   wmsURL = $(this).attr("data-wms-url");
-                   //   subsetURL = $(this).attr("data-subset-url");
-                   // });
-                   //
-                   // let input_check_serv = $(`#${new_title}_check`);
-
-                   // input_check_serv.on("click", function(){
                    $(`#${new_title}`).on("click",function(){
                      current_tdds = id_dictionary[new_title].split('_join_')[0];
                      current_vars = dict_file_vars[new_title];
                      opendapURL = $(this).attr("data-opendap-url");
                      wmsURL = $(this).attr("data-wms-url");
+                     subsetURL = $(this).attr("data-subset-url");
+                     // console.log(current_tdds, current_vars, opendapURL, wmsURL, subsetURL);
+
+                   });
+                   //
+                   // let input_check_serv = $(`#${new_title}_check`);
+
+                   // input_check_serv.on("click", function(){
+                   $(`#${new_title}_span`).on("click",function(){
+                     // current_tdds = id_dictionary[new_title].split('_join_')[0];
+                     // current_vars = dict_file_vars[new_title];
+                     // opendapURL = $(this).attr("data-opendap-url");
+                     // wmsURL = $(this).attr("data-wms-url");
+                     console.log(wmsURL);
                      subsetURL = $(this).attr("data-subset-url");
                      $("#GeneralLoading").removeClass("hidden");
                      $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
@@ -372,142 +375,6 @@ var load_individual_thredds_for_group = function(group_name){
                     last_selected_id = new_title;
                   });
 
-
-                   //
-                   // $(`#${new_title}_variables`).on("click",showVariables2);
-                   // $(`#${new_title}_variables_info`).on("click",hydroserver_information);
-                   // $(`#${new_title}_${group_name_e3}_reload`).on("click",update_hydroserver);
-
-
-                   // for (let i = 0; i< attributes.length; ++i){
-                   //   console.log(attributes[i]['name']);
-                   //   var check_id_var = `${attributes[i]['name']}_${new_title}_check`
-                   //   let input_check = $(`#${check_id_var}`);
-                   //   console.log(input_check);
-                   //   let layernameUI = `${attributes[i]['name']}_${new_title}`
-                   //   layers_style[layernameUI] = {}
-                   //
-                   //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                   //   layers_style[layernameUI]['wmsURL']= $(`#${new_title}_span`).attr("data-wms-url");
-                   //   layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
-                   //   layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
-                   //   layers_style[layernameUI]['variable'] = attributes[i]['name'];
-                   //   layers_style[layernameUI]['subset'] = $(`#${new_title}_span`).attr("data-subset-url");
-                   //   layers_style[layernameUI]['opendap'] = $(`#${new_title}_span`).attr("data-opendap-url");
-                   //   layers_style[layernameUI]['spatial'] = {};
-                   //   layers_style[layernameUI]['epsg'] = epsg;
-                   //   layers_style[layernameUI]['selected'] = false;
-                   //   // array_services.push(layers_style[layernameUI]);
-                   //   // console.log($(`#${new_title}`));
-                   //   console.log(layers_style[layernameUI]);
-                   //   input_check.on("change", function(){
-                   //    updateWMSLayer(layernameUI,layers_style[layernameUI]);
-                   //   })
-                   //
-                   // }
-
-
-
-                   //
-                     // input_check.addEventListener("change", function(){
-                     //   let check_box = this;
-                     //   if(layersDict['selectedPointModal']){
-                     //     map.removeLayer(layersDict['selectedPointModal'])
-                     //     map.updateSize()
-                     //   }
-                     //   if(layersDict['selectedPoint']){
-                     //     map.removeLayer(layersDict['selectedPoint'])
-                     //     map.updateSize()
-                     //   }
-                     //   map.getLayers().forEach(function(layer) {
-                     //     if(layer_object_filter.hasOwnProperty(title) == false){
-                     //       if(layer instanceof ol.layer.Vector && layer == layersDict[title]){
-                     //         if(check_box.checked){
-                     //
-                     //           layer.setStyle(featureStyle(layerColorDict[title]));
-                     //         }
-                     //         else{
-                     //           layer.setStyle(new ol.style.Style({}));
-                     //
-                     //         }
-                     //       }
-                     //     }
-                     //     else{
-                     //       if(layer instanceof ol.layer.Vector && layer == layer_object_filter[title]){
-                     //         if(check_box.checked){
-                     //
-                     //           layer.setStyle(featureStyle(layerColorDict[title]));
-                     //         }
-                     //         else{
-                     //           layer.setStyle(new ol.style.Style({}));
-                     //         }
-                     //       }
-                     //     }
-                     //    });
-                     //
-                     // });
-                   //
-                   //   let sites = siteInfo
-                   //   if (typeof(sites) == "string"){
-                   //     sites = JSON.parse(siteInfo);
-                   //   }
-                   //   var vectorLayer = map_layers(sites,title,url)[0]
-                   //   var vectorSource = map_layers(sites,title,url)[1]
-                   //
-                   //   let test_style = new ol.style.Style({
-                   //     image: new ol.style.Circle({
-                   //       radius: 10,
-                   //       stroke: new ol.style.Stroke({
-                   //         color: "white",
-                   //       }),
-                   //       fill: new ol.style.Fill({
-                   //         color: layerColorDict[title],
-                   //       }),
-                   //     })
-                   //   });
-                   //   let rowHTML= `<tr id= ${new_title}-row-complete>
-                   //                  <th id="${new_title}-row-legend"></th>
-                   //                  <th>${title}</th>
-                   //                </tr>`
-                   //  if(!document.getElementById(`${new_title}-row-complete`)){
-                   //    $(rowHTML).appendTo('#tableLegend');
-                   //  }
-                   //  $(`#${new_title}-row-legend`).prepend($(getIconLegend(test_style,title)));
-                   //
-                   //
-                   //   map.addLayer(vectorLayer);
-                   //   vectorLayer.setStyle(new ol.style.Style({}));
-                   //
-                   //
-                   //   vectorLayer.set("selectable", true)
-                   //
-                   //   layersDict[title] = vectorLayer;
-                   //   $(`#${new_title}_zoom`).on("click",function(){
-                   //     if(layersDict['selectedPointModal']){
-                   //       map.removeLayer(layersDict['selectedPointModal'])
-                   //       map.updateSize();
-                   //     }
-                   //     if(layersDict['selectedPoint']){
-                   //       map.removeLayer(layersDict['selectedPoint'])
-                   //       map.updateSize();
-                   //     }
-                   //     map.getView().fit(vectorSource.getExtent());
-                   //     map.updateSize();
-                   //     map.getLayers().forEach(function(layer) {
-                   //       if (!(title in layer_object_filter)){
-                   //         if(layer instanceof ol.layer.Vector && layer == layersDict[title]){
-                   //           layer.setStyle(featureStyle(layerColorDict[title]));
-                   //         }
-                   //       }
-                   //       else{
-                   //         if(layer instanceof ol.layer.Vector && layer == layer_object_filter[title]){
-                   //           layer.setStyle(featureStyle(layerColorDict[title]));
-                   //         }
-                   //       }
-                   //
-                   //      });
-                   //     input_check.checked = true;
-                   //   });
                })
                $("#GeneralLoading").addClass("hidden");
              }
@@ -946,14 +813,16 @@ var addSingleThreddsServer = function(){
                 opendapURL = $(this).attr("data-opendap-url");
                 wmsURL = $(this).attr("data-wms-url");
                 subsetURL = $(this).attr("data-subset-url");
+                // console.log(current_tdds, current_vars, opendapURL, wmsURL, subsetURL);
               });
 
 
               let input_check_serv = $(`#${new_title}_check`);
 
-              input_check_serv.on("click", function(){
+              // input_check_serv.on("click", function(){
+              $(`#${new_title}_span`).on("click",function(){
                //ONLY ONE CHECKBOX AT A TIME//
-               $('input[type="checkbox"]').not(this).prop('checked', false);
+               // $('input[type="checkbox"]').not(this).prop('checked', false);
 
                //CLEAN TABLE //
                $("#table_div").empty();
