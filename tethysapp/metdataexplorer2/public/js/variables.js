@@ -36,6 +36,26 @@ var VARIABLES_PACKAGE = (function(){
     $("#btn-geo_link").on("click", function(){
       input_spatial = $("#geoServer_link").val();
       console.log(input_spatial);
+      $.ajax({
+          type: "GET",
+          url: input_spatial,
+          dataType: "json",
+          success: function(result) {
+            console.log(result);
+            var myStyle = {
+                "color": "#E2E5DE",
+                "weight": 5,
+                "opacity": 0.5
+            };
+
+            let jsonLayer = L.geoJSON(result, {
+                style: myStyle
+            })
+            jsonLayer.addTo(mapObj);
+            mapObj.flyToBounds(jsonLayer.getBounds());
+          }
+      })
+
     })
     $("#download_dropdown").on("change", function(){
       let method_download = $(this).val();
