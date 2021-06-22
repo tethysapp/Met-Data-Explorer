@@ -48,7 +48,7 @@ var VARIABLES_PACKAGE = (function(){
                 "opacity": 0.5
             };
 
-            let jsonLayer = L.geoJSON(result, {
+            jsonLayer = L.geoJSON(result, {
                 style: myStyle
             })
             jsonLayer.addTo(mapObj);
@@ -219,13 +219,13 @@ var chosen_method_spatial = function(method_draw){
   console.log(method_draw);
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
-
+    mapObj.removeLayer(jsonLayer);
   }
   if(method_draw == 'upload_shp'){
     $(".leaflet-draw-section").hide();
     $('#externalSPTL_modal').modal("show");
     drawnItems.clearLayers();
-
+    mapObj.removeLayer(jsonLayer);
   }
   if(method_draw == 'geoserv_link'){
     console.log("holis");
