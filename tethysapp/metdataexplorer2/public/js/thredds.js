@@ -287,15 +287,17 @@ var load_individual_thredds_for_group = function(group_name){
                      opendapURL = $(this).attr("data-opendap-url");
                      wmsURL = $(this).attr("data-wms-url");
                      subsetURL = $(this).attr("data-subset-url");
-                     // console.log(current_tdds, current_vars, opendapURL, wmsURL, subsetURL);
-
                    });
                    //
                    // let input_check_serv = $(`#${new_title}_check`);
 
                    // input_check_serv.on("click", function(){
                    $(`#${new_title}_span`).on("click",function(){
-                     // current_tdds = id_dictionary[new_title].split('_join_')[0];
+
+                     current_tdds = id_dictionary[new_title].split('_join_')[0];
+                     current_Group = group_name;
+                     console.log(current_tdds);
+
                      // current_vars = dict_file_vars[new_title];
                      // opendapURL = $(this).attr("data-opendap-url");
                      // wmsURL = $(this).attr("data-wms-url");
@@ -847,6 +849,8 @@ var addSingleThreddsServer = function(){
               $(`#${new_title}_span`).on("click",function(){
                //ONLY ONE CHECKBOX AT A TIME//
                // $('input[type="checkbox"]').not(this).prop('checked', false);
+               current_tdds = id_dictionary[new_title].split('_join_')[0];
+
                $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
                console.log(last_selected_id);
                $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
