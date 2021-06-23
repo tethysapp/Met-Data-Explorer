@@ -847,7 +847,9 @@ var addSingleThreddsServer = function(){
               $(`#${new_title}_span`).on("click",function(){
                //ONLY ONE CHECKBOX AT A TIME//
                // $('input[type="checkbox"]').not(this).prop('checked', false);
-
+               $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
+               console.log(last_selected_id);
+               $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
                //CLEAN TABLE //
                $("#table_div").empty();
                $("#siteDes").empty();
@@ -863,15 +865,15 @@ var addSingleThreddsServer = function(){
               $(info_file).appendTo("#siteDes");
 
 
-              let layernameUI2 = `${attributes[0]['name']}_${new_title}`
+              let layernameUI2 = `${attr_array[0]['name']}_${new_title}`
               layers_style[layernameUI2] = {}
-              layers_style[layernameUI2]['title'] = attributes[0]['name'];
+              layers_style[layernameUI2]['title'] = attr_array[0]['name'];
               layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
-              layers_style[layernameUI2]['wmsURL']= url_wms;
+              layers_style[layernameUI2]['wmsURL']= wmsURL;
               layers_style[layernameUI2]['style'] = $('#wmslayer-style').val();
               layers_style[layernameUI2]['range'] = $('#wmslayer-bounds').val();
-              layers_style[layernameUI2]['variable'] = attributes[0]['name'];
-              layers_style[layernameUI2]['subset'] = url_subset;
+              layers_style[layernameUI2]['variable'] = attr_array[0]['name'];
+              layers_style[layernameUI2]['subset'] = subsetURL;
               layers_style[layernameUI2]['opendap'] = url;
               layers_style[layernameUI2]['spatial'] = {};
               layers_style[layernameUI2]['epsg'] = epsg;
@@ -898,11 +900,11 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI] = {}
                 layers_style[layernameUI]['title'] = attr[i]['name'];
                 layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                layers_style[layernameUI]['wmsURL']= url_wms;
+                layers_style[layernameUI]['wmsURL']= wmsURL;
                 layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
                 layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
                 layers_style[layernameUI]['variable'] = attr[i]['name'];
-                layers_style[layernameUI]['subset'] = url_subset;
+                layers_style[layernameUI]['subset'] = subsetURL;
                 layers_style[layernameUI]['opendap'] = url;
                 layers_style[layernameUI]['spatial'] = {};
                 layers_style[layernameUI]['epsg'] = epsg;
@@ -925,9 +927,14 @@ var addSingleThreddsServer = function(){
                   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
                 })
               }
+              $("#GeneralLoading").addClass("hidden");
+
+              last_selected_id = new_title;
+
               });
 
             }
+            $("#GeneralLoading").addClass("hidden");
 
           }
           catch(e){
