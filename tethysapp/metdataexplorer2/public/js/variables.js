@@ -63,10 +63,18 @@ var VARIABLES_PACKAGE = (function(){
       download_Methods(method_download);
     })
     $("#get_data_values").on("click", get_data_bounds);
+    $("#apply_config").on("click",apply_style_config);
 
   })
 
 })()
+
+var apply_style_config = function(){
+  var range = $("#wmslayer-bounds").val();
+  var opacity = $("#wmslayer-style").val();
+  var colorStyle = $("#wmslayer-style").val();
+  myWMS_display();
+}
 
 var get_data_bounds = function(){
   let variable_active = $("#variables_graph").val();
