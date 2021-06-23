@@ -121,6 +121,8 @@ td{
 #filetree-div{
   height: 300px;
   overflow-x: hidden;
+  cursor: pointer;
+
 }
 
 #groups_variables_div{
@@ -470,6 +472,7 @@ tr:hover {
     background-color: #bbbbbb;
     cursor: pointer;
 }
+
 .group-name{
   color: "#666";
 }
