@@ -62,10 +62,75 @@ var VARIABLES_PACKAGE = (function(){
       console.log(method_download);
       download_Methods(method_download);
     })
+    $("#get_data_values").on("click", get_data_bounds);
 
   })
 
 })()
+
+var get_data_bounds = function(){
+  let variable_active = $("#variables_graph").val();
+  let json_request = {
+    variable: variable_active,
+    group: current_Group,
+    tdds: current_tdds
+  }
+  console.log(json_request);
+  $('#GeneralLoading').removeClass('hidden');
+
+  $.ajax({
+      type: "POST",
+      url: `get-data-bounds/`,
+      data: json_request,
+      dataType: "json",
+      success: function(result) {
+        $("#wmslayer-bounds").val(result['range']);
+        // console.log(result);
+        $('#GeneralLoading').addClass('hidden');
+        $.notify(
+            {
+                message: `Bounds were succesfully retrieved`
+            },
+            {
+                type: "success",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      },
+      error:function(e){
+        $('#GeneralLoading').addClass('hidden');
+        console.log(e);
+        $.notify(
+            {
+                message: `There was an error retrieving the data bounds`
+            },
+            {
+                type: "danger",
+                allow_dismiss: true,
+                z_index: 20000,
+                delay: 5000,
+                animate: {
+                  enter: 'animated fadeInRight',
+                  exit: 'animated fadeOutRight'
+                },
+                onShow: function() {
+                    this.css({'width':'auto','height':'auto'});
+                }
+            }
+        )
+      }
+    })
+}
+
 
 var download_Methods = function(method_download){
   if(method_download == 'CSV'){
@@ -203,14 +268,18 @@ var download_Methods = function(method_download){
 var myWMS_display = function(){
   let tdds_e3;
   console.log(current_tdds);
+  console.log(current_Group);
   console.log(id_dictionary);
   Object.keys(id_dictionary).forEach(function(key) {
     if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
       tdds_e3 = key;
+      console.log(tdds_e3);
     }
   });
   let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
   console.log(layernameUI);
+  layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
+  layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer(layernameUI,layers_dict_wms[layernameUI]);
 
   console.log(layers_dict_wms);
