@@ -15,6 +15,7 @@ class Variables(Base):
     dimensions = Column(JSON)
     units = Column(String(100))
     color = Column(String(100))
+    range = Column(String(100))
     thredds_servers = relationship("Thredds", back_populates="attributes")
     metadata_variable = Column(JSON)
     def __init__(self, name, dimensions,units,color,metadata_variable):
