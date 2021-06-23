@@ -1,5 +1,16 @@
+#bounds_share{
+  display: flex;
+}
+#wmslayer-bounds{
+  margin-right: 1.5em;
+  margin-left: 1em;
+}
+#button_for_bounds{
+  display: flex;
+}
+
 .modal-body {
-    overflow : auto;
+  overflow : auto;
 }
 #display_wms_graphs{
   display:flex;
