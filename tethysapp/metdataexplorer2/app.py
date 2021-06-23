@@ -106,6 +106,11 @@ class Metdataexplorer2(TethysAppBase):
                 controller='metdataexplorer2.variables.get_full_array'
             ),
             UrlMap(
+                name='get-data-bounds',
+                url='get-data-bounds/',
+                controller='metdataexplorer2.variables.get_data_bounds'
+            ),
+            UrlMap(
                 name='getAvailableAttributes',
                 url='getAvailableAttributes/',
                 controller='metdataexplorer2.groups.give_all_attributes'

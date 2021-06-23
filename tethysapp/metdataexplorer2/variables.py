@@ -13,7 +13,52 @@ import netCDF4
 from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
 import xarray
+
+
 Persistent_Store_Name = 'thredds_db'
+
+
+def get_data_bounds(request):
+    return_obj = {}
+    variable_single = request.POST.get('variable')
+    tdds_single = request.POST.get('tdds')
+    group_single = request.POST.get('group')
+    SessionMaker = app.get_persistent_store_database(
+        Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()
+    tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group_single).filter(Thredds.title == tdds_single).first()
+    var_row = session.query(Variables).filter(Variables.name == variable_single).join(Thredds).filter(Thredds.title == tdds_single).join(Groups).filter(Groups.name == group_single).first()
+    # print(type(var_row.range))
+    if var_row.range is None:
+        # print("hol")
+        da = xarray.open_dataset(tdds_group.url.strip(),chunks={"time": '500MB'})
+        data = da[variable_single].compute()
+        # print(variable_single)
+        max = data.max().values
+        min = data.min().values
+        # return_obj['min'] = min
+        # return_obj['max'] = max
+        # print(min, max)
+        range_string = f'{min},{max}'
+        return_obj['range'] = range_string
+        var_row.range = range_string
+        session.commit()
+        session.close()
+    else:
+        return_obj['range'] = var_row.range
+
+    # da = xarray.open_dataset(tdds_group.url.strip())
+    # print(da)
+    # print(da[variable_single].compute())
+    # data = da[variable_single].compute()
+    # da.load()
+    # print(da[variable_single].values)
+
+
+
+    return JsonResponse(return_obj)
+
+
 
 def add_vars(request):
     group_obj={}
