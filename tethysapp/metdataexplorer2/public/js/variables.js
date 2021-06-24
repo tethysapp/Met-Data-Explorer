@@ -309,6 +309,7 @@ var myWMS_display2 = function(){
   });
   let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
   console.log(layernameUI);
+  console.log(layers_dict_wms[layernameUI]);
   layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
   layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer2(layernameUI,layers_dict_wms[layernameUI]);

@@ -905,31 +905,31 @@ var addSingleThreddsServer = function(){
 
 
 
-
+              console.log();
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
-              for (let i = 0; i< attr.length; ++i){
-                $(`#${attr[i]['name']}_${new_title}_info`).on("click", function(){
+              for (let i = 0; i< attr_array.length; ++i){
+                $(`#${attr_array[i]['name']}_${new_title}_info`).on("click", function(){
                   $("#metadata_vars").empty();
-                  let info_content = get_metadata_button(attr[i]);
+                  let info_content = get_metadata_button(attr_array[i]);
                   $(info_content).appendTo("#metadata_vars");
                 })
 
                 // DEFINE THE LAYER ATTRIBUTES //
 
-                let layernameUI = `${attr[i]['name']}_${new_title}`
+                let layernameUI = `${attr_array[i]['name']}_${new_title}`
                 layers_style[layernameUI] = {}
-                layers_style[layernameUI]['title'] = attr[i]['name'];
+                layers_style[layernameUI]['title'] = attr_array[i]['name'];
                 layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
                 layers_style[layernameUI]['wmsURL']= wmsURL;
                 layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
                 layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
-                layers_style[layernameUI]['variable'] = attr[i]['name'];
+                layers_style[layernameUI]['variable'] = attr_array[i]['name'];
                 layers_style[layernameUI]['subset'] = subsetURL;
                 layers_style[layernameUI]['opendap'] = url;
                 layers_style[layernameUI]['spatial'] = {};
                 layers_style[layernameUI]['epsg'] = epsg;
                 layers_style[layernameUI]['selected'] = false;
-                console.log(layers_style[layernameUI]);
+                // console.log(layers_style[layernameUI]);
                 layers_dict_wms = layers_style;
 
 
