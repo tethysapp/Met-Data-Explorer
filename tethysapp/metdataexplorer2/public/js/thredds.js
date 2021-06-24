@@ -346,11 +346,17 @@ var load_individual_thredds_for_group = function(group_name){
                     console.log(layernameUI2);
                     console.log(layers_style[layernameUI2]);
 
+                    $('#show_wms').bootstrapToggle('on');
 
-                    setTimeout(updateWMSLayer(layernameUI2,layers_style[layernameUI2]), 3000);
+                    updateWMSLayer2(layernameUI2,layers_style[layernameUI2])
+                    // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                    $("#opacity-slider").on("change", function(){
+                      changeOpacity(layernameUI2,this.value);
+                      layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+                    });
 
+                    // $('#show_wms').prop('checked', true);
 
-                    $('#show_wms').bootstrapToggle('on')
                     // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
                     for (let i = 0; i< attributes.length; ++i){
                       $(`#${attributes[i]['name']}_${new_title}_info`).on("click", function(){
@@ -379,21 +385,20 @@ var load_individual_thredds_for_group = function(group_name){
                       // console.log(layers_style[layernameUI]);
 
                       // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                      var check_id_var = `${attributes[i]['name']}_${new_title}_check`
-                      let input_check = $(`#${check_id_var}`);
-
-                      input_check.on("change", function(){
-                        updateWMSLayer(layernameUI,layers_style[layernameUI]);
-                        // only one check box at a time //
-                        $('input[type="checkbox"]').not(this).prop('checked', false);
-
-                      });
+                      // var check_id_var = `${attributes[i]['name']}_${new_title}_check`
+                      // let input_check = $(`#${check_id_var}`);
+                      //
+                      // input_check.on("change", function(){
+                      //   updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                      //   $('input[type="checkbox"]').not(this).prop('checked', false);
+                      //
+                      // });
 
                       // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
-                      $("#opacity-slider").on("change", function(){
-                        changeOpacity(layernameUI,this.value);
-                        layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                      })
+                      // $("#opacity-slider").on("change", function(){
+                      //   changeOpacity(layernameUI,this.value);
+                      //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                      // });
 
 
                     }
@@ -888,7 +893,18 @@ var addSingleThreddsServer = function(){
               console.log(layers_style[layernameUI2]);
 
 
-              setTimeout(updateWMSLayer(layernameUI2,layers_style[layernameUI2]), 3000);
+
+              $('#show_wms').bootstrapToggle('on');
+
+              updateWMSLayer2(layernameUI2,layers_style[layernameUI2])
+              // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+              $("#opacity-slider").on("change", function(){
+                changeOpacity(layernameUI2,this.value);
+                layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+              });
+
+
+
 
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
               for (let i = 0; i< attr.length; ++i){
@@ -918,18 +934,18 @@ var addSingleThreddsServer = function(){
 
 
                 // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                var check_id_var = `${attr[i]['name']}_${new_title}_check`
-                let input_check = $(`#${check_id_var}`);
-                input_check.on("change", function(){
-                  updateWMSLayer(layernameUI,layers_style[layernameUI]);
-                  // only one check box at a time //
-                  $('input[type="checkbox"]').not(this).prop('checked', false);
-                });
-                // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
-                $("#opacity-slider").on("change", function(){
-                  changeOpacity(layernameUI,this.value);
-                  layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                })
+                // var check_id_var = `${attr[i]['name']}_${new_title}_check`
+                // let input_check = $(`#${check_id_var}`);
+                // input_check.on("change", function(){
+                //   updateWMSLayer(layernameUI,layers_style[layernameUI]);
+                //   // only one check box at a time //
+                //   $('input[type="checkbox"]').not(this).prop('checked', false);
+                // });
+                // // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                // $("#opacity-slider").on("change", function(){
+                //   changeOpacity(layernameUI,this.value);
+                //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                // })
               }
               $("#GeneralLoading").addClass("hidden");
 

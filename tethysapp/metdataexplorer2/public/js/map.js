@@ -270,6 +270,38 @@ var updateWMSLayer = function(layernameUI,x) {
     console.log(e);
   }
 
+}
+var updateWMSLayer2 = function(layernameUI,x) {
+  try{
+    wmsURL = x['wmsURL'];
+    console.log(wmsURL);
+    layer = x['variable'];
+    console.log(layer);
+    range =x['range'];
+    console.log(range);
+    style = x['style'];
+    console.log(style);
+    opacity =x['opacity'];
+    console.log(opacity);
+    console.log(layernameUI);
+      // if (firstlayeradded == true) {
+
+
+    Object.keys(layers_dict).forEach(function(key) {
+      layerControlObj.removeLayer(layers_dict[key]);
+      mapObj.removeLayer(layers_dict[key]);
+      delete layers_dict[key];
+
+    });
+    dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+    dataLayerObj.setOpacity(opacity);
+    layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+    console.log("showing");
+
+  }
+  catch(e){
+    console.log(e);
+  }
 
 }
 

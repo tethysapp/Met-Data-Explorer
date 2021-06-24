@@ -13,7 +13,7 @@ var VARIABLES_PACKAGE = (function(){
     $("#variables_graph").on("change", function(){
       let actual_state=$("#show_wms").prop('checked');
       if(actual_state){
-        myWMS_display()
+        myWMS_display2()
       }
     })
     $("#variable_met_info").on("click", function(){
@@ -70,10 +70,14 @@ var VARIABLES_PACKAGE = (function(){
 })()
 
 var apply_style_config = function(){
+  if(!$('#show_wms').is(":checked")){
+    $('#show_wms').bootstrapToggle('on');
+  }
   var range = $("#wmslayer-bounds").val();
   var opacity = $("#wmslayer-style").val();
   var colorStyle = $("#wmslayer-style").val();
-  myWMS_display();
+  myWMS_display2();
+
 }
 
 var get_data_bounds = function(){
@@ -289,6 +293,25 @@ var myWMS_display = function(){
   layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
   layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer(layernameUI,layers_dict_wms[layernameUI]);
+
+  console.log(layers_dict_wms);
+}
+var myWMS_display2 = function(){
+  let tdds_e3;
+  console.log(current_tdds);
+  console.log(current_Group);
+  console.log(id_dictionary);
+  Object.keys(id_dictionary).forEach(function(key) {
+    if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
+      tdds_e3 = key;
+      console.log(tdds_e3);
+    }
+  });
+  let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
+  console.log(layernameUI);
+  layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
+  layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
+  updateWMSLayer2(layernameUI,layers_dict_wms[layernameUI]);
 
   console.log(layers_dict_wms);
 }
