@@ -44,7 +44,7 @@ def thredds_proxy(request):
 
 def get_files_and_folders(request):
     url = request.GET.get('url')
-    print(url)
+    # print(url)
     data_tree = {}
     folders_dict = {}
     files_dict = {}
@@ -76,14 +76,14 @@ def get_files_and_folders(request):
     final_obj = {}
     final_obj['dataTree'] = data_tree
     final_obj['correct_url'] = correct_url
-    print(final_obj)
+    # print(final_obj)
     return JsonResponse(final_obj)
 
 def get_variables_and_file_metadata(request):
     url = request.GET['opendapURL']
     variables = {}
     file_metadata = ''
-    print(url)
+    # print(url)
     try:
         ds = netCDF4.Dataset(url)
     except OSError:

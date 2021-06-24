@@ -29,7 +29,7 @@ def edit_tdds(request):
     # Query DB for hydroservers
     if request.is_ajax() and request.method == 'POST':
         try:
-            print(request.POST)
+            # print(request.POST)
             title_old =request.POST.get('old_title')
             # print(title_old)
             title_new = request.POST.get('new_title')
@@ -81,8 +81,8 @@ def delete_single_thredd(request):
     if request.is_ajax() and request.method == 'POST':
         titles=request.POST.getlist('server')
         group = request.POST.get('actual-group')
-        print(titles)
-        print(group)
+        # print(titles)
+        # print(group)
         i=0;
         for title in titles:
             # tdds_group = session.query(Thredds).filter(Thredds.title == title).first().delete(

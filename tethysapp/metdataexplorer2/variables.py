@@ -32,7 +32,7 @@ def get_data_bounds(request):
     if var_row.range is None:
         # print("hol")
         da = xarray.open_dataset(tdds_group.url.strip(),chunks={"time": '100MB'})
-        print(da)
+        # print(da)
         data = da[variable_single].compute()
         # print(variable_single)
         max = data.max().values
@@ -76,8 +76,8 @@ def add_vars(request):
         file_tempt_dict = {}
         # tdds_objects = session.query(Thredds).filter(Thredds.title == actual_tdds)
         tdds_object = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
-        print(tdds_object.__dict__)
-        print(tdds_object.group.__dict__)
+        # print(tdds_object.__dict__)
+        # print(tdds_object.group.__dict__)
         # for td_single_obj in tdds_objects:
         #     if td_single_obj.group.name == actual_group and td_single_obj.title == actual_tdds:
         #         print(td_single_obj.group.name)
@@ -101,7 +101,7 @@ def add_vars(request):
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
             tdds_var_query = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).join(Variables).filter(Variables.name == key).count()
-            print(tdds_var_query)
+            # print(tdds_var_query)
             if tdds_var_query == 0:
                 variable_one = Variables(name= key,dimensions =tdds_info[key]['dimensions'],
                                     units = tdds_info[key]['units'],
@@ -169,7 +169,7 @@ def delete_vars(request):
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
             for single_var in variables_tdds:
                 var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
-                print(var_row)
+                # print(var_row)
                 # var_row = session.query(Variables).filter(Variables.title == single_var).first()
 
                 session.delete(var_row)
@@ -193,8 +193,8 @@ def getVariablesTds(request):
         try:
             actual_group = request.POST.get('group')
             actual_tdds = request.POST.get('tdds')
-            print(actual_group)
-            print(actual_tdds)
+            # print(actual_group)
+            # print(actual_tdds)
             old_attr_arr = []
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
@@ -253,7 +253,7 @@ def get_full_array(request):
 
     attribute_array['attributes'] = attr_variable
     xds = xarray.open_dataset(tdds_group.url)
-    print(xds)
+    # print(xds)
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
     data = organize_array(attribute_array)
@@ -297,12 +297,12 @@ def organize_array(attribute_array):
         if dim_single.startswith("lon"):
             dims2.append(dim_single)
     dim_order = (dims2[0], dims2[1], dims2[2] )
-    print(dim_order)
+    # print(dim_order)
     stats_value = 'mean'
     feature_label = 'id'
-    print(variable)
+    # print(variable)
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
-    print(timeseries)
+    # print(timeseries)
     data[variable] = timeseries
     # for variable in attribute_array['attributes']:
     #     # print(variable)
@@ -344,7 +344,7 @@ def get_geojson_and_data(spatial, epsg):
             shift_lat = int(epsg.split(',')[2][2:])
             shift_lon = int(epsg.split(',')[1][2:])
             # print(shift_lat, shift_lon)
-            print(geojson_geometry['geometry'])
+            # print(geojson_geometry['geometry'])
             geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
 
     geojson_geometry.to_file(geojson_path, driver="GeoJSON")
@@ -356,7 +356,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label
     #print('Getting TimeSeries')
     # print(var)
     # print(files)
-    print(dim_order)
+    # print(dim_order)
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     #series.interp_units = True
     # timeseries_array = series.shape(vector=geojson_path, )

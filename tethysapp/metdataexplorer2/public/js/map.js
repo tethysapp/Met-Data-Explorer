@@ -70,7 +70,7 @@ var MAP_PACKAGE = (function(){
                   async: false,
                   success: function (result) {
                       let geojson = result['geojson'];
-                      console.log(geojson)
+                      // console.log(geojson)
                       makeGeojsonLayer(geojson);
                       mapObj.flyToBounds(shpLayer.getBounds());
                   },
@@ -138,7 +138,7 @@ var MAP_PACKAGE = (function(){
     drawnItems.on('click', function (e) {
         let coord = e.layer.getLatLngs();
         getTimeseries(coord);
-        console.log("draw item");
+        // console.log("draw item");
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
@@ -154,10 +154,10 @@ var MAP_PACKAGE = (function(){
 
         } else {
             drawnItems.addLayer(e.layer);
-            console.log(e.layer);
+            // console.log(e.layer);
             // let coord = e.layer.getLatLngs();
             input_spatial = JSON.stringify(e.layer.toGeoJSON());
-            console.log(input_spatial);
+            // console.log(input_spatial);
             // getFullArray();
             // getSingleTS();
             // getTimeseries(coord);
@@ -187,10 +187,10 @@ var getThreddsBounds = function() {
 }
 
 var data_layer = function(layernameUI,wmsURL,layer,range,style) {
-  console.log("data  layer");
-  console.log(URL_threddsProxy);
+  // console.log("data  layer");
+  // console.log(URL_threddsProxy);
   let wmsURL2;
-  console.log(wmsURL);
+  // console.log(wmsURL);
   try {
     if (wmsURL.indexOf("http://") != -1) {
       console.log("Http endpoint found, changing to proxy URL");
@@ -199,7 +199,7 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
     else{
       wmsURL2 = wmsURL;
     }
-    console.log(wmsURL2);
+    // console.log(wmsURL2);
     // const layer = $('#variable-input').val();
     // const range = $('#wmslayer-bounds').val();
     // const style = $('#wmslayer-style').val();
@@ -233,16 +233,16 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
 var updateWMSLayer = function(layernameUI,x) {
   try{
     wmsURL = x['wmsURL'];
-    console.log(wmsURL);
+    // console.log(wmsURL);
     layer = x['variable'];
-    console.log(layer);
+    // console.log(layer);
     range =x['range'];
-    console.log(range);
+    // console.log(range);
     style = x['style'];
-    console.log(style);
+    // console.log(style);
     opacity =x['opacity'];
-    console.log(opacity);
-    console.log(layernameUI);
+    // console.log(opacity);
+    // console.log(layernameUI);
       // if (firstlayeradded == true) {
       if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
           layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
@@ -251,7 +251,7 @@ var updateWMSLayer = function(layernameUI,x) {
           // mapObj.removeLayer(dataLayerObj);
           delete layers_dict[`${layernameUI}_check`];
           // x['selected'] = false;
-          console.log("taking off");
+          // console.log("taking off");
       }
       else{
         Object.keys(layers_dict).forEach(function(key) {
@@ -263,7 +263,7 @@ var updateWMSLayer = function(layernameUI,x) {
         dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
         dataLayerObj.setOpacity(opacity);
         layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-        console.log("showing");
+        // console.log("showing");
       }
   }
   catch(e){
@@ -274,16 +274,16 @@ var updateWMSLayer = function(layernameUI,x) {
 var updateWMSLayer2 = function(layernameUI,x) {
   try{
     wmsURL = x['wmsURL'];
-    console.log(wmsURL);
+    // console.log(wmsURL);
     layer = x['variable'];
-    console.log(layer);
+    // console.log(layer);
     range =x['range'];
-    console.log(range);
+    // console.log(range);
     style = x['style'];
-    console.log(style);
+    // console.log(style);
     opacity =x['opacity'];
-    console.log(opacity);
-    console.log(layernameUI);
+    // console.log(opacity);
+    // console.log(layernameUI);
       // if (firstlayeradded == true) {
 
 
@@ -296,7 +296,7 @@ var updateWMSLayer2 = function(layernameUI,x) {
     dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
     dataLayerObj.setOpacity(opacity);
     layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-    console.log("showing");
+    // console.log("showing");
 
   }
   catch(e){
