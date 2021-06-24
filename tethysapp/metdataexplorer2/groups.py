@@ -8,6 +8,7 @@ import netCDF4
 import logging
 from .model import Variables, Thredds, Groups
 import json
+import xarray as xr
 
 # from .model import Thredds, Groups
 from .app import Metdataexplorer2 as app
@@ -210,8 +211,12 @@ def load_group(request):
         layer_obj["timestamp"] = trds.timestamp
         layer_obj["metadata_file"] = trds.metadata_td_file
         layer_obj["attributes"] = []
+
+
+
         for attribute_single in trds.attributes:
             temp_var_td = {}
+
             temp_var_td['name'] = attribute_single.name
             temp_var_td['dimensions'] = attribute_single.dimensions
             temp_var_td['units'] = attribute_single.units
