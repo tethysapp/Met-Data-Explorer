@@ -98,6 +98,7 @@ var apply_var_filter = function(){
                     });
                   })
               });
+
               $("#current-GroupThredds").find("li").each(function()
                  {
                     var $li=$(this)['0'];
@@ -139,6 +140,7 @@ var apply_var_filter = function(){
                       // }
                     }
                  });
+                 $("#btn-r-reset").show()
             }
             catch(e){
               console.log(e);

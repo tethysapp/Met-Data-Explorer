@@ -91,10 +91,50 @@ var AUX_PACKAGE = (function(){
       addDefaultBehaviorToAjax();
       $('#sG').change(activate_deactivate_graphs);
       initialize_graphs([],[],"No data Available","","","","scatter");
+      $("#btn-r-reset").on("click", reset_keywords);
+      
     })
 
 })()
 
+var reset_keywords = function(){
+  try{
+    $('#btn-r-reset').hide();
+    $("#current-GroupThredds").find("li").each(function(){
+          var $li=$(this)['0'];
+          let id_li = $li['id'];
+
+          $(`#${id_li}`).css({"opacity": "1",
+                              "border-color": "#d3d3d3",
+                              "border-width":"1px",
+                              "border-style":"solid",
+                              "color":"#555555",
+                              "font-weight": "normal"});
+
+
+   });
+  }
+  catch(error){
+    $.notify(
+        {
+            message: `There is a problem reseting the fitler`
+        },
+        {
+            type: "danger",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+  }
+}
 var metadata_button_modal = function(infoService){
   let table_content = '<table id = "table_metadata_file2" class="table table-hover table-condensed"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'

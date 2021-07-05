@@ -1,3 +1,12 @@
+#current-GroupThredds li {
+  opacity: 1;
+  border-color: #d3d3d3;
+  border-width:1px;
+  border-style:solid;
+  color:#555555;
+  font-weight: normal;
+}
+
 #bounds_share{
   display: flex;
 }
