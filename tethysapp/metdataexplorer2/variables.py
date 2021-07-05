@@ -13,10 +13,60 @@ import netCDF4
 from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
 import xarray
+import glob
 
 
 Persistent_Store_Name = 'thredds_db'
+def shp_to_geojson(shp_filepath, filename):
+    new_directory = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace')
+    current_geojsons = glob.glob(os.path.join(new_directory, '*.geojson'))
+    already_made = False
+    for geojson in current_geojsons:
+        print(geojson)
+        if not already_made:
+            if os.path.basename(geojson) == filename + '.geojson':
+                already_made = True
+            else:
+                already_made = False
+    print(already_made)
+    if not already_made:
+        shape_file = gpd.read_file(shp_filepath)
+        shape_file.to_file(os.path.join(new_directory, filename + '.geojson'), driver='GeoJSON')
+    return already_made
 
+def upload_shapefile(request):
+    files = request.FILES.getlist('files')
+    shp_path = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces')
+
+    # write the new files to the directory
+    for n, shp_file in enumerate(files):
+        with open(os.path.join(shp_path, shp_file.name), 'wb') as dst:
+            for chunk in files[n].chunks():
+                dst.write(chunk)
+
+    filepath = glob.glob(os.path.join(shp_path, '*.shp'))[0]
+    filename = os.path.splitext(os.path.basename(filepath))[0]
+    path_to_shp = os.path.join(shp_path, filename)
+    already_made = True
+    i = 0
+    while already_made:
+        already_made = shp_to_geojson(path_to_shp + '.shp', filename)
+        if already_made:
+            if i == 0:
+                filename += str(i)
+            else:
+                filename = filename[:-1] + str(i)
+            i += 1
+
+    files_to_remove = glob.glob(path_to_shp + '*')
+    for this_file in files_to_remove:
+        os.remove(this_file)
+
+    path_to_geojson = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', filename + '.geojson')
+    with open(path_to_geojson) as f:
+        geojson = json.load(f)
+    # print(geojson)
+    return JsonResponse({'filename': filename, 'alreadyMade': already_made, 'geojson': json.dumps(geojson)})
 
 def get_data_bounds(request):
     return_obj = {}

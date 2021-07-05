@@ -120,6 +120,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='filterTddsByVariable/',
                 controller='metdataexplorer2.groups.filter_by_variable'
             ),
+            UrlMap(
+                name='upload-shapefile',
+                url='upload-shapefile/',
+                controller='metdataexplorer2.variables.upload_shapefile'
+            ),
 
 
         )

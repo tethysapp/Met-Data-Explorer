@@ -64,7 +64,7 @@ var VARIABLES_PACKAGE = (function(){
     })
     $("#get_data_values").on("click", get_data_bounds);
     $("#apply_config").on("click",apply_style_config);
-
+    $("#btn-add-shp").on("click", uploadShapefile)
   })
 
 })()

@@ -92,10 +92,62 @@ var AUX_PACKAGE = (function(){
       $('#sG').change(activate_deactivate_graphs);
       initialize_graphs([],[],"No data Available","","","","scatter");
       $("#btn-r-reset").on("click", reset_keywords);
-      
+
     })
 
 })()
+
+//ADD A USER SHAPEFILE TO THE MAP
+//Ajax call to send the shapefile to the client side
+var uploadShapefile = function() {
+    let files = $('#shapefile-upload')[0].files;
+    if (files.length !== 4) {
+        alert('The files you selected were rejected. Upload exactly 4 files ending in shp, shx, prj and dbf.');
+        return
+    }
+    let data = new FormData();
+    Object.keys(files).forEach(function (file) {
+        data.append('files', files[file]);
+    });
+    $.ajax({
+        url: 'upload-shapefile/',
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+          try{
+            console.log(result);
+            let filename = result["filename"];
+            let alreadyMade = result["alreadyMade"];
+            let geoJsonObject = JSON.parse(result['geojson']);
+            var myStyle = {
+                "color": "#E2E5DE",
+                "weight": 5,
+                "opacity": 0.5
+            };
+
+            jsonLayer = L.geoJSON(geoJsonObject, {
+                style: myStyle
+            })
+            jsonLayer.addTo(mapObj);
+            mapObj.flyToBounds(jsonLayer.getBounds());
+
+            if (alreadyMade == true) {
+                console.log('You already have a shape with this name. Please rename your file and try again.');
+            }
+            else {
+                $('#externalSPTL_modal').modal('hide');
+            }
+          }
+          catch(e){
+            console.log(e);
+          }
+
+        },
+    });
+}
 
 var reset_keywords = function(){
   try{
