@@ -85,9 +85,81 @@ var apply_var_filter = function(){
           success: function(result) {
             try{
               console.log(result);
+              let result2 = JSON.parse(result);
+              let filter_tdds_id = [];
+              Object.keys(result2).forEach(function(key_group) {
+                console.log(result2[key_group]);
+                  result2[key_group].forEach(function(filter_tdds){
+                    console.log(id_dictionary);
+                    Object.keys(id_dictionary).forEach(function(keys_uui) {
+                      if(id_dictionary[keys_uui] == `${filter_tdds}_join_${key_group}` ){
+                          filter_tdds_id.push(keys_uui);
+                      }
+                    });
+                  })
+              });
+              $("#current-GroupThredds").find("li").each(function()
+                 {
+                    var $li=$(this)['0'];
+                    let id_li = $li['id'];
+
+                    if(filter_tdds_id.includes(id_li)){
+
+                      $(`#${id_li}`).css({"opacity": "1",
+                                          "border-color": "#ac2925",
+                                          "border-width": "2px",
+                                          "border-style": "solid",
+                                          "color": "black",
+                                          "font-weight": "bold"});
+                      $(`#${id_li} input[type=checkbox]`).each(function() {
+                        this.checked = true;
+                      });
+
+                    }
+                    else{
+                      // let groups_divs = Object.keys(information_model);
+                      // let groups_divs_3e = []
+                      // groups_divs.forEach(function(g3){
+                      //   let g_new2;
+                      //   Object.keys(id_dictionary).forEach(function(key) {
+                      //     if(id_dictionary[key] == g3 ){
+                      //       g_new2 = key;
+                      //     }
+                      //   });
+                      //   groups_divs_3e.push(g_new2);
+                      // })
+                      // groups_divs = groups_divs_3e
+                      // if (!groups_divs.includes(id_li)){
+                        $(`#${id_li}`).css({"opacity": "0.5",
+                                             "border-color": "#d3d3d3",
+                                             "border-width":"1px",
+                                             "border-style":"solid",
+                                             "color":"#555555",
+                                             "font-weight": "normal"});
+                      // }
+                    }
+                 });
             }
             catch(e){
               console.log(e);
+              $.notify(
+                  {
+                      message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
+                  },
+                  {
+                      type: "danger",
+                      allow_dismiss: true,
+                      z_index: 20000,
+                      delay: 5000,
+                      animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                      },
+                      onShow: function() {
+                          this.css({'width':'auto','height':'auto'});
+                      }
+                  }
+              )
             }
 
           },
