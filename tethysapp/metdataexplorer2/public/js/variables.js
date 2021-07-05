@@ -773,9 +773,15 @@ var getFullArray= function() {
                  if(Object.keys(timeseries[key]).length <= 2 ){
                    let xArray = [];
                    let yArray = [];
-                   Object.keys(timeseries[key]['Shape-mean']).forEach(function(key2) {
-                       xArray.push(timeseries[key]['Shape-mean'][key2]);
-                       yArray.push(timeseries[key]['datetime'][key2]);
+                   Object.keys(timeseries[key]).forEach(function(key2) {
+                      if(key2 != "datetime"){
+                        console.log(key2);
+                        Object.keys(timeseries[key][key2]).forEach(function(key3) {
+                          xArray.push(timeseries[key][key2][key3]);
+                          yArray.push(timeseries[key]['datetime'][key3]);
+                        })
+                      }
+
                     });
                     console.log($("#type_graph_select2").val());
                     initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,$("#type_graph_select2").val());
