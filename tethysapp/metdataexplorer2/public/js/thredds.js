@@ -394,11 +394,11 @@ var load_individual_thredds_for_group = function(group_name){
                       //
                       // });
 
-                      // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
-                      // $("#opacity-slider").on("change", function(){
-                      //   changeOpacity(layernameUI,this.value);
-                      //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                      // });
+                      //ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                      $("#opacity-slider").on("change", function(){
+                        changeOpacity(layernameUI,this.value);
+                        layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                      });
 
 
                     }
@@ -941,11 +941,11 @@ var addSingleThreddsServer = function(){
                 //   // only one check box at a time //
                 //   $('input[type="checkbox"]').not(this).prop('checked', false);
                 // });
-                // // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
-                // $("#opacity-slider").on("change", function(){
-                //   changeOpacity(layernameUI,this.value);
-                //   layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-                // })
+                // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+                $("#opacity-slider").on("change", function(){
+                  changeOpacity(layernameUI,this.value);
+                  layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+                })
               }
               $("#GeneralLoading").addClass("hidden");
 
