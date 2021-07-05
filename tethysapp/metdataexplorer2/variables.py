@@ -360,7 +360,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     #series.interp_units = True
     # timeseries_array = series.shape(vector=geojson_path, )
-    timeseries_array = series.shape(vector=geojson_path, behavior='features', labelby=feature_label, statistics=stats)
+    timeseries_array = series.shape(mask=geojson_path, behavior='features', labelby=feature_label, statistics=stats)
 
     timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
     return timeseries_array
