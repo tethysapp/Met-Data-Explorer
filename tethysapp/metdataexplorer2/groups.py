@@ -33,7 +33,7 @@ def give_all_attributes(request):
 
 def thredds_proxy(request):
     if 'main_url' in request.GET:
-        request_url = request.GET['main_url']
+        request_url = request.GET.get('main_url')
         query_params = request.GET.dict()
         query_params.pop('main_url', None)
         r = requests.get(request_url, params=query_params)
@@ -80,7 +80,7 @@ def get_files_and_folders(request):
     return JsonResponse(final_obj)
 
 def get_variables_and_file_metadata(request):
-    url = request.GET['opendapURL']
+    url = request.GET.get('opendapURL')
     variables = {}
     file_metadata = ''
     # print(url)
@@ -116,7 +116,7 @@ def add_group(request):
     session = SessionMaker()  # Initiate a session
     if request.is_ajax() and request.method == 'POST':
         # print(request.POST)
-        groups_info = json.loads(request.POST["data"])
+        groups_info = json.loads(request.POST.get("data"))
         # print(groups_info)
         description = groups_info['description']
         title = groups_info['title']

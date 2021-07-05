@@ -66,9 +66,9 @@ def add_vars(request):
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
-    tdds_info = json.loads(request.POST["attributes"])
-    actual_tdds = request.POST["current_tdds"]
-    actual_group = request.POST["current_group"]
+    tdds_info = json.loads(request.POST.get("attributes"))
+    actual_tdds = request.POST.get("current_tdds")
+    actual_group = request.POST.get("current_group")
     unique_vars = []
     if request.is_ajax() and request.method == 'POST':
 
@@ -223,10 +223,10 @@ def get_full_array(request):
     session = SessionMaker()
     attribute_array = {}
     # attribute_array = json.loads(request.GET['containerAttributes'])
-    actual_group = request.GET['group']
-    actual_tdds = request.GET['tds']
-    single_var = request.GET['attr_name']
-    input_spatial = request.GET['input_sptl']
+    actual_group = request.GET.get('group')
+    actual_tdds = request.GET.get('tds')
+    single_var = request.GET.get('attr_name')
+    input_spatial = request.GET.get('input_sptl')
 
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
