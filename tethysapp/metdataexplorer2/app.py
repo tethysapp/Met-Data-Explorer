@@ -115,6 +115,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='getAvailableAttributes/',
                 controller='metdataexplorer2.groups.give_all_attributes'
             ),
+            UrlMap(
+                name='filterTddsByVariable',
+                url='filterTddsByVariable/',
+                controller='metdataexplorer2.groups.filter_by_variable'
+            ),
 
 
         )

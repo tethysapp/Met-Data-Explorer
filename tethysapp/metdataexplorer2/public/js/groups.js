@@ -73,40 +73,45 @@ var GROUPS_PACKAGE = (function(){
 
 var apply_var_filter = function(){
     try{
-      let elementForm= $("#modalKeyWordSearch");
+      let elementForm= $("#modalVariablesFilter");
       let datastring= elementForm.serialize();
       console.log(datastring);
 
-      // $.ajax({
-      //     type: "POST",
-      //     url: `filterTddsByVariable/`,
-      //     dataType: "HTML",
-      //     data: datastring,
-      //     success: function(result) {
-      //
-      //
-      //     },
-      //     error: function(error){
-      //       $.notify(
-      //           {
-      //               message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
-      //           },
-      //           {
-      //               type: "danger",
-      //               allow_dismiss: true,
-      //               z_index: 20000,
-      //               delay: 5000,
-      //               animate: {
-      //                 enter: 'animated fadeInRight',
-      //                 exit: 'animated fadeOutRight'
-      //               },
-      //               onShow: function() {
-      //                   this.css({'width':'auto','height':'auto'});
-      //               }
-      //           }
-      //       )
-      //     }
-      // })
+      $.ajax({
+          type: "POST",
+          url: `filterTddsByVariable/`,
+          dataType: "HTML",
+          data: datastring,
+          success: function(result) {
+            try{
+              console.log(result);
+            }
+            catch(e){
+              console.log(e);
+            }
+
+          },
+          error: function(error){
+            $.notify(
+                {
+                    message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
+                },
+                {
+                    type: "danger",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
+          }
+      })
     }
     catch(e){
       $.notify(
@@ -146,21 +151,21 @@ var give_all_variables = function(){
         let variables_groups = result['attrs'];
 
         // countries_available = data['countries']
-        const chunk = (arr, size) =>
-          Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-            arr.slice(i * size, i * size + size)
-          );
-        let arr=chunk(variables_groups, 2);
+        // const chunk = (arr, size) =>
+        //   Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+        //     arr.slice(i * size, i * size + size)
+        //   );
+        // let arr=chunk(variables_groups, 1);
 
         var HSTableHtml =
             `<table id="data-table" class="table table-striped table-bordered table-condensed"><tbody>`
 
-          arr.forEach(l_arr => {
+          variables_groups.forEach(l_arr => {
             HSTableHtml +=  '<tr class="odd gradeX">'
-            l_arr.forEach(i =>{
+            // l_arr.forEach(i =>{
               // let new_i = i.replace(/ /g,"_");
-              HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="servers" value = "${i}" /> ${i}</td>`;
-            })
+              HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="variables" value = "${l_arr}" /> ${l_arr}</td>`;
+            // })
 
                 HSTableHtml += '</tr>';
           })

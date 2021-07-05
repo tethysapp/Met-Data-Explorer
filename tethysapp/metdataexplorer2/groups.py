@@ -16,7 +16,22 @@ from .app import Metdataexplorer2 as app
 log = logging.getLogger('tethys.metdataexplorer2')
 Persistent_Store_Name = 'thredds_db'
 
-
+def filter_by_variable(request):
+    return_objt = {}
+    selected_vars = request.POST.getlist('variables')
+    SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()  # Initiate a session
+    for selected_var in selected_vars:
+        cr =session.query(Thredds).first()
+        tdds_group = session.query(Thredds).join(Variables).filter(Variables.name == selected_var).all()
+        for tdds_single in tdds_group:
+            if tdds_single.group.name  in return_objt:
+                if tdds_single.title not in return_objt[tdds_single.group.name]:
+                    return_objt[tdds_single.group.name].append(tdds_single.title)
+            else:
+                return_objt[tdds_single.group.name] = []
+                return_objt[tdds_single.group.name].append(tdds_single.title)
+    return JsonResponse(return_objt)
 
 def give_all_attributes(request):
     return_objt = {}
