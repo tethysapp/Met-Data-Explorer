@@ -980,7 +980,7 @@ var getFoldersAndFiles = function() {
               if (dataTree == "Invalid URL") {
                   $.notify(
                       {
-                          message: `Invalid THREDDS Endpoint`
+                          message: `Invalid THREDDS Endpoint. Be Sure to provide a Catalog URL, and not a OPENDAP Service `
                       },
                       {
                           type: "danger",
