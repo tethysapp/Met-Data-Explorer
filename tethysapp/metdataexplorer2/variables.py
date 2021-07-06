@@ -49,6 +49,9 @@ def upload_shapefile(request):
     path_to_shp = os.path.join(shp_path, filename)
     already_made = True
     i = 0
+    files_to_remove_app_wokspace = glob.glob(os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '*.geojson'))
+    for this_file in files_to_remove_app_wokspace:
+        os.remove(this_file)
     while already_made:
         already_made = shp_to_geojson(path_to_shp + '.shp', filename)
         if already_made:
@@ -61,6 +64,8 @@ def upload_shapefile(request):
     files_to_remove = glob.glob(path_to_shp + '*')
     for this_file in files_to_remove:
         os.remove(this_file)
+
+
 
     path_to_geojson = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', filename + '.geojson')
     with open(path_to_geojson) as f:
