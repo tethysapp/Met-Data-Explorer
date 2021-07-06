@@ -82,13 +82,21 @@
                       <option value="upload_shp" >Use a Shapefile</option>
                       <option value="geoserv_link" >WMF GeoServer Link</option>
                 </select>
-                <!-- <select id="type_graph_select2" class="selectpicker" data-width="100%">
-                  <optgroup label="Individual Variable Plots">
-                    <option value = "scatter"> Scatter </option>
-                    <option value = "whisker"> Whisker and Box </option>
-                </optgroup>
-                </select> -->
               </div>
+            </div>
+            <div id= "fourthContainer" class="controlGraphs2">
+                <div class="type_shp">
+                  <select id= "features_file" class="selectpicker" data-dropup-auto="false" data-live-search="true" data-style="btn-primary" data-width="100%">
+                    <option value="select_val" > Select Feature Name</option>
+                  </select>
+                  <select id= "behavior_shp" class="selectpicker" data-live-search="false" data-width="100%" data-style="btn-info">
+                        <option value="select_val" > Mask Type</option>
+
+                        <option value = "draw_map">dissolve</option>
+                        <option value="upload_shp" >features</option>
+                  </select>
+                </div>
+
             </div>
             <div id= "thirdContainer">
               <div id ="display_wms_graphs">
@@ -96,9 +104,6 @@
                 <button class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
                   <i class="fas fa-sliders-h"> Display Settings</i>
                 </button>
-                <!-- <button id = "variable_met_info" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
-                    <i class="fas fa-info-circle"> Metadata</i>
-                </button> -->
               </div>
               <select id="type_graph_select2" class="selectpicker" data-width="100%" data-style="btn-info">
                 <optgroup label="Individual Variable Plots">
@@ -106,14 +111,6 @@
                   <option value = "whisker"> Whisker and Box </option>
               </optgroup>
               </select>
-
-
-              <!-- <select id= "spatial_input" class="selectpicker" data-live-search="false" data-size="mini">
-                    <option value="sptial_in"> Select Spatial Input Mask</option>
-                    <option value = "draw_map"> Draw on Map</option>
-                    <option value="upload_shp" >Use a Shapefile</option>
-                    <option value="geoserv_link" >WMF GeoServer Link</option>
-              </select> -->
             </div>
             <div id= "secondContainer" class="controlGraphs2">
                 <button type="button" id= "update_graphs" class="btn btn-success"><i class="far fa-chart-bar"></i> Plot Time Series</button>
@@ -121,7 +118,6 @@
                     <option value="Download">Download</option>
                       <option value="CSV" >CSV</option>
                       <option value = "JSON">JSON</option>
-                      <!-- <option value = "xml">XML</option> -->
                 </select>
             </div>
           </div>

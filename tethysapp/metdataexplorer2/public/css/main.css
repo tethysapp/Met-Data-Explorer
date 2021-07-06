@@ -1,3 +1,9 @@
+.type_shp{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 #current-GroupThredds li {
   opacity: 1;
   border-color: #d3d3d3;
