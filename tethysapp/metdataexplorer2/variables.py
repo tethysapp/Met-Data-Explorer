@@ -114,8 +114,6 @@ def get_data_bounds(request):
 
     return JsonResponse(return_obj)
 
-
-
 def add_vars(request):
     group_obj={}
     services_array = []
@@ -282,6 +280,9 @@ def get_full_array(request):
     actual_tdds = request.GET.get('tds')
     single_var = request.GET.get('attr_name')
     input_spatial = request.GET.get('input_sptl')
+    behavior_type = request.GET.get('behavior_type')
+    label_type = request.GET.get('label_type')
+    dimensions_sel = request.GET.getlist('dimensions_sel[]')
 
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
@@ -302,7 +303,8 @@ def get_full_array(request):
     var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
     attr_variable = {}
     attr_variable['color'] = var_row.color
-    attr_variable['dimensions'] = var_row.dimensions
+    attr_variable['dimensions'] = dimensions_sel
+    # attr_variable['dimensions'] = var_row.dimensions
     attr_variable['units'] = var_row.units
     attr_variable['name'] = var_row.name
 
@@ -311,13 +313,13 @@ def get_full_array(request):
     # print(xds)
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
-    data = organize_array(attribute_array)
+    data = organize_array(attribute_array,behavior_type,label_type)
     #print(data)
 
     return JsonResponse({'result': data})
 
 
-def organize_array(attribute_array):
+def organize_array(attribute_array,behavior_type,label_type):
     access_urls = {}
     variables = ''
     if attribute_array['timestamp'] == 'true':
@@ -335,28 +337,29 @@ def organize_array(attribute_array):
 
     epsg = attribute_array['epsg']
     geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
+    print(geojson_path)
     # print(geojson_path)
     data = {}
     # for variable in attribute_array['attributes']:
     # print(attribute_array['attributes']['dimensions'])
     dims = attribute_array['attributes']['dimensions']
-    # dim_order = ("time", "lat", "lon")
-    dims2 = []
-    for dim_single in dims:
-        if dim_single.startswith("time"):
-            dims2.append(dim_single)
-    for dim_single in dims:
-        if dim_single.startswith("lat"):
-            dims2.append(dim_single)
-    for dim_single in dims:
-        if dim_single.startswith("lon"):
-            dims2.append(dim_single)
-    dim_order = (dims2[0], dims2[1], dims2[2] )
-    # print(dim_order)
+    # dims2 = []
+    # for dim_single in dims:
+    #     if dim_single.startswith("time"):
+    #         dims2.append(dim_single)
+    # for dim_single in dims:
+    #     if dim_single.startswith("lat"):
+    #         dims2.append(dim_single)
+    # for dim_single in dims:
+    #     if dim_single.startswith("lon"):
+    #         dims2.append(dim_single)
+    # dim_order = (dims2[0], dims2[1], dims2[2] )
+    dim_order = (dims[0], dims[1], dims[2] )
+    print(dim_order)
     stats_value = 'mean'
-    feature_label = 'id'
+    # feature_label = 'id'
     # print(variable)
-    timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
+    timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path,behavior_type,label_type, stats_value)
     # print(timeseries)
     data[variable] = timeseries
     # for variable in attribute_array['attributes']:
@@ -407,15 +410,20 @@ def get_geojson_and_data(spatial, epsg):
     return geojson_path
 
 
-def get_timeseries_at_geojson(files, var, dim_order, geojson_path, feature_label, stats):
+def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,label_type, stats):
     #print('Getting TimeSeries')
     # print(var)
     # print(files)
     # print(dim_order)
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     #series.interp_units = True
-    # timeseries_array = series.shape(vector=geojson_path, )
-    timeseries_array = series.shape(mask=geojson_path, behavior='features', labelby=feature_label, statistics=stats)
+    # timeseries_array = series.shape(vector=geojson_plabel_typeath, )
+    if label_type != 'select_val':
+        timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
+    else:
+        print("timeseries point")
+        timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+
 
     timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
     return timeseries_array

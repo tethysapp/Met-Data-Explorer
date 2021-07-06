@@ -15,6 +15,25 @@ var VARIABLES_PACKAGE = (function(){
       if(actual_state){
         myWMS_display2()
       }
+      let tdds_e3;
+      Object.keys(id_dictionary).forEach(function(key) {
+        if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
+          tdds_e3 = key;
+          console.log(tdds_e3);
+        }
+      });
+      let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
+      let dimensions = layers_dict_wms[layernameUI]['dimensions'];
+      let dim_orders_id = $("#dim_select");
+      dim_orders_id.empty();
+      dimensions.forEach(function(dim){
+        let option;
+        option = `<option value=${dim} >${dim} </option>`;
+        dim_orders_id.append(option)
+        dim_orders_id.selectpicker("refresh");
+      })
+
+
     })
     $("#variable_met_info").on("click", function(){
       let tdds_e3;
@@ -44,10 +63,8 @@ var VARIABLES_PACKAGE = (function(){
             console.log(result);
             let geoJsonObject = result
             let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
-            let option_beginning= `<option value= 0 selected= "selected"> Select Feature Property Name </option>`;
             let feature_select = $("#features_file");
             feature_select.empty();
-            feature_select.append(option_beginning);
             feature_select.selectpicker('refresh');
 
             attr_shp.forEach(function(attr){
@@ -293,9 +310,9 @@ var download_Methods = function(method_download){
 
 var myWMS_display = function(){
   let tdds_e3;
-  console.log(current_tdds);
-  console.log(current_Group);
-  console.log(id_dictionary);
+  // console.log(current_tdds);
+  // console.log(current_Group);
+  // console.log(id_dictionary);
   Object.keys(id_dictionary).forEach(function(key) {
     if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
       tdds_e3 = key;
@@ -334,24 +351,53 @@ var chosen_method_spatial = function(method_draw){
   console.log(method_draw);
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
-    mapObj.removeLayer(jsonLayer);
-    let option_beginning= `<option value= 0 selected= "selected"> Select Feature Property Name </option>`;
+    try{
+      mapObj.removeLayer(jsonLayer);
+    }
+    catch(e){
+      console.log("no cat");
+    }
+    let option_beginning= `<option value="select_val"> Select Feature Property Name</option>`;
     let feature_select = $("#features_file");
     feature_select.empty();
     feature_select.append(option_beginning);
     feature_select.selectpicker('refresh');
+    $('#behavior_shp').prop('disabled', true);
+    $('#behavior_shp').selectpicker('refresh');
+    $('#features_file').prop('disabled', true);
+    $('#features_file').selectpicker('refresh');
+
   }
   if(method_draw == 'upload_shp'){
     $(".leaflet-draw-section").hide();
     $('#externalSPTL_modal').modal("show");
     drawnItems.clearLayers();
-    mapObj.removeLayer(jsonLayer);
+    try{
+      mapObj.removeLayer(jsonLayer);
+    }
+    catch(e){
+      console.log("no cat");
+    }
+    $('#behavior_shp').prop('disabled', false);
+    $('#behavior_shp').selectpicker('refresh');
+    $('#features_file').prop('disabled', false);
+    $('#features_file').selectpicker('refresh');
   }
   if(method_draw == 'geoserv_link'){
     console.log("holis");
     $(".leaflet-draw-section").hide();
     $('#Geo_link_modal').modal("show");
     drawnItems.clearLayers();
+    try{
+      mapObj.removeLayer(jsonLayer);
+    }
+    catch(e){
+      console.log("no cat");
+    }
+    $('#behavior_shp').prop('disabled', false);
+    $('#behavior_shp').selectpicker('refresh');
+    $('#features_file').prop('disabled', false);
+    $('#features_file').selectpicker('refresh');
   }
 
 
@@ -757,12 +803,14 @@ var getSingleTS = function(){
 
 
 var getFullArray= function() {
-    // console.log($("#variables_graph").val());
     let request_obj = {
       group: current_Group,
       tds: current_tdds,
       attr_name:$("#variables_graph").val(),
-      input_sptl: input_spatial
+      input_sptl: input_spatial,
+      label_type: $("#features_file").val(),
+      behavior_type:  $("#behavior_shp").val(),
+      dimensions_sel: $("#dim_select").val()
     }
 
     console.log(request_obj);

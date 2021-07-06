@@ -122,11 +122,10 @@ var uploadShapefile = function() {
             let filename = result["filename"];
             let alreadyMade = result["alreadyMade"];
             let geoJsonObject = JSON.parse(result['geojson']);
+            input_spatial = filename
             let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
-            let option_beginning= `<option value= 0 selected= "selected"> Select Feature Property Name </option>`;
             let feature_select = $("#features_file");
             feature_select.empty();
-            feature_select.append(option_beginning);
             feature_select.selectpicker('refresh');
 
             attr_shp.forEach(function(attr){

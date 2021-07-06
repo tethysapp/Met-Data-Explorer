@@ -232,7 +232,7 @@ var load_individual_thredds_for_group = function(group_name){
            data: group_name_obj,
            success: result => {
              try{
-               // console.log(result);
+               console.log(result);
                let servers = result["thredds"]
                //USE A FUNCTION TO FIND THE LI ASSOCIATED WITH THAT GROUP  AND DELETE IT FROM THE MAP AND MAKE ALL
                // THE CHECKBOXES VISIBLE //
@@ -341,10 +341,21 @@ var load_individual_thredds_for_group = function(group_name){
                     layers_style[layernameUI2]['spatial'] = {};
                     layers_style[layernameUI2]['epsg'] = epsg;
                     layers_style[layernameUI2]['selected'] = false;
+                    layers_style[layernameUI2]['selected'] = false;
+                    layers_style[layernameUI2]['dimensions'] = attributes[0]['dimensions'];
                     layers_dict_wms = layers_style;
 
-                    console.log(layernameUI2);
-                    console.log(layers_style[layernameUI2]);
+                    // make the dims dropdown for the first varriable //
+                    let dim_orders_id = $("#dim_select");
+                    dim_orders_id.empty();
+                    
+                    layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+                      let option;
+                      option = `<option value=${dim} >${dim} </option>`;
+                      dim_orders_id.append(option)
+                      dim_orders_id.selectpicker("refresh");
+                    })
+
 
                     $('#show_wms').bootstrapToggle('on');
 
@@ -381,6 +392,8 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI]['spatial'] = {};
                       layers_style[layernameUI]['epsg'] = epsg;
                       layers_style[layernameUI]['selected'] = false;
+                      layers_style[layernameUI]['dimensions'] = attributes[i]['dimensions'];
+
                       layers_dict_wms = layers_style;
                       // console.log(layers_style[layernameUI]);
 

@@ -1,3 +1,7 @@
+.div_hor{
+  display: flex;
+  flex-direction: row;
+}
 .type_shp{
   display: flex;
   flex-direction: column;
