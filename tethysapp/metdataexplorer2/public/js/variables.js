@@ -42,6 +42,20 @@ var VARIABLES_PACKAGE = (function(){
           dataType: "json",
           success: function(result) {
             console.log(result);
+            let geoJsonObject = result
+            let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
+            let option_beginning= `<option value= 0 selected= "selected"> Select Feature Property Name </option>`;
+            let feature_select = $("#features_file");
+            feature_select.empty();
+            feature_select.append(option_beginning);
+            feature_select.selectpicker('refresh');
+
+            attr_shp.forEach(function(attr){
+              let option;
+              option = `<option value=${attr} >${attr} </option>`;
+              feature_select.append(option)
+              feature_select.selectpicker("refresh");
+            });
             var myStyle = {
                 "color": "#E2E5DE",
                 "weight": 5,
@@ -321,6 +335,11 @@ var chosen_method_spatial = function(method_draw){
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
     mapObj.removeLayer(jsonLayer);
+    let option_beginning= `<option value= 0 selected= "selected"> Select Feature Property Name </option>`;
+    let feature_select = $("#features_file");
+    feature_select.empty();
+    feature_select.append(option_beginning);
+    feature_select.selectpicker('refresh');
   }
   if(method_draw == 'upload_shp'){
     $(".leaflet-draw-section").hide();
