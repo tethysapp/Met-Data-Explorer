@@ -1022,17 +1022,27 @@ tr:hover {
   }
 
   #secondContainer{
-    order:3;
+    order:5;
     display: flex;
     flex-direction: column;
   }
   #thirdContainer{
-    order:2;
+    order:4;
     display: flex;
     flex-direction: column;
   }
   #firstContainer{
     order:1;
+    display: flex;
+    flex-direction: row;
+  }
+  #fifthContainer{
+    order:3;
+    display: flex;
+    flex-direction: row;
+  }
+  #fourthContainer{
+    order:2;
     display: flex;
     flex-direction: row;
   }
@@ -1087,19 +1097,31 @@ tr:hover {
   }
 
   #secondContainer{
+    order:5;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25em;
+  }
+  #thirdContainer{
+    order:4;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25em;
+  }
+  #firstContainer{
+    order:1;
+    display: flex;
+    flex-direction: row;
+    padding: 0.25em;
+  }
+  #fifthContainer{
+    order:3;
     display: flex;
     flex-direction: column;
     padding: 0.25em;
   }
   #fourthContainer{
-    padding: 0.25em;
-  }
-  #firstContainer{
-    display: flex;
-    flex-direction: row;
-    padding: 0.25em;
-  }
-  #thirdContainer{
+    order:2;
     display: flex;
     flex-direction: column;
     padding: 0.25em;
