@@ -297,8 +297,10 @@ def get_full_array(request):
     attribute_array['url_wms'] = tdds_group.url_wms
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
-    attribute_array['extra_dim'] = int(extra_dim)
-
+    if extra_dim != '':
+        attribute_array['extra_dim'] = int(extra_dim)
+    else:
+        attribute_array['extra_dim'] = extra_dim
     try:
         attribute_array['spatial'] = json.loads(input_spatial)
         print(attribute_array['spatial'])
