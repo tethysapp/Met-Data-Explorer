@@ -293,6 +293,7 @@ var load_individual_thredds_for_group = function(group_name){
 
                    // input_check_serv.on("click", function(){
                    $(`#${new_title}_span`).on("click",function(){
+                     $('#sG').bootstrapToggle('on');
 
                      current_tdds = id_dictionary[new_title].split('_join_')[0];
                      current_Group = group_name;
@@ -341,14 +342,13 @@ var load_individual_thredds_for_group = function(group_name){
                     layers_style[layernameUI2]['spatial'] = {};
                     layers_style[layernameUI2]['epsg'] = epsg;
                     layers_style[layernameUI2]['selected'] = false;
-                    layers_style[layernameUI2]['selected'] = false;
                     layers_style[layernameUI2]['dimensions'] = attributes[0]['dimensions'];
                     layers_dict_wms = layers_style;
 
                     // make the dims dropdown for the first varriable //
                     let dim_orders_id = $("#dim_select");
                     dim_orders_id.empty();
-                    
+
                     layers_style[layernameUI2]['dimensions'].forEach(function(dim){
                       let option;
                       option = `<option value=${dim} >${dim} </option>`;
@@ -417,6 +417,8 @@ var load_individual_thredds_for_group = function(group_name){
                     }
                     $("#GeneralLoading").addClass("hidden");
                     last_selected_id = new_title;
+
+
                   });
 
                })
@@ -865,6 +867,8 @@ var addSingleThreddsServer = function(){
 
               // input_check_serv.on("click", function(){
               $(`#${new_title}_span`).on("click",function(){
+                $('#sG').bootstrapToggle('on');
+                
                //ONLY ONE CHECKBOX AT A TIME//
                // $('input[type="checkbox"]').not(this).prop('checked', false);
                current_tdds = id_dictionary[new_title].split('_join_')[0];
@@ -900,7 +904,19 @@ var addSingleThreddsServer = function(){
               layers_style[layernameUI2]['spatial'] = {};
               layers_style[layernameUI2]['epsg'] = epsg;
               layers_style[layernameUI2]['selected'] = false;
+              layers_style[layernameUI2]['dimensions'] = attr_array[0]['dimensions'];
               layers_dict_wms = layers_style;
+
+              // make the dims dropdown for the first varriable //
+              let dim_orders_id = $("#dim_select");
+              dim_orders_id.empty();
+
+              layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+                let option;
+                option = `<option value=${dim} >${dim} </option>`;
+                dim_orders_id.append(option)
+                dim_orders_id.selectpicker("refresh");
+              })
 
               console.log(layernameUI2);
               console.log(layers_style[layernameUI2]);
@@ -942,8 +958,9 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI]['spatial'] = {};
                 layers_style[layernameUI]['epsg'] = epsg;
                 layers_style[layernameUI]['selected'] = false;
-                // console.log(layers_style[layernameUI]);
+                layers_style[layernameUI]['dimensions'] = attr_array[i]['dimensions'];
                 layers_dict_wms = layers_style;
+                // console.log(layers_style[layernameUI]);
 
 
                 // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
@@ -963,7 +980,6 @@ var addSingleThreddsServer = function(){
               $("#GeneralLoading").addClass("hidden");
 
               last_selected_id = new_title;
-
               });
 
             }
