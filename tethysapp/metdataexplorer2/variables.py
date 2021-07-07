@@ -284,6 +284,7 @@ def get_full_array(request):
     label_type = request.GET.get('label_type')
     dimensions_sel = request.GET.getlist('dimensions_sel[]')
     type_ask = request.GET.get('type_ask')
+    extra_dim = request.GET.get('extra_dim')
 
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
@@ -297,6 +298,7 @@ def get_full_array(request):
     attribute_array['url_wms'] = tdds_group.url_wms
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
+    attribute_array['extra_dim'] = int(extra_dim)
 
     try:
         attribute_array['spatial'] = json.loads(input_spatial)
@@ -358,12 +360,13 @@ def organize_array(attribute_array,behavior_type,label_type):
     #     if dim_single.startswith("lon"):
     #         dims2.append(dim_single)
     # dim_order = (dims2[0], dims2[1], dims2[2] )
-    dim_order = (dims[0], dims[1], dims[2] )
+    # dim_order = (dims[0], dims[1], dims[2] )
+    dim_order = tuple(dims)
     print(dim_order)
     stats_value = 'mean'
     # feature_label = 'id'
     # print(variable)
-    timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path,behavior_type,label_type, stats_value, attribute_array['type_request'])
+    timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path,behavior_type,label_type, stats_value, attribute_array['type_request'],attribute_array['extra_dim'])
     # print(timeseries)
     data[variable] = timeseries
     # for variable in attribute_array['attributes']:
@@ -414,7 +417,7 @@ def get_geojson_and_data(spatial, epsg):
     return geojson_path
 
 
-def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,label_type, stats, type_ask):
+def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,label_type, stats, type_ask, extra_dim):
 
     series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
 
@@ -426,18 +429,28 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     print(geojson_geometry.geometry)
     print(geojson_geometry.geometry[0].geom_type)
     print(geojson_geometry.geometry[0].bounds)
-    if type_ask == 'marker':
-        # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
-        print("point")
-        timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
-    if type_ask == "rectangle":
-        print("bounding_box")
-        print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
-        print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
-        timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
-    else:
-        # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
-        timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
+    if len(list(dim_order)) == 3:
+        if type_ask == 'marker':
+            # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+            print("point")
+            timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+        if type_ask == "rectangle":
+            print("bounding_box")
+            print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
+            print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
+            timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+        else:
+            # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+            timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
+    if len(list(dim_order)) == 4:
+        if type_ask == 'marker':
+            print("point")
+            timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+        if type_ask == "rectangle":
+            print("bounding_box")
+            print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
+            print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
+            timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
 
 
 
