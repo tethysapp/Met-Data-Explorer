@@ -810,7 +810,8 @@ var getFullArray= function() {
       input_sptl: input_spatial,
       label_type: $("#features_file").val(),
       behavior_type:  $("#behavior_shp").val(),
-      dimensions_sel: $("#dim_select").val()
+      dimensions_sel: $("#dim_select").val(),
+      type_ask: type_of_series
     }
 
     console.log(request_obj);

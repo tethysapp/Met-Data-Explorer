@@ -142,6 +142,7 @@ var MAP_PACKAGE = (function(){
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
+      console.log(e);
       if (!isEditing) {
         if (urlInfoBox == true) {
 
@@ -151,12 +152,13 @@ var MAP_PACKAGE = (function(){
           $('#modalAddGroupThredds').modal('show');
           $('#modalAddServices').modal('show');
           urlInfoBox = false;
-
+          type_of_series = e.layerType;
         } else {
             drawnItems.addLayer(e.layer);
             // console.log(e.layer);
             // let coord = e.layer.getLatLngs();
             input_spatial = JSON.stringify(e.layer.toGeoJSON());
+            type_of_series = e.layerType;
             // console.log(input_spatial);
             // getFullArray();
             // getSingleTS();
