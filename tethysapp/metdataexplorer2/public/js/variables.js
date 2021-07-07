@@ -362,15 +362,12 @@ var chosen_method_spatial = function(method_draw){
     feature_select.empty();
     feature_select.append(option_beginning);
     feature_select.selectpicker('refresh');
-    $('#behavior_shp').prop('disabled', true);
-    $('#behavior_shp').selectpicker('refresh');
-    $('#features_file').prop('disabled', true);
-    $('#features_file').selectpicker('refresh');
-
+    $("#fifthContainer").addClass("hidden");
   }
   if(method_draw == 'upload_shp'){
     $(".leaflet-draw-section").hide();
     $('#externalSPTL_modal').modal("show");
+    type_of_series = 'shape';
     drawnItems.clearLayers();
     try{
       mapObj.removeLayer(jsonLayer);
@@ -378,13 +375,11 @@ var chosen_method_spatial = function(method_draw){
     catch(e){
       console.log("no cat");
     }
-    $('#behavior_shp').prop('disabled', false);
-    $('#behavior_shp').selectpicker('refresh');
-    $('#features_file').prop('disabled', false);
-    $('#features_file').selectpicker('refresh');
+    $("#fifthContainer").removeClass("hidden");
+
   }
   if(method_draw == 'geoserv_link'){
-    console.log("holis");
+    type_of_series = 'geoserver';
     $(".leaflet-draw-section").hide();
     $('#Geo_link_modal').modal("show");
     drawnItems.clearLayers();
@@ -394,10 +389,7 @@ var chosen_method_spatial = function(method_draw){
     catch(e){
       console.log("no cat");
     }
-    $('#behavior_shp').prop('disabled', false);
-    $('#behavior_shp').selectpicker('refresh');
-    $('#features_file').prop('disabled', false);
-    $('#features_file').selectpicker('refresh');
+    $("#fifthContainer").removeClass("hidden");
   }
 
 
@@ -832,11 +824,34 @@ var getFullArray= function() {
          method: 'GET',
          success: function (result) {
            try{
+             console.log(result);
              let data = result['result'];
              let timeseries = {};
              let htmlVariables = '';
              let i = 1;
              for (let key in data) {
+                 if(data[key].hasOwnProperty('error')){
+                   $.notify(
+                       {
+                         message: ` ${data[key]['error']}`
+                       },
+                       {
+                           type: "info",
+                           allow_dismiss: true,
+                           z_index: 20000,
+                           delay: 5000,
+                           animate: {
+                             enter: 'animated fadeInRight',
+                             exit: 'animated fadeOutRight'
+                           },
+                           onShow: function() {
+                               this.css({'width':'auto','height':'auto'});
+                           }
+                       }
+                   )
+                   break;
+                   return
+                 }
                  timeseries[key] = JSON.parse(data[key]);
                  values_donwload_json = timeseries[key];
                  console.log(timeseries[key]);

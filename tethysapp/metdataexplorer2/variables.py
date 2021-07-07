@@ -292,7 +292,6 @@ def get_full_array(request):
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     attribute_array['epsg'] = tdds_group.epsg
-    # attribute_array['epsg'] = '4326,x:360,y:0'
     attribute_array['type'] = 'file'
     attribute_array['url'] = tdds_group.url
     attribute_array['url_wms'] = tdds_group.url_wms
@@ -426,9 +425,9 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     # else:
 
     geojson_geometry = gpd.read_file(geojson_path)
-    print(geojson_geometry.geometry)
-    print(geojson_geometry.geometry[0].geom_type)
-    print(geojson_geometry.geometry[0].bounds)
+    # print(geojson_geometry.geometry)
+    # print(geojson_geometry.geometry[0].geom_type)
+    # print(geojson_geometry.geometry[0].bounds)
     if len(list(dim_order)) == 3:
         if type_ask == 'marker':
             # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
@@ -436,11 +435,12 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
         if type_ask == "rectangle":
             print("bounding_box")
-            print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
-            print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
+            # print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
+            # print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
             timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+        if type_ask == "polygon":
+            timeseries_array = series.shape(mask=geojson_path, statistics=stats)
         else:
-            # timeseries_array = series.shape(mask=geojson_path, statistics=stats)
             timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
     if len(list(dim_order)) == 4:
         if type_ask == 'marker':
@@ -448,11 +448,13 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
         if type_ask == "rectangle":
             print("bounding_box")
-            print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
-            print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
+            # print(geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0])
+            # print(geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2])
             timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
-
-
+        if type_ask == "polygon":
+            timeseries_array = {}
+            timeseries_array['error'] = "Not possible to retrieve timeseries for variables with more than 3 dimensions when uploading a shapefile or WMF service link "
+            return timeseries_array
 
     timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
     return timeseries_array
