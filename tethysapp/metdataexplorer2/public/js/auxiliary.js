@@ -56,17 +56,21 @@ var AUX_PACKAGE = (function(){
     var activate_deactivate_graphs = function(){
 
       let actual_state=$(this).prop('checked');
+      console.log(actual_state);
       let element_graphs=document.getElementById("graph");
 
       let element_map =document.getElementById("map");
       if(actual_state){
+        $("#graph").show();
+        $("#graph").removeClass("hidden");
+
         if($( window ).width() > 320 && $( window ).width() <= 480){
-          element_graphs.style.cssText=  "display: flex !important; flex-direction: column;";
+          element_graphs.style.cssText=  "display: flex; flex-direction: column;";
         }
         else{
-          element_graphs.style.cssText=  "display: flex !important; flex-direction: row;";
+          element_graphs.style.cssText=  "display: flex; flex-direction: row;";
         }
-
+        mapObj._onResize();
         try{
           if($('#plots').is(':visible')){
             Plotly.Plots.resize("plots");
@@ -529,7 +533,7 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
       element_graphs.style.cssText=  "display: flex; flex-direction: column;";
     }
     else{
-      element_graphs.style.cssText=  "display: flex !important; flex-direction: row;";
+      element_graphs.style.cssText=  "display: flex; flex-direction: row;";
     }
 
     var config = {
