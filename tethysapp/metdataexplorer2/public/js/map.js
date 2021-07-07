@@ -107,7 +107,7 @@ var MAP_PACKAGE = (function(){
             marker: true,
             polyline: true,
             circlemarker: true,
-            circle: true,
+            circle: false,
             polygon: true,
             rectangle: true,
             trash: true,
@@ -142,7 +142,7 @@ var MAP_PACKAGE = (function(){
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
-      console.log(e);
+
       if (!isEditing) {
         if (urlInfoBox == true) {
 
