@@ -1091,6 +1091,9 @@ tr:hover {
     flex-direction: column;
     padding: 0.25em;
   }
+  #fourthContainer{
+    padding: 0.25em;
+  }
   #firstContainer{
     display: flex;
     flex-direction: row;
