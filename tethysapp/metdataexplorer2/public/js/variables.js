@@ -797,6 +797,9 @@ var getSingleTS = function(){
 var getFullArray= function() {
     let extra_dim = $("#extra_dim").val();
     console.log(extra_dim);
+    let extra_epsg = $("#epsg_change").val();
+
+    console.log(extra_epsg);
     let request_obj = {
       group: current_Group,
       tds: current_tdds,
@@ -806,7 +809,8 @@ var getFullArray= function() {
       behavior_type:  $("#behavior_shp").val(),
       dimensions_sel: $("#dim_select").val(),
       type_ask: type_of_series,
-      extra_dim: extra_dim
+      extra_dim: extra_dim,
+      epsg_offset:extra_epsg
     }
 
     console.log(request_obj);
