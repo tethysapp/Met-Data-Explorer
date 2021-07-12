@@ -377,6 +377,7 @@ def organize_array(attribute_array,behavior_type,label_type):
     stats_value = 'mean'
     # feature_label = 'id'
     # print(variable)
+    print(access_urls['OPENDAP'])
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path,behavior_type,label_type, stats_value, attribute_array['type_request'],attribute_array['extra_dim'])
     # print(timeseries)
     data[variable] = timeseries
@@ -442,53 +443,80 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     # print(geojson_geometry.geometry[0].geom_type)
     # print(geojson_geometry.geometry[0].bounds)
     if len(list(dim_order)) == 3:
+        print("3 dimensions")
         if type_ask == 'marker':
             print("point")
+
             try:
                 timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
 
         if type_ask == "rectangle":
             print("bounding_box")
             try:
                 timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
 
         if type_ask == "polygon":
             try:
                 timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
 
         else:
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
 
     if len(list(dim_order)) == 4:
+        print("4 dimensions")
+
         if type_ask == 'marker':
             print("point")
             try:
                 timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
         if type_ask == "rectangle":
             print("bounding_box")
             try:
                 timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                return timeseries_array
+
             except Exception as e:
                 timeseries_array['error'] = e
+                return timeseries_array
+
         if type_ask == "polygon":
             timeseries_array = {}
             timeseries_array['error'] = "Not possible to retrieve timeseries for variables with more than 3 dimensions when uploading a shapefile or WMF service link "
             return timeseries_array
-    # print(timeseries_array)
     return timeseries_array
