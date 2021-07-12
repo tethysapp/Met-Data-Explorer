@@ -17,6 +17,6 @@
   :numbered:
 
 
-   Met Data Explorer (WDE) <MDE>
+   Met Data Explorer (MDE) <MDE>
    MDE User Functionalities <MDE_user_func>
    MDE Administrator Functionalities <MDE_admin_func>
