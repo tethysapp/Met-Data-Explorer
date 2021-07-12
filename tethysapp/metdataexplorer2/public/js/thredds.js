@@ -270,7 +270,7 @@ var load_individual_thredds_for_group = function(group_name){
                    let layers_style = {}
                    let new_title = unique_id_tds;
 
-                   let newHtml = html_for_servers(new_title,group_name_e3, url, url_wms, url_subset);
+                   let newHtml = html_for_servers(can_delete_groups,new_title,group_name_e3, url, url_wms, url_subset);
                    $(newHtml).appendTo(`#${id_group_separator}`);
 
                    // UPDATE THE DICT VAR //
@@ -849,7 +849,7 @@ var addSingleThreddsServer = function(){
               id_dictionary[unique_id_tds] = `${title}_join_${current_Group}`
               let layers_style = {}
               let new_title = unique_id_tds;
-              let newHtml = html_for_servers(new_title,group_name_e3, url, wmsURL, subsetURL);
+              let newHtml = html_for_servers(can_delete_groups,new_title,group_name_e3, url, wmsURL, subsetURL);
               $(newHtml).appendTo(`#${id_group_separator}`);
 
 
@@ -868,7 +868,7 @@ var addSingleThreddsServer = function(){
               // input_check_serv.on("click", function(){
               $(`#${new_title}_span`).on("click",function(){
                 $('#sG').bootstrapToggle('on');
-                
+
                //ONLY ONE CHECKBOX AT A TIME//
                // $('input[type="checkbox"]').not(this).prop('checked', false);
                current_tdds = id_dictionary[new_title].split('_join_')[0];

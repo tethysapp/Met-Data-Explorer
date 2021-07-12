@@ -687,87 +687,47 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
   }
 
 }
-var html_for_servers = function (title,group_name, url_opendap, url_wms, url_subset,isNew){
+var html_for_servers = function (isAdmin, title,group_name, url_opendap, url_wms, url_subset,isNew){
   // console.log(url_subset);
   try{
     let good_title = id_dictionary[title].split('_join_')[0];
-
-//     let html_vars = '';
-//     for(var i= 0;  i< variables_array.length; ++i){
-//       html_vars +=
-// `      <li class="ui-state-default buttonAppearance" id="${variables_array[i]['name']}_${title}" variable-layer="${variables_array[i]['name']}_${title}">
-//           <span class="variable-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${variables_array[i]['name']}">${variables_array[i]['name']}</span>
-//           <input id = "${variables_array[i]['name']}_${title}_check" class="chkbx-variables" type="checkbox" data-color= "${variables_array[i]['colors']}" value = "${variables_array[i]['name']}">
-//           <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-//             <i class="fas fa-layer-group"></i>
-//           </button>
-//           <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalVariableInfo">
-//             <span class=" glyphicon glyphicon-info-sign "></span>
-//           </button>
-//           <button id = "${variables_array[i]['name']}_${title}_plots"" class="btn btn-primary btn-sm">
-//             <i class="fas fa-chart-bar"></i>
-//           </button>
-//       </li>`
-//     }
     let check_var = (( isNew == true ) ? 'checked' : '');
-    let newHtml = `
-    <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
+    if(isAdmin){
+      let newHtml = `
+      <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
 
-      <span  id= "${title}_span" layer-name="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
+        <span  id= "${title}_span" layer-name="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
 
+        <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+        <button id= "add_var" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button id="delete-var" class="btn btn-default btn-xs" data-toggle="modal"  data-dismiss="modal" data-target="#modalDeleteVariable">
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
 
-      <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">
-        <span class="glyphicon glyphicon-pencil"></span>
-      </button>
-      <button id= "add_var" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalAddVariables">
-        <span class="glyphicon glyphicon-plus"></span>
-      </button>
-      <button id="delete-var" class="btn btn-default btn-xs" data-toggle="modal"  data-dismiss="modal" data-target="#modalDeleteVariable">
-        <span class="glyphicon glyphicon-trash"></span>
-      </button>
+      </li>
+      `;
+      return newHtml
 
-    </li>
-    `;
-    // <button id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="btn btn-default btn-xs" >
-    // <span class="glyphicon glyphicon-info-sign"></span>
-    // </button>
+    }
+    else{
+      let newHtml = `
+      <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
+        <span  id= "${title}_span" layer-name="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
+        <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
 
-
-//     let newHtml = `<div class="panel-group" id="accordion_${title}" role="tablist" aria-multiselectable="true">
-//   <div class="panel panel-default">
-//     <div class="panel-heading" role="tab" id="${title}_Heading">
-//       <h4 class="panel-title">
-//           <li class="ui-state-default" layer-name="${title}" id="${title}" >
-//           <a role="button" data-toggle="collapse" data-parent="#accordion_${title}" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-//
-//             <span id="${title}_span" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${id_dictionary[title]}">${id_dictionary[title]}</span>
-//             </a>
-//
-//             <input id = "${title}_check" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}"  class="chkbx-layer" type="checkbox" data-toggle="tooltip" data-placement="bottom" title="Show/Hide View" >
-//
-//             <button type="button" id="${title}_zoom" class="btn btn-dark btn-sm" >
-//              <span class="glyphicon glyphicon-map-marker tool_tip_h" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Zoom to View"></span>
-//             </button>
-//
-//             <button id="${title}_variables" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalShowVariablesTable"> <span class=" glyphicon glyphicon-list-alt tool_tip_h" data-toggle="tooltip" data-placement="bottom" title="View Variables"></span>
-//             </button>
-//
-//             <button type="button" id="${title}_variables_info" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modalThreddsInformation">
-//              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-//             </button>
-//           </li>
-//       </h4>
-//     </div>
-//     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{title}_Heading">
-//       <div class="panel-body">
-//         ${html_vars}
-//       </div>
-//     </div>
-//   </div>
-// </div>`
+      </li>
+      `;
+      return newHtml
+    }
 
 
-    return newHtml
+
   }
   catch (e){
     console.log(e);
@@ -830,7 +790,6 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
             </a>
           </h4>
           <li class="ui-state-default buttonAppearance" id="${title}" layer-name="none">
-            <input class="chkbx-layers" type="checkbox">
             <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalInterface">
               <span class=" glyphicon glyphicon-info-sign "></span>
             </button>
