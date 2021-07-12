@@ -561,22 +561,20 @@ var load_groups_start = function(){
                  // });
                  //
                  //
-                 // let $title="#"+new_title;
-                 // let $title_list="#"+new_title+"list";
-                 //
-                 // $($title).click(function(){
-                 //   $("#pop-up_description2").html("");
-                 //
-                 //   actual_group = `&actual-group=${title}`;
-                 //
-                 //   let description_html=`
-                 //   <h3>Catalog Title</h3>
-                 //   <p>${title}</p>
-                 //   <h3>Catalog Description</h3>
-                 //   <p>${description}</p>`;
-                 //   $("#pop-up_description2").html(description_html);
-                 //
-                 // });
+                 let $title="#"+new_title;
+                 $($title).click(function(){
+                   $("#pop-up_description2").html("");
+
+                   actual_group = `&actual-group=${title}`;
+
+                   let description_html=`
+                   <h3>Catalog Title</h3>
+                   <p>${title}</p>
+                   <h3>Catalog Description</h3>
+                   <p>${description}</p>`;
+                   $("#pop-up_description2").html(description_html);
+
+                 });
                  ind = ind +1;
 
              })
