@@ -3,18 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Met Data Explorer's documentation!
-=============================================
+.. |mde| image:: images/wde.png
+   :scale: 10%
+
+===============================
+|mde| Met Data Explorer Guide
+===============================
+
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  :caption: Table of Contents
+  :maxdepth: 3
+  :numbered:
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   Met Data Explorer (WDE) <MDE>
+   MDE User Functionalities <MDE_user_func>
+   MDE Administrator Functionalities <MDE_admin_func>
