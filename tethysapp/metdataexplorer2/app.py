@@ -9,10 +9,10 @@ class Metdataexplorer2(TethysAppBase):
 
     name = 'Met Data Explorer'
     index = 'metdataexplorer2:home'
-    icon = 'metdataexplorer2/images/nc.png'
+    icon = 'metdataexplorer2/images/mde.png'
     package = 'metdataexplorer2'
     root_url = 'metdataexplorer2'
-    color = '#2980b9'
+    color = '#5a6268'
     description = ''
     tags = ''
     enable_feedback = False
