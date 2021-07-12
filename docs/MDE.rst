@@ -1,5 +1,5 @@
 =========================
-met Data Explorer (MDE)
+Met Data Explorer (MDE)
 =========================
 
 Introduction
@@ -17,9 +17,9 @@ MDE is designed in a way that allows users to customize it for local or regional
 MDE Overview
 ************
 
-WDE is an open-source web application providing users with the functionalities of data discovery, data access, data visualization,
+MDE is an open-source web application providing users with the functionalities of data discovery, data access, data visualization,
 and data downloading from any Information System that makes available water data in WaterML format through WaterOneFlow web services.
-WDE  can be installed by any organization and requires minimal server space.
+MDE  can be installed by any organization and requires minimal server space.
 
 The MDE is an open-source web application for visualizing meteorological gridded data. Utilizing TDS to serve the data, the app
 allows you to organize and save datafiles with the specific variables and dimensions that you need, visualize the data in a
@@ -31,7 +31,7 @@ feature in the MDE will work on most data, provided that the data conforms to OG
 User Interface
 --------------
 
-To organize and manage various WaterOneFlow web services, WDE uses THREDDS files that are organized in Catalogs.
+To organize and manage various WaterOneFlow web services, MDE uses THREDDS files that are organized in Catalogs.
 
 
 .. image:: images/1.1.png
@@ -41,7 +41,7 @@ To organize and manage various WaterOneFlow web services, WDE uses THREDDS files
 
 Each THREDDS file contains a set of data that is accessible through a specific OPeNDAP service.
 
-For each THREDDS files, a set of metadata is available in the Graphs Panel of the WDE User Interface.
+For each THREDDS files, a set of metadata is available in the Graphs Panel of the MDE User Interface.
 
 .. image:: images/1.2.png
    :width: 1000
@@ -73,7 +73,7 @@ CSV and JSON formats for any available time period of interest in the Time Serie
 Developers
 ----------
 
-WDE has been developed by Elkin Giovanni Romero Bustamante and Enoch Jones
+MDE has been developed by Elkin Giovanni Romero Bustamante and Enoch Jones
 at `Brigham Young University's (BYU) Hydroinformatics laboratory <https://hydroinformatics.byu.edu/>`_
 with the support of the World Meteorological Organization.
 The BYU's Hydroinformatics laboratory focuses on delivering different software products and services for water modelling. Some of the most important works include:
@@ -85,6 +85,6 @@ Source Code
 -----------
 
 
-The WDE source code is available on Github:
+The MDE source code is available on Github:
 
   - https://github.com/BYU-Hydroinformatics/Met-Data-Explorer
