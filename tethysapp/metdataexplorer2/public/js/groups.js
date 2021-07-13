@@ -547,20 +547,11 @@ var load_groups_start = function(){
 
                  $(newHtml).appendTo("#current-GroupThredds");
 
-
-                 // let li_object = document.getElementById(`${new_title}`);
-                 // let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
-
                  load_individual_thredds_for_group(title);
                  $(`#${new_title}_panel`).on("click",function(){
                    current_Group = id_dictionary[new_title];
                  });
-                 // let servers_checks = document.getElementById(`${id_group_separator}`).getElementsByClassName("chkbx-layers");
-                 // input_check.addEventListener("change", function(){
-                 //   change_effect_groups(this,id_group_separator);
-                 // });
-                 //
-                 //
+
                  let $title="#"+new_title;
                  $($title).click(function(){
                    $("#pop-up_description2").html("");
@@ -883,19 +874,13 @@ var make_varaibles_appear = function () {
         alert('Please enter a url to a Thredds Data Server.')
         return
     } else {
-        console.log("now we are");
-        // $('#loading-modal').modal('show');
         containerAttributes = false;
-        // $('#main-body').css('display', 'none');
-        // $('#db-forms').css('display', 'block');
-        // $('#name-in-form').append($('#url-input').val());
         let html = '';
         let html2 = '';
         let variables = {};
         $('#variable-input option').each(function () {
             variables[$(this).val()] = $(this).attr('data-dimensions');
         });
-        console.log(variables);
         for (let variable in variables) {
             let dimensionString = variables[variable];
           html2 += addAttribute(variable, dimensionString, '', '');
@@ -915,26 +900,24 @@ var updateFilepath = function() {
     // $("#loading-modal").modal("show");
     if ($(this).attr("class") == "folder") {
         let newURL = $(this).attr("data-url");
-        console.log(newURL);
+        // console.log(newURL);
         $("#url").val(newURL);
         getFoldersAndFiles();
-        console.log(URLpath);
+        // console.log(URLpath);
     }
     else if ($(this).attr("class") == "file") {
         $('#loading-group').removeClass("hidden");
 
-        console.log((this));
+        // console.log((this));
         let newURL = $(this).attr("data-opendap-url");
-        console.log(newURL);
+        // console.log(newURL);
         $("#url").val(newURL);
-        // $('#name-in-form').attr('data-type', 'file');
-        // $("#url").val($(this).text().trim());
+
         $("#layer-display-container").css("display", "inline");
-        // $("#filetree-div").css("display", "none");
         $("#file-info-div").css("display", "flex");
         opendapURL = $(this).attr("data-opendap-url");
         subsetURL = $(this).attr("data-subset-url");
-        console.log(opendapURL);
+        // console.log(opendapURL);
         wmsURL = $(this).attr("data-wms-url");
 
         $("#attributes").empty();
@@ -945,21 +928,6 @@ var updateFilepath = function() {
 
         addFileMetadata(variablesAndFileMetadata[1]);
         $("#groups_variables_div").show();
-
-        // if ($("#groups_variables_div").is(":hidden")) {
-        //     console.log($("#groups_variables_div").is(":hidden"));
-        //     let variablesAndFileMetadata = getVariablesAndFileMetadata();
-        //     addVariables(variablesAndFileMetadata[0]);
-        //     make_varaibles_appear();
-        //     $(".tables_mul").selectpicker("refresh");
-        //
-        //     addFileMetadata(variablesAndFileMetadata[1]);
-        //     $("#groups_variables_div").show();
-        // }
-        // else {
-        //   $("#attributes").empty();
-        //   $("#groups_variables_div").hide();
-        // }
 
         $('#loading-group').addClass("hidden");
 
@@ -988,7 +956,7 @@ var variableMetadata = function() {
 }
 
 var addVariables = function(variables) {
-    console.log(variables)
+    // console.log(variables);
     let keys = Object.keys(variables);
     keys.sort();
     let html = "";
@@ -1029,19 +997,13 @@ var addFileMetadata = function(fileMetadata) {
 }
 
 var getFoldersAndFiles = function() {
-  // let elementForm= $("#modalAddServiceForm");
-  // let datastring= elementForm.serialize();
-  // console.log(datastring);
-  // let form_elements = datastring.split("&");
-  // let url_alone = form_elements[form_elements.length -1]
-  console.log($("#url").val())
+  // console.log($("#url").val())
   let request_obj = {
     url:$("#url").val()
   }
-  // let url_alone =  encodeURIComponent($("#url").val());
-  // console.log(url_alone);
+
   $('#name-in-form').attr('data-type', 'folder');
-  $('#loading-group').removeClass("hidden");
+  $('#GeneralLoading').removeClass("hidden");
     $.ajax({
         url: 'getFilesAndFolders/',
         data: request_obj,
@@ -1050,7 +1012,7 @@ var getFoldersAndFiles = function() {
         method: "GET",
         success: function (result) {
           try{
-            console.log(result);
+            // console.log(result);
               $("#folders_structures").show();
 
               var dataTree = result["dataTree"];
@@ -1081,8 +1043,8 @@ var getFoldersAndFiles = function() {
                   let html =
                   `<tbody>`
 
-                  console.log(dataTree);
-                  console.log(Object.keys(dataTree["files"]).length );
+                  // console.log(dataTree);
+                  // console.log(Object.keys(dataTree["files"]).length );
                   if(Object.keys(dataTree["files"]).length !== 0){
                     for (var file in dataTree["files"]) {
                         html += `
@@ -1114,15 +1076,13 @@ var getFoldersAndFiles = function() {
                   html += `</tbody>`
                   $("#available_services").removeClass("hidden");
                   $("#filetree-div").empty();
-                  // .append(html);
                   $(html).appendTo(`#filetree-div`);
                   $("#url").val(correctURL);
                   if (URLpath[URLpath.length - 1] !== correctURL) {
                       URLpath.push(correctURL);
                   }
               }
-              // $("#loading-modal").modal("hide");
-              $('#loading-group').addClass("hidden");
+              $('#GeneralLoading').addClass("hidden");
 
           }
           catch(e){
@@ -1283,11 +1243,10 @@ var createDBArray = function() {
         type: 'POST',
         success: function (data) {
           add_services_list = [];
-          console.log(data);
+          // console.log(data);
           let unique_id_group = uuidv4();
           id_dictionary[unique_id_group] = $('#addGroup-title').val();
           let group = data
-          // let title=group.title;
           let title=group.title;
           let description=group.description;
           let new_title = unique_id_group;
@@ -1297,22 +1256,8 @@ var createDBArray = function() {
           $(`#${title}-noGroups`).show();
           load_individual_thredds_for_group(title);
 
-          // let li_object = document.getElementById(`${new_title}`);
-          // let input_check = li_object.getElementsByClassName("chkbx-layers")[0];
-          //
-          // if(!input_check.checked){
-          //   // //console.log("HERE NOT CHECKEC")
-          //   load_individual_thredds_for_group(title);
-          // }
-//           overflow-x: scroll;
-// width: 100%;
-// height: 500px;
-          // input_check.addEventListener("change", function(){
-          //   change_effect_groups(this,id_group_separator);
-          // });
-          $("#GeneralLoading").addClass("hidden")
+          $("#GeneralLoading").addClass("hidden");
 
-          // $("#modalAddGroupServer").modal("hide")
           $("#modalAddGroupServerForm").each(function() {
               this.reset();
           })
@@ -1357,6 +1302,7 @@ var createDBArray = function() {
   }
   catch(error){
     add_services_list = [];
+    $("#GeneralLoading").addClass("hidden");
 
     console.log(error);
     $.notify(

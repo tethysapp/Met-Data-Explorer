@@ -830,6 +830,7 @@ var getFullArray= function() {
            try{
              console.log(result);
              let data = result['result'];
+             // console.log(JSON.parse(data));
              let timeseries = {};
              let htmlVariables = '';
              let i = 1;
