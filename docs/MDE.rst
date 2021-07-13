@@ -6,7 +6,7 @@ Introduction
 ************
 
 In recent years, there has been a growing recognition of the need for standardized ways of sharing meteorological gridded data on the web.
-In response to this need, Unidata, a division of the University Corporation for Atmospheric Research (UCAR) developed the `THREDDS Data Server<https://github.com/Unidata/thredds>`_ (TDS)
+In response to this need, Unidata, a division of the University Corporation for Atmospheric Research (UCAR) developed the `THREDDS Data Server <https://github.com/Unidata/thredds>`_ (TDS)
 TDS is a web server that provides metadata and data access for scientific datasets, using OPeNDAP, OGC WMS and WCS, HTTP, and other remote data
 access protocols.
 

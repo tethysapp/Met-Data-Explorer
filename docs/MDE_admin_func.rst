@@ -1,3 +1,11 @@
+.. |add| image:: images/add.png
+
+.. |trash| image:: images/trash.png
+
+.. |add_tds| image:: images/add_tds.png
+
+.. |go_tds| image:: images/go_tds.png
+
 =========================
 MDE Admin Functionalities
 =========================
@@ -5,7 +13,7 @@ MDE Admin Functionalities
 The MDE admin functionalities are only available for the MDE administrators.
 
 Adding and Deleting Data Catalogs and TDS Files
-*******************************************
+***********************************************
 
 To add Catalogs, administrators should use the |add| icon to access the “Add a Catalog of TDS files” menu.
 
@@ -40,18 +48,27 @@ This process can be repeated for every TDS file that wants to be added to the Ca
    coordinates from -180 to 180 to match a gridded dataset with longitude coordinates from 0 to 360,
    the coordinates would need to be shifted by 360 and not just by 180.
 
+.. note::
+
+   When entering the TDS URL, it needs to finish in .catalog.hml or .catlog.xml. For example,
+   `https://thredds.ucar.edu/thredds/catalog/grib/NCEP/GFS/Global_0p25deg/catalog.html <https://thredds.ucar.edu/thredds/catalog/grib/NCEP/GFS/Global_0p25deg/catalog.html>`_
+
 .. image:: images/1.15.png
    :width: 1000
    :align: center
-
-To delete Catalogs, administrators should use the |trash| icon to access the “Delete Catalogs” menu and select the Catalog to be deleted.
 
 .. image:: images/1.16.png
    :width: 1000
    :align: center
 
+To delete Catalogs, administrators should use the |trash| icon to access the “Delete Catalogs” menu and select the Catalog to be deleted.
 
-To add Views to a specific Catalog, administrators should use the |add| icon to the right of  the Catalog’s title to access the “Add a TDS File” menu.
+.. image:: images/1.17.png
+   :width: 1000
+   :align: center
+
+
+To add TDS files to a specific Catalog, administrators should use the |add| icon to the right of  the Catalog’s title to access the “Add a TDS File” menu.
 
 .. note::
 
@@ -59,13 +76,13 @@ To add Views to a specific Catalog, administrators should use the |add| icon to 
    as a result the same steps can be used.
 
 
-.. image:: images/1.17.png
+.. image:: images/1.18.png
    :width: 1000
    :align: center
 
 
-To delete Views, administrators should use the |trash| icon to access the “Delete TDS Files” menu and select the TDS files to be deleted.
+To delete TDS files, administrators should use the |trash| icon to access the “Delete TDS Files” menu and select the TDS files to be deleted.
 
-.. image:: images/1.18.png
+.. image:: images/1.19.png
    :width: 1000
    :align: center
