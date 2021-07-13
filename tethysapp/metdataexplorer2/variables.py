@@ -331,7 +331,7 @@ def get_full_array(request):
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
     data = organize_array(attribute_array,behavior_type,label_type)
-    #print(data)
+    print(data)
 
     return JsonResponse({'result': data})
 
@@ -443,6 +443,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     # print(geojson_geometry.geometry[0].geom_type)
     # print(geojson_geometry.geometry[0].bounds)
     if len(list(dim_order)) == 3:
+        print(type_ask)
         print("3 dimensions")
         if type_ask == 'marker':
             print("point")
@@ -453,7 +454,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
 
@@ -465,28 +466,30 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
 
         if type_ask == "polygon":
+            print("polygon")
             try:
                 timeseries_array = series.shape(mask=geojson_path, statistics=stats)
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
 
         else:
+            print(type_ask)
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
 
@@ -501,7 +504,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
         if type_ask == "rectangle":
@@ -512,7 +515,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
             except Exception as e:
-                timeseries_array['error'] = e
+                timeseries_array['error'] = str(e)
                 return timeseries_array
 
         if type_ask == "polygon":
