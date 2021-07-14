@@ -167,7 +167,8 @@ def add_group(request):
                              url_wms = servi['url_wms'],
                              url_subset = servi['url_subset'],
                              epsg=servi['epsg'],
-                             spatial = json.dumps(servi['spatial']),
+                             # spatial = json.dumps(servi['spatial']),
+                             spatial = json.dumps({}),
                              description = servi['description'],
                              timestamp = servi['timestamp'],
                              metadata_td_file = json.dumps(file_tempt_dict))
