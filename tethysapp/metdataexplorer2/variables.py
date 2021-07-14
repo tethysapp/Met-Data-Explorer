@@ -28,7 +28,7 @@ def shp_to_geojson(shp_filepath, filename):
                 already_made = True
             else:
                 already_made = False
-    print(already_made)
+    # print(already_made)
     if not already_made:
         shape_file = gpd.read_file(shp_filepath)
         shape_file.to_file(os.path.join(new_directory, filename + '.geojson'), driver='GeoJSON')
@@ -127,16 +127,7 @@ def add_vars(request):
 
         ## File Metadata ##
         file_tempt_dict = {}
-        # tdds_objects = session.query(Thredds).filter(Thredds.title == actual_tdds)
         tdds_object = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
-        # print(tdds_object.__dict__)
-        # print(tdds_object.group.__dict__)
-        # for td_single_obj in tdds_objects:
-        #     if td_single_obj.group.name == actual_group and td_single_obj.title == actual_tdds:
-        #         print(td_single_obj.group.name)
-        #         print(td_single_obj.title)
-        #         tdds_object = td_single_obj
-
         try:
             ds = netCDF4.Dataset(tdds_object.url)
             for metadata_string in ds.__dict__:
@@ -152,9 +143,7 @@ def add_vars(request):
                     variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
             except Exception as e:
                 print(e)
-            # variable_metadata [key] = variable_tempt_dict
             tdds_var_query = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).join(Variables).filter(Variables.name == key).count()
-            # print(tdds_var_query)
             if tdds_var_query == 0:
                 variable_one = Variables(name= key,dimensions =tdds_info[key]['dimensions'],
                                     units = tdds_info[key]['units'],
@@ -162,23 +151,6 @@ def add_vars(request):
                                     metadata_variable = json.dumps(variable_tempt_dict))
                 tdds_object.attributes.append(variable_one)
 
-            # for single_var in tdds_object.attributes:
-            #     # variable_one = Variables(name= key,dimensions =tdds_info[key]['dimensions'],
-            #     #                     units = tdds_info[key]['units'],
-            #     #                     color = tdds_info[key]['color'],
-            #     #                     metadata_variable = json.dumps(variable_tempt_dict))
-            #     if single_var.name != key and key not in unique_vars:
-            #         unique_vars.append(key)
-            #         print(key)
-            #         print(key not in unique_vars)
-            #         variable_one = Variables(name= key,dimensions =tdds_info[key]['dimensions'],
-            #                             units = tdds_info[key]['units'],
-            #                             color = tdds_info[key]['color'],
-            #                             metadata_variable = json.dumps(variable_tempt_dict))
-            #         #
-            #         tdds_object.attributes.append(variable_one)
-            # for unique_var in unique_vars:
-                # tdds_object.attributes.append(unique_var)
 
         services_array.append(tdds_info)
         session.add(tdds_object)
@@ -222,9 +194,6 @@ def delete_vars(request):
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
             for single_var in variables_tdds:
                 var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
-                # print(var_row)
-                # var_row = session.query(Variables).filter(Variables.title == single_var).first()
-
                 session.delete(var_row)
                 session.commit()
                 session.close()
@@ -286,20 +255,20 @@ def get_full_array(request):
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
     epsg_offset = request.GET.get('epsg_offset')
-    print(epsg_offset)
-    print(extra_dim)
+    # print(epsg_offset)
+    # print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
     attribute_array['title'] = tdds_group.title
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     if epsg_offset != '':
-        print("not empty")
+        # print("not empty")
         attribute_array['epsg'] = epsg_offset
     else:
-        print("empty")
+        # print("empty")
         attribute_array['epsg'] = tdds_group.epsg
-        print(tdds_group.epsg)
+        # print(tdds_group.epsg)
 
 
     attribute_array['type'] = 'file'
@@ -313,7 +282,7 @@ def get_full_array(request):
         attribute_array['extra_dim'] = extra_dim
     try:
         attribute_array['spatial'] = json.loads(input_spatial)
-        print(attribute_array['spatial'])
+        # print(attribute_array['spatial'])
     except Exception as e:
         attribute_array['spatial'] = input_spatial
 
@@ -331,7 +300,7 @@ def get_full_array(request):
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
     data = organize_array(attribute_array,behavior_type,label_type)
-    print(data)
+    # print(data)
 
     return JsonResponse({'result': data})
 
@@ -354,42 +323,21 @@ def organize_array(attribute_array,behavior_type,label_type):
 
     epsg = attribute_array['epsg']
     geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
-    print(geojson_path)
+    # print(geojson_path)
     # print(geojson_path)
     data = {}
-    # for variable in attribute_array['attributes']:
-    # print(attribute_array['attributes']['dimensions'])
+
     dims = attribute_array['attributes']['dimensions']
-    # dims2 = []
-    # for dim_single in dims:
-    #     if dim_single.startswith("time"):
-    #         dims2.append(dim_single)
-    # for dim_single in dims:
-    #     if dim_single.startswith("lat"):
-    #         dims2.append(dim_single)
-    # for dim_single in dims:
-    #     if dim_single.startswith("lon"):
-    #         dims2.append(dim_single)
-    # dim_order = (dims2[0], dims2[1], dims2[2] )
-    # dim_order = (dims[0], dims[1], dims[2] )
+
     dim_order = tuple(dims)
-    print(dim_order)
+    # print(dim_order)
     stats_value = 'mean'
     # feature_label = 'id'
     # print(variable)
-    print(access_urls['OPENDAP'])
+    # print(access_urls['OPENDAP'])
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path,behavior_type,label_type, stats_value, attribute_array['type_request'],attribute_array['extra_dim'])
     # print(timeseries)
     data[variable] = timeseries
-    # for variable in attribute_array['attributes']:
-    #     # print(variable)
-    #     dims = attribute_array['attributes'][variable]['dimensions'].split(',')
-    #     dim_order = (dims[0], dims[1], dims[2])
-    #     stats_value = 'mean'
-    #     feature_label = 'id'
-    #     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, feature_label, stats_value)
-    #     data[variable] = timeseries
-
     os.remove(geojson_path)
     return data
 
@@ -414,7 +362,6 @@ def get_geojson_and_data(spatial, epsg):
     if not str(epsg) == 'false':
         # print(len(epsg))
         # print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
-
         if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
             geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
         if len(epsg) > 4:
@@ -443,11 +390,10 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     # print(geojson_geometry.geometry[0].geom_type)
     # print(geojson_geometry.geometry[0].bounds)
     if len(list(dim_order)) == 3:
-        print(type_ask)
-        print("3 dimensions")
+        # print(type_ask)
+        # print("3 dimensions")
         if type_ask == 'marker':
-            print("point")
-
+            # print("point")
             try:
                 timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -459,7 +405,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
 
 
         if type_ask == "rectangle":
-            print("bounding_box")
+            # print("bounding_box")
             try:
                 timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -471,7 +417,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
 
 
         if type_ask == "polygon":
-            print("polygon")
+            # print("polygon")
             try:
                 timeseries_array = series.shape(mask=geojson_path, statistics=stats)
                 return timeseries_array
@@ -480,9 +426,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 timeseries_array['error'] = str(e)
                 return timeseries_array
 
-
         else:
-            print(type_ask)
+            # print(type_ask)
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -492,12 +437,11 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 timeseries_array['error'] = str(e)
                 return timeseries_array
 
-
     if len(list(dim_order)) == 4:
-        print("4 dimensions")
+        # print("4 dimensions")
 
         if type_ask == 'marker':
-            print("point")
+            # print("point")
             try:
                 timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -508,7 +452,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
         if type_ask == "rectangle":
-            print("bounding_box")
+            # print("bounding_box")
             try:
                 timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -522,4 +466,5 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             timeseries_array = {}
             timeseries_array['error'] = "Not possible to retrieve timeseries for variables with more than 3 dimensions when uploading a shapefile or WMF service link "
             return timeseries_array
+            
     return timeseries_array
