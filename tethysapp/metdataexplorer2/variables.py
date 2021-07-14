@@ -159,6 +159,8 @@ def add_vars(request):
 
         session = SessionMaker()
         tdds_object2 = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
+        group_obj['metadata_file'] = tdds_object2.metadata_td_file
+
         old_attr_arr = []
         for old_attr in tdds_object2.attributes:
             variable_obj = {}
@@ -166,7 +168,8 @@ def add_vars(request):
             variable_obj['dimensions'] = old_attr.dimensions
             variable_obj['units'] = old_attr.units
             variable_obj['color'] = old_attr.color
-            variable_obj['metatada'] = old_attr.metadata_variable
+            variable_obj['metadata_var'] = old_attr.metadata_variable
+            variable_obj['epsg'] = tdds_object2.epsg
 
             old_attr_arr.append(variable_obj)
         session.commit()
@@ -466,5 +469,5 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             timeseries_array = {}
             timeseries_array['error'] = "Not possible to retrieve timeseries for variables with more than 3 dimensions when uploading a shapefile or WMF service link "
             return timeseries_array
-            
+
     return timeseries_array

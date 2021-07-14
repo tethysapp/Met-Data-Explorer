@@ -19,7 +19,6 @@ var VARIABLES_PACKAGE = (function(){
       Object.keys(id_dictionary).forEach(function(key) {
         if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
           tdds_e3 = key;
-          console.log(tdds_e3);
         }
       });
       let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
@@ -37,8 +36,6 @@ var VARIABLES_PACKAGE = (function(){
     })
     $("#variable_met_info").on("click", function(){
       let tdds_e3;
-      console.log(current_tdds);
-      console.log(id_dictionary);
       Object.keys(id_dictionary).forEach(function(key) {
         if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
           tdds_e3 = key;
@@ -54,13 +51,11 @@ var VARIABLES_PACKAGE = (function(){
 
     $("#btn-geo_link").on("click", function(){
       input_spatial = $("#geoServer_link").val();
-      console.log(input_spatial);
       $.ajax({
           type: "GET",
           url: input_spatial,
           dataType: "json",
           success: function(result) {
-            console.log(result);
             let geoJsonObject = result
             let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
             let feature_select = $("#features_file");
@@ -90,7 +85,6 @@ var VARIABLES_PACKAGE = (function(){
     })
     $("#download_dropdown").on("change", function(){
       let method_download = $(this).val();
-      console.log(method_download);
       download_Methods(method_download);
     })
     $("#get_data_values").on("click", get_data_bounds);
@@ -118,7 +112,6 @@ var get_data_bounds = function(){
     group: current_Group,
     tdds: current_tdds
   }
-  console.log(json_request);
   $('#GeneralLoading').removeClass('hidden');
 
   $.ajax({
@@ -128,7 +121,6 @@ var get_data_bounds = function(){
       dataType: "json",
       success: function(result) {
         $("#wmslayer-bounds").val(result['range']);
-        // console.log(result);
         $('#GeneralLoading').addClass('hidden');
         $.notify(
             {
@@ -177,26 +169,15 @@ var get_data_bounds = function(){
 
 var download_Methods = function(method_download){
   if(method_download == 'CSV'){
-    console.log("csv");
     var csvData = [];
     // var csvData_temp = [];
 
     var header = [] //main header.
     Object.keys(values_donwload_json).forEach(function(key) {
         header.push(key);
-        // let temp_arr = [];
-        // Object.key(values_donwload_json[key]).forEach(function(key2){
-        //   temp_arr.push(values_donwload_json[key][key2]);
-        // })
-        // csvData_temp.push(temp_arr);
     });
     csvData.push(header);
-    // for (let i= 0; i< csvData_temp.length; ++i){
-    //   var line = [];
-    //   for (let j= 0; j< csvData_temp[i].length; ++j){
-    //     csvData_temp[i][j]
-    //   }
-    // }
+
 
     for (let i = 0; i < Object.keys(values_donwload_json['datetime']).length; i++) {
       let row = []
@@ -310,45 +291,35 @@ var download_Methods = function(method_download){
 
 var myWMS_display = function(){
   let tdds_e3;
-  // console.log(current_tdds);
-  // console.log(current_Group);
-  // console.log(id_dictionary);
+
   Object.keys(id_dictionary).forEach(function(key) {
     if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
       tdds_e3 = key;
-      console.log(tdds_e3);
     }
   });
   let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
-  console.log(layernameUI);
+  // console.log(layers_dict_wms[layernameUI]);
+  // console.log(layernameUI);
+  // console.log(layers_dict_wms);
   layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
   layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer(layernameUI,layers_dict_wms[layernameUI]);
 
-  console.log(layers_dict_wms);
 }
 var myWMS_display2 = function(){
   let tdds_e3;
-  console.log(current_tdds);
-  console.log(current_Group);
-  console.log(id_dictionary);
+
   Object.keys(id_dictionary).forEach(function(key) {
     if(id_dictionary[key] == `${current_tdds}_join_${current_Group}` ){
       tdds_e3 = key;
-      console.log(tdds_e3);
     }
   });
   let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
-  console.log(layernameUI);
-  console.log(layers_dict_wms[layernameUI]);
   layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
   layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer2(layernameUI,layers_dict_wms[layernameUI]);
-
-  console.log(layers_dict_wms);
 }
 var chosen_method_spatial = function(method_draw){
-  console.log(method_draw);
   if(method_draw == 'draw_map'){
     $(".leaflet-draw-section").show();
     try{
@@ -409,8 +380,6 @@ var drawGraphTwo = function() {
         }
     })
     let series = {};
-    console.log('timeseries')
-    console.log(fullArrayTimeseries[timeseriesVariable])
     series['timeseries'] = fullArrayTimeseries[timeseriesVariable]['datetime'];
     series['mean'] = fullArrayTimeseries[timeseriesVariable][timeseriesFeature];
     let x = [];
@@ -443,15 +412,12 @@ var deleteVariablesToTD = function(){
   var datastring = $modalAddVars.serialize();
   datastring += `&actual-group=${current_Group}`
   datastring += `&actual-tdds=${current_tdds}`
-  console.log(datastring);
   $.ajax({
       type: "POST",
       url: `delete-vars/`,
       data: datastring,
       dataType: "HTML",
       success: function(result) {
-
-        console.log(result);
         let variables_to_del = JSON.parse(result)['var_list'];
         let new_title;
         Object.keys(id_dictionary).forEach(function(key) {
@@ -467,7 +433,7 @@ var deleteVariablesToTD = function(){
 
       },
       error:function(e){
-
+        console.log(e);
       }
     })
 }
@@ -526,166 +492,269 @@ var addVariablesToTD = function(){
       data: json_request,
       dataType: "json",
       success: function(result) {
+        try{
+          console.log(result);
+          // let attr2 = JSON.parse(result['all_attr']);
+          let attr2 = result['all_attr'];
+          let current_tdds_id;
+          let layers_style = {}
 
-        let attr2 = JSON.parse(result['all_attr']);
-        let current_tdds_id;
-        Object.keys(id_dictionary).forEach(function(key) {
-            if(id_dictionary[key].split('_join_')[0] == current_tdds){
-              current_tdds_id = key;
-            }
-        })
+          Object.keys(id_dictionary).forEach(function(key) {
+              if(id_dictionary[key].split('_join_')[0] == current_tdds){
+                current_tdds_id = key;
+              }
+          })
 
 
-        if( current_tdds_id == tdds_displaying_metadata){
-          let table_content = $('#table_var_body').html().split('</tbody>')[0];
-          Object.keys(attr).forEach(function(single_att_key) {
+          if( current_tdds_id == tdds_displaying_metadata){
+            console.log("here now");
+            let table_content = $('#table_var_body').html().split('</tbody>')[0];
+            Object.keys(attr).forEach(function(single_att_key) {
 
+            // for (let i = 0; i< attr.length; ++i){
+              table_content += "<tr>";
+              // let var_metad = attr[i];
+              let var_metad = attr[single_att_key];
+              // MAKE THE HEADERS FIRST //
+              Object.keys(var_metad).forEach(function(key) {
+                if(key =="name"){
+                  let fixed_name = var_metad[key].replace(/_/g, ' ')
+                  table_content += `<td >${fixed_name}</td>`;
+                  table_content += `<td>
+                            <button id = "${var_metad[key]}_${current_tdds_id}_info" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                  </td>`;
+                }
+
+                if(key != "metadata_var" && key != "color" && key != "name" && key != "units"){
+
+                  table_content += `<td>${var_metad[key]}</td>`;
+                }
+
+              });
+
+
+              table_content += "</tr>";
+
+            })
+            table_content += "</tbody>"
+            $("#table_var_body").empty();
+            // let table_content = get_table_vars(attr2,current_tdds_id);
+
+            $(table_content).appendTo("#table_var_body");
+            let info_file = make_metadata_file_table(result['metadata_file']);
+            $(info_file).appendTo("#siteDes");
+          }
           // for (let i = 0; i< attr.length; ++i){
-            table_content += "<tr>";
-            // let var_metad = attr[i];
-            let var_metad = attr[single_att_key];
-            // MAKE THE HEADERS FIRST //
-            Object.keys(var_metad).forEach(function(key) {
-              if(key =="name"){
-                let fixed_name = var_metad[key].replace(/_/g, ' ')
-                table_content += `<td >${fixed_name}</td>`;
-                table_content += `<td>
-                          <input id = "${var_metad[key]}_${current_tdds}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
-                          <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-                            <i class="fas fa-layer-group"></i>
-                          </button>
-                          <button id = "${var_metad[key]}_${current_tdds}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
-                              <i class="fas fa-info-circle"></i>
-                          </button>
-                </td>`;
-              }
-              if(key != "metadata_var" && key != "color" && key != "name" ){
+          Object.keys(attr2).forEach(function(single_att_key) {
 
-                table_content += `<td>${var_metad[key]}</td>`;
-              }
-
-                // else{
-                //     table_content += `<td>${var_metad[key]}</td>`;
-                // }
-            });
-
-
-            table_content += "</tr>";
-          })
-          table_content += "</tbody>"
-          console.log(table_content)
-          $("#table_var_body").empty();
-
-          $(table_content).appendTo("#table_var_body");
-
-        }
-        // for (let i = 0; i< attr.length; ++i){
-        Object.keys(attr).forEach(function(single_att_key) {
-
-          $(`#${attr[single_att_key]['name']}_${new_title}_info`).on("click", function(){
-            $("#metadata_vars").empty();
-            let info_content = get_metadata_button(attr[single_att_key]);
-            $(info_content).appendTo("#metadata_vars");
-          })
-
-          // DEFINE THE LAYER ATTRIBUTES //
-
-          let layernameUI = `${attr[single_att_key]['name']}_${current_tdds_id}`
-          layers_style[layernameUI] = {}
-          layers_style[layernameUI]['title'] = attr[single_att_key]['name'];
-          layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-          layers_style[layernameUI]['wmsURL']= url_wms;
-          layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
-          layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
-          layers_style[layernameUI]['variable'] = attr[single_att_key]['name'];
-          layers_style[layernameUI]['subset'] = url_subset;
-          layers_style[layernameUI]['opendap'] = url;
-          layers_style[layernameUI]['spatial'] = {};
-          layers_style[layernameUI]['epsg'] = epsg;
-          layers_style[layernameUI]['selected'] = false;
-          // console.log(layers_style[layernameUI]);
-
-          // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-          var check_id_var = `${attr[single_att_key]['name']}_${current_tdds_id}_check`
-          let input_check = $(`#${check_id_var}`);
-
-          input_check.on("change", function(){
-            updateWMSLayer(layernameUI,layers_style[layernameUI]);
-            // only one check box at a time //
-            $('input[type="checkbox"]').not(this).prop('checked', false);
-
-          });
-
-          // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
-          $("#opacity-slider").on("change", function(){
-            changeOpacity(layernameUI,this.value);
-            layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
-          })
-
-
-        });
-
-        //ADD event listener to display the modality after each click in the info logo///
-        let input_check_serv = $(`#${new_title}_check`);
-        input_check_serv.on("click", function(){
-           //CLEAN TABLE //
-           $("#table_div").empty()
-          //MAKE DROPDOWN MENU FOR VARIABLES//
-          options_vars(attr_array, new_title);
-          ///MAKE TABLE//
-
-          let table_content = get_table_vars(attr_array,new_title);
-          // console.log(table_content);
-          $(table_content).appendTo("#table_div");
-
-          // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
-          for (let i = 0; i< attr2.length; ++i){
-            $(`#${attr2[i]['name']}_${new_title}_info`).on("click", function(){
+            $(`#${attr2[single_att_key]['name']}_${current_tdds_id}_info`).on("click", function(){
               $("#metadata_vars").empty();
-              let info_content = get_metadata_button(attr2[i]);
+              let info_content = get_metadata_button(attr2[single_att_key]);
               $(info_content).appendTo("#metadata_vars");
             })
 
             // DEFINE THE LAYER ATTRIBUTES //
 
-            let layernameUI = `${attr[i]['name']}_${new_title}`;
+            let layernameUI = `${attr2[single_att_key]['name']}_${current_tdds_id}`
+            layers_style[layernameUI] = {}
+            layers_style[layernameUI]['title'] = attr2[single_att_key]['name'];
+            layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+            layers_style[layernameUI]['wmsURL']= wmsURL;
+            layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+            layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+            layers_style[layernameUI]['variable'] = attr2[single_att_key]['name'];
+            layers_style[layernameUI]['subset'] = subsetURL;
+            layers_style[layernameUI]['opendap'] = url;
+            layers_style[layernameUI]['spatial'] = {};
+            layers_style[layernameUI]['epsg'] = attr2[single_att_key]['epsg'];
+            layers_style[layernameUI]['selected'] = false;
+            layers_style[layernameUI]['dimensions'] = attr2[single_att_key]['dimensions'];
 
-            // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-            var check_id_var = `${attr2[i]['name']}_${new_title}_check`
-            let input_check = $(`#${check_id_var}`);
-            input_check.on("change", function(){
-              updateWMSLayer(layernameUI,layers_style[layernameUI]);
-              // only one check box at a time //
-              $('input[type="checkbox"]').not(this).prop('checked', false);
-            });
+
+            layers_dict_wms = layers_style;
+
             // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
             $("#opacity-slider").on("change", function(){
               changeOpacity(layernameUI,this.value);
               layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
             })
-          }
-        });
 
-        $.notify(
-            {
-              message: `The Addition of Variables was Sucessful.`
-            },
-            {
-                type: "success",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function() {
-                    this.css({'width':'auto','height':'auto'});
-                }
-            }
-        )
+
+          });
+
+          options_vars(attr2, current_tdds_id);
+
+          //ADD event listener to display the modality after each click in the info logo///
+          let input_check_serv = $(`#${current_tdds_id}_span`);
+
+
+          input_check_serv.on("click", function(){
+            $('#sG').bootstrapToggle('on');
+
+            current_tdds = id_dictionary[current_tdds_id].split('_join_')[0];
+            current_Group = current_Group;
+
+            subsetURL = $(this).attr("data-subset-url");
+            $("#GeneralLoading").removeClass("hidden");
+            $(`#${current_tdds_id}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
+            console.log(current_tdds_id);
+            Object.keys(id_dictionary).forEach(function(key) {
+              if(key != current_tdds_id ){
+                $(`#${id_dictionary[key]}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
+
+              }
+            })
+            // console.log(last_selected_id);
+            tdds_displaying_metadata = current_tdds_id;
+
+
+            //CLEAN TABLE //
+            $("#table_div").empty();
+            $("#siteDes").empty();
+
+           //MAKE DROPDOWN MENU FOR VARIABLES//
+           options_vars(attr2, current_tdds_id);
+           ///MAKE TABLE//
+           let table_content = get_table_vars(attr2,current_tdds_id);
+
+           let info_file = make_metadata_file_table(result['metadata_file']);
+           $(info_file).appendTo("#siteDes");
+
+           $(table_content).appendTo("#table_div");
+           //make the layers to display
+
+           let layernameUI2 = `${attr2[0]['name']}_${current_tdds_id}`
+           layers_style[layernameUI2] = {}
+           layers_style[layernameUI2]['title'] = attr2[0]['name'];
+           layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+           layers_style[layernameUI2]['wmsURL']= wmsURL;
+           layers_style[layernameUI2]['style'] = $('#wmslayer-style').val();
+           layers_style[layernameUI2]['range'] = $('#wmslayer-bounds').val();
+           layers_style[layernameUI2]['variable'] = attr2[0]['name'];
+           layers_style[layernameUI2]['subset'] = subsetURL;
+           layers_style[layernameUI2]['opendap'] = url;
+           layers_style[layernameUI2]['spatial'] = {};
+           layers_style[layernameUI2]['epsg'] = attr2[0]['epsg'];
+           layers_style[layernameUI2]['selected'] = false;
+           layers_style[layernameUI2]['dimensions'] = attr2[0]['dimensions'];
+           layers_dict_wms = layers_style;
+
+           // make the dims dropdown for the first varriable //
+           let dim_orders_id = $("#dim_select");
+           dim_orders_id.empty();
+
+           layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+             let option;
+             option = `<option value=${dim} >${dim} </option>`;
+             dim_orders_id.append(option)
+             dim_orders_id.selectpicker("refresh");
+           })
+
+
+
+           updateWMSLayer2(layernameUI2,layers_style[layernameUI2]);
+           $('#show_wms').bootstrapToggle('on');
+
+           // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+           $("#opacity-slider").on("change", function(){
+             changeOpacity(layernameUI2,this.value);
+             layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
+           });
+
+
+           // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
+           // for (let i = 0; i< attributes.length; ++i){
+           Object.keys(attr2).forEach(function(i) {
+
+             $(`#${attr2[i]['name']}_${current_tdds_id}_info`).on("click", function(){
+               $("#metadata_vars").empty();
+               let info_content = get_metadata_button(attr[i]);
+               $(info_content).appendTo("#metadata_vars");
+             })
+
+             // DEFINE THE LAYER ATTRIBUTES //
+
+             let layernameUI = `${attr2[i]['name']}_${current_tdds_id}`
+             layers_style[layernameUI] = {}
+             layers_style[layernameUI]['title'] = attr2[i]['name'];
+             layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+             layers_style[layernameUI]['wmsURL']= wmsURL;
+             layers_style[layernameUI]['style'] = $('#wmslayer-style').val();
+             layers_style[layernameUI]['range'] = $('#wmslayer-bounds').val();
+             layers_style[layernameUI]['variable'] = attr2[i]['name'];
+             layers_style[layernameUI]['subset'] = subsetURL;
+             layers_style[layernameUI]['opendap'] = url;
+             layers_style[layernameUI]['spatial'] = {};
+             layers_style[layernameUI]['epsg'] = attr2[i]['epsg'];
+             layers_style[layernameUI]['selected'] = false;
+             layers_style[layernameUI]['dimensions'] = attr2[i]['dimensions'];
+
+             layers_dict_wms = layers_style;
+
+             //ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
+             $("#opacity-slider").on("change", function(){
+               changeOpacity(layernameUI,this.value);
+               layers_style[layernameUI]['opacity']= $("#opacity-slider").val();
+             });
+
+
+           })
+           $("#GeneralLoading").addClass("hidden");
+           last_selected_id = current_tdds_id;
+         });
+
+         // remove the added variables //
+         $('.attr-checkbox').each(function () {
+             if (this.checked) {
+               $(this).parent().parent().remove();
+             }
+         })
+
+          $.notify(
+              {
+                message: `The Addition of Variables was Sucessful.`
+              },
+              {
+                  type: "success",
+                  allow_dismiss: true,
+                  z_index: 20000,
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
+              }
+          )
+        }
+        catch(e){
+          $("#GeneralLoading").addClass("hidden");
+          $.notify(
+              {
+                message: `There was an error while adding the variables to the Tredds file.`
+              },
+              {
+                  type: "danger",
+                  allow_dismiss: true,
+                  z_index: 20000,
+                  delay: 5000,
+                  animate: {
+                    enter: 'animated fadeInRight',
+                    exit: 'animated fadeOutRight'
+                  },
+                  onShow: function() {
+                      this.css({'width':'auto','height':'auto'});
+                  }
+              }
+          )
+        }
       },
       error:function(e){
+        $("#GeneralLoading").addClass("hidden");
         console.log(e);
         $.notify(
             {
@@ -796,10 +865,8 @@ var getSingleTS = function(){
 
 var getFullArray= function() {
     let extra_dim = $("#extra_dim").val();
-    console.log(extra_dim);
     let extra_epsg = $("#epsg_change").val();
 
-    console.log(extra_epsg);
     let request_obj = {
       group: current_Group,
       tds: current_tdds,
@@ -812,8 +879,6 @@ var getFullArray= function() {
       extra_dim: extra_dim,
       epsg_offset:extra_epsg
     }
-
-    console.log(request_obj);
 
    let type_drawing = $("#spatial_input").val();
    let var_val = $("#variables_graph").val();
@@ -828,9 +893,7 @@ var getFullArray= function() {
          method: 'GET',
          success: function (result) {
            try{
-             console.log(result);
              let data = result['result'];
-             // console.log(JSON.parse(data));
              let timeseries = {};
              let htmlVariables = '';
              let i = 1;
@@ -859,14 +922,11 @@ var getFullArray= function() {
                  }
                  timeseries[key] = JSON.parse(data[key]);
                  values_donwload_json = timeseries[key];
-                 console.log(timeseries[key]);
-                 console.log(Object.keys(timeseries[key]).length);
                  if(Object.keys(timeseries[key]).length <= 2 ){
                    let xArray = [];
                    let yArray = [];
                    Object.keys(timeseries[key]).forEach(function(key2) {
                       if(key2 != "datetime"){
-                        console.log(key2);
                         Object.keys(timeseries[key][key2]).forEach(function(key3) {
                           xArray.push(timeseries[key][key2][key3]);
                           yArray.push(timeseries[key]['datetime'][key3]);
@@ -874,7 +934,6 @@ var getFullArray= function() {
                       }
 
                     });
-                    console.log($("#type_graph_select2").val());
                     initialize_graphs(yArray,xArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,$("#type_graph_select2").val());
                  }
                  else{
@@ -983,10 +1042,3 @@ var getFullArray= function() {
 
 
 }
-
- var create_table = function(){
-
-   console.log("hola");
-
-
- }

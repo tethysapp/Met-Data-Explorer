@@ -6,7 +6,6 @@ var THREDDS_PACKAGE = (function(){
     $("#btn-del-server").on("click", delete_single_tdds);
     //ADDITION SERVICE //
     $(document).on("click", "#add_service", function(){
-      console.log("button service");
       $("#btn-add-addServiceToTable").hide();
       $("#btn-add-addService2").removeClass("hidden");
     });
@@ -44,8 +43,6 @@ var display_vars_from_Tdds = function(){
       group: current_Group,
       tdds: current_tdds
     };
-    console.log(current_tdds);
-    console.log(current_Group);
 
     $.ajax({
         type: "POST",
@@ -56,7 +53,6 @@ var display_vars_from_Tdds = function(){
           try{
             $modalDelete = $("#modalDeleteVariable");
             //Dynamically generate the list of existing hydroservers'
-            console.log(result);
             var tdds_list = result["var_list"]
             var HSTableHtml =
                 '<table class="table table-condensed-xs" id="tbl-tdds"><thead><th>Select</th><th>Variable</th></thead><tbody>'
@@ -165,9 +161,7 @@ var display_vars_from_OpenDabs = function(){
   let html = '';
   let html2 = '';
   let variables = {};
-  console.log(opendapURL);
   let variablesAndFileMetadata = getVariablesAndFileMetadata(opendapURL);
-  console.log(variablesAndFileMetadata);
   let variables_list = variablesAndFileMetadata[0];
   let keys = Object.keys(variables_list);
   keys.sort();
@@ -186,7 +180,6 @@ var display_vars_from_OpenDabs = function(){
 
     variables[keys[i]] = str_dims;
   }
-  console.log(variables);
   for (let variable in variables) {
     let dimensionString = variables[variable];
     if(!current_vars.includes(variable)){
@@ -207,7 +200,6 @@ var display_vars_from_OpenDabs = function(){
     $(html2).appendTo('#attributes2');
   }
   $(".tables_mul").selectpicker("refresh");
-  console.log(current_vars);
 
   $("#groups_variables_div2").show();
 
@@ -232,7 +224,6 @@ var load_individual_thredds_for_group = function(group_name){
            data: group_name_obj,
            success: result => {
              try{
-               console.log(result);
                let servers = result["thredds"]
                //USE A FUNCTION TO FIND THE LI ASSOCIATED WITH THAT GROUP  AND DELETE IT FROM THE MAP AND MAKE ALL
                // THE CHECKBOXES VISIBLE //
@@ -264,7 +255,6 @@ var load_individual_thredds_for_group = function(group_name){
                        attributes,
                        metadata_file
                    } = server
-                   // console.log(metadata_file);
                    let unique_id_tds = uuidv4();
                    id_dictionary[unique_id_tds] = `${title}_join_${group_name}`
                    let layers_style = {}
@@ -297,19 +287,18 @@ var load_individual_thredds_for_group = function(group_name){
 
                      current_tdds = id_dictionary[new_title].split('_join_')[0];
                      current_Group = group_name;
-                     console.log(current_tdds);
 
                      // current_vars = dict_file_vars[new_title];
                      // opendapURL = $(this).attr("data-opendap-url");
                      // wmsURL = $(this).attr("data-wms-url");
-                     console.log(wmsURL);
                      subsetURL = $(this).attr("data-subset-url");
                      $("#GeneralLoading").removeClass("hidden");
                      $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
-                     console.log(last_selected_id);
-                     $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
                      console.log(new_title);
+                     $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
+                     console.log(last_selected_id);
                      tdds_displaying_metadata = new_title;
+
                      //ONLY ONE CHECKBOX AT A TIME//
                      // $('input[type="checkbox"]').not(this).prop('checked', false);
 
@@ -325,7 +314,6 @@ var load_individual_thredds_for_group = function(group_name){
                     let info_file = make_metadata_file_table(metadata_file);
                     $(info_file).appendTo("#siteDes");
 
-                    // console.log(table_content);
                     $(table_content).appendTo("#table_div");
                     //make the layers to display
 
@@ -366,14 +354,12 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
                     });
 
-                    // $('#show_wms').prop('checked', true);
 
                     // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
                     for (let i = 0; i< attributes.length; ++i){
                       $(`#${attributes[i]['name']}_${new_title}_info`).on("click", function(){
                         $("#metadata_vars").empty();
                         let info_content = get_metadata_button(attributes[i]);
-                        console.log();
                         $(info_content).appendTo("#metadata_vars");
                       })
 
@@ -395,17 +381,6 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI]['dimensions'] = attributes[i]['dimensions'];
 
                       layers_dict_wms = layers_style;
-                      // console.log(layers_style[layernameUI]);
-
-                      // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                      // var check_id_var = `${attributes[i]['name']}_${new_title}_check`
-                      // let input_check = $(`#${check_id_var}`);
-                      //
-                      // input_check.on("change", function(){
-                      //   updateWMSLayer(layernameUI,layers_style[layernameUI]);
-                      //   $('input[type="checkbox"]').not(this).prop('checked', false);
-                      //
-                      // });
 
                       //ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
                       $("#opacity-slider").on("change", function(){
@@ -477,7 +452,6 @@ var load_individual_thredds_for_group = function(group_name){
 
 var get_table_vars = function(attributes,title){
   let table_content = '<table id = "table_vars" class="table table-hover table-condensed"><thead><tr>'
-  console.log(attributes);
   let var_metad = attributes[0];
   // MAKE THE HEADERS FIRST //
   Object.keys(var_metad).forEach(function(key) {
@@ -562,7 +536,6 @@ var get_all_the_var_metadata = function(attributes){
   table_content += "<tbody>"
   for (let i = 0; i< attributes.length; ++i){
     table_content += "<tr>";
-    console.log(attributes[i]);
     let var_metad = JSON.parse(attributes[i]['metadata_var']);
     // MAKE THE HEADERS FIRST //
     let all_vars_keys = Object.keys(var_metad);
@@ -752,7 +725,6 @@ var addSingleThreddsServer = function(){
 
         }
     })
-    console.log(attr);
     if(variables_list.length <= 0){
       $.notify(
           {
@@ -803,7 +775,6 @@ var addSingleThreddsServer = function(){
         attributes: attr,
         timestamp: timestamp,
     };
-    console.log(databaseInfo);
     $.ajax({
         url: "add-thredds/",
         dataType: 'json',
@@ -811,7 +782,6 @@ var addSingleThreddsServer = function(){
         data: {data: JSON.stringify(databaseInfo)},
         type: 'POST',
         success: function (data) {
-          console.log(data);
           try{
             if(data.hasOwnProperty("error")) {
               $.notify(
@@ -843,7 +813,6 @@ var addSingleThreddsServer = function(){
               });
               let id_group_separator = `${group_name_e3}_list_separator`;
 
-              console.log(group_name_e3);
               $(`#${group_name_e3}-noGroups`).hide();
               let unique_id_tds = uuidv4();
               id_dictionary[unique_id_tds] = `${title}_join_${current_Group}`
@@ -859,7 +828,6 @@ var addSingleThreddsServer = function(){
                 opendapURL = $(this).attr("data-opendap-url");
                 wmsURL = $(this).attr("data-wms-url");
                 subsetURL = $(this).attr("data-subset-url");
-                // console.log(current_tdds, current_vars, opendapURL, wmsURL, subsetURL);
               });
 
 
@@ -874,7 +842,6 @@ var addSingleThreddsServer = function(){
                current_tdds = id_dictionary[new_title].split('_join_')[0];
 
                $(`#${new_title}`).css({"border-color":"#2e6da4", "border-width": "2px 2px" });
-               console.log(last_selected_id);
                $(`#${last_selected_id}`).css({"border-color":"darkgrey", "border-width": "0px 0px"});
                //CLEAN TABLE //
                $("#table_div").empty();
@@ -885,7 +852,6 @@ var addSingleThreddsServer = function(){
               ///MAKE TABLE//
 
               let table_content = get_table_vars(attr_array,new_title);
-              // console.log(table_content);
               $(table_content).appendTo("#table_div");
               let info_file = make_metadata_file_table(data['services'][0]['metadata_file']);
               $(info_file).appendTo("#siteDes");
@@ -918,11 +884,6 @@ var addSingleThreddsServer = function(){
                 dim_orders_id.selectpicker("refresh");
               })
 
-              console.log(layernameUI2);
-              console.log(layers_style[layernameUI2]);
-
-
-
               $('#show_wms').bootstrapToggle('on');
 
               updateWMSLayer2(layernameUI2,layers_style[layernameUI2])
@@ -932,9 +893,6 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI2]['opacity']= $("#opacity-slider").val();
               });
 
-
-
-              console.log();
               // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
               for (let i = 0; i< attr_array.length; ++i){
                 $(`#${attr_array[i]['name']}_${new_title}_info`).on("click", function(){
@@ -960,17 +918,7 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI]['selected'] = false;
                 layers_style[layernameUI]['dimensions'] = attr_array[i]['dimensions'];
                 layers_dict_wms = layers_style;
-                // console.log(layers_style[layernameUI]);
 
-
-                // ADD AN EVENT TO THE CHECK THAT DISPLAYS THE MAP //
-                // var check_id_var = `${attr[i]['name']}_${new_title}_check`
-                // let input_check = $(`#${check_id_var}`);
-                // input_check.on("change", function(){
-                //   updateWMSLayer(layernameUI,layers_style[layernameUI]);
-                //   // only one check box at a time //
-                //   $('input[type="checkbox"]').not(this).prop('checked', false);
-                // });
                 // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
                 $("#opacity-slider").on("change", function(){
                   changeOpacity(layernameUI,this.value);
@@ -984,13 +932,31 @@ var addSingleThreddsServer = function(){
 
             }
             $("#GeneralLoading").addClass("hidden");
-
+            $.notify(
+                {
+                  message: `Added new TDS File`
+                },
+                {
+                    type: "success",
+                    allow_dismiss: true,
+                    z_index: 20000,
+                    delay: 5000,
+                    animate: {
+                      enter: 'animated fadeInRight',
+                      exit: 'animated fadeOutRight'
+                    },
+                    onShow: function() {
+                        this.css({'width':'auto','height':'auto'});
+                    }
+                }
+            )
           }
           catch(e){
             console.log(e);
           }
         },
         error:function(error){
+          console.log(error);
           $.notify(
               {
                 message: `There was an error while adding the THREDDS file and its variables to the Group.`
@@ -1179,7 +1145,6 @@ var delete_single_tdds = function(){
             var json_response = JSON.parse(result);
             let attributes= json_response['attr_tdds'];
             let json_titles= json_response['title_tdds'];
-            console.log(json_response);
             $("#modalDelete").modal("hide")
             $("#modalDelete").each(function() {
                 this.reset()
@@ -1329,7 +1294,6 @@ var edit_single_tdds = function(){
   if ($('#url2').val() != '') {
     url_edit = $('#url2').val();
   }
-  console.log($('#url2').val());
 
   let request_objt = {
     new_title: serviceTitle,
@@ -1340,8 +1304,7 @@ var edit_single_tdds = function(){
     spatial: spatial_edit,
     url: url_edit,
   }
-  console.log(request_objt);
-  console.log(id_dictionary)
+
   $.ajax({
       url: "edit-thredds/",
       dataType: 'json',
@@ -1351,16 +1314,13 @@ var edit_single_tdds = function(){
       success: function (data) {
         try{
           if(request_objt['new_title'] != '' ){
-            console.log(`${request_objt['old_title']}_join_${request_objt['group']}`);
             let title_e3;
             Object.keys(id_dictionary).forEach(function(key) {
               if(id_dictionary[key] == `${request_objt['old_title']}_join_${request_objt['group']}` ){
                 title_e3 = key;
                 id_dictionary[key] = `${request_objt['new_title']}_join_${request_objt['group']}`;
-                console.log(id_dictionary[key]);
               }
             });
-            console.log($(`#${title_e3}_span`));
             $(`#${title_e3}_span`).html(`${request_objt['new_title']}`);
             $(`#${title_e3}_span`).attr('title', `${request_objt['new_title']}`);
           }
