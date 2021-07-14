@@ -429,6 +429,14 @@ var deleteVariablesToTD = function(){
           $(`#${single_var}deleteID`).remove();
           let layernameUI = `${single_var}_${new_title}`
           removeActiveLayer(layernameUI);
+          let row_var_table = `${single_var}_${new_title}_info`;
+          $(`#${row_var_table}`).parent().parent().remove();
+
+          var select_dropdown = $(`#variables_graph option[value="${single_var}"]`).remove();
+          $("#variables_graph").selectpicker("refresh");
+          $('#show_wms').bootstrapToggle('on');
+
+
         });
 
       },
