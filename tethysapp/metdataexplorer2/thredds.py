@@ -155,7 +155,8 @@ def add_tdds(request):
                          url_wms = tdds_info['url_wms'],
                          url_subset = tdds_info['url_subset'],
                          epsg=tdds_info['epsg'],
-                         spatial = json.dumps(tdds_info['spatial']),
+                         spatial = json.dumps({}),
+                         # spatial = json.dumps(tdds_info['spatial']),
                          description = tdds_info['description'],
                          timestamp = tdds_info['timestamp'],
                          metadata_td_file = json.dumps(file_tempt_dict))

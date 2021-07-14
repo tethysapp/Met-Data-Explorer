@@ -56,7 +56,7 @@ var AUX_PACKAGE = (function(){
     var activate_deactivate_graphs = function(){
 
       let actual_state=$(this).prop('checked');
-      console.log(actual_state);
+      // console.log(actual_state);
       let element_graphs=document.getElementById("graph");
 
       let element_map =document.getElementById("map");
@@ -122,7 +122,7 @@ var uploadShapefile = function() {
         contentType: false,
         success: function (result) {
           try{
-            console.log(result);
+            // console.log(result);
             let filename = result["filename"];
             let alreadyMade = result["alreadyMade"];
             let geoJsonObject = JSON.parse(result['geojson']);
@@ -302,8 +302,6 @@ var searchVariables_func = function() {
   }
 }
 var getVariablesAndFileMetadata = function (opendapURL) {
-    //$("#loading-modal").modal("show");
-    console.log("getVariablesAndFileMetadata");
     let variables = {};
     let fileMetadata = '';
     $.ajax({
@@ -372,8 +370,7 @@ var graphs_features =  function(timeseries, yTitle, type){
             yArray.push(temp_dict);
           }
        });
-       console.log(xArray);
-       console.log(yArray);
+
        let i = 0 ;
        yArray.forEach(function(sinlge_attr){
          let displayOption = i > 0 ? 'legendonly' : true
@@ -451,7 +448,6 @@ var graphs_features =  function(timeseries, yTitle, type){
              yArray.push(temp_dict);
            }
         });
-        console.log(yArray);
         let i = 0 ;
         yArray.forEach(function(sinlge_attr){
           let displayOption = i > 0 ? 'legendonly' : true
@@ -688,7 +684,6 @@ var initialize_graphs = function(xArray,yArray,title_graph,xTitle,yTitle,legend1
 
 }
 var html_for_servers = function (isAdmin, title,group_name, url_opendap, url_wms, url_subset,isNew){
-  // console.log(url_subset);
   try{
     let good_title = id_dictionary[title].split('_join_')[0];
     let check_var = (( isNew == true ) ? 'checked' : '');
@@ -813,7 +808,6 @@ var html_for_groups = function (isAdmin, title, id_group_separator){
 var check_for_same_names = function(type_level, title_to_check){
   let check_nene = false;
   if(type_level == "Group"){
-    console.log("in process");
     $(".group-name").each(function(){
       if($(this).html().trim() == title_to_check){
         check_nene = true;

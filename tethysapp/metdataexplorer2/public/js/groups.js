@@ -75,8 +75,6 @@ var apply_var_filter = function(){
     try{
       let elementForm= $("#modalVariablesFilter");
       let datastring= elementForm.serialize();
-      console.log(datastring);
-
       $.ajax({
           type: "POST",
           url: `filterTddsByVariable/`,
@@ -84,13 +82,10 @@ var apply_var_filter = function(){
           data: datastring,
           success: function(result) {
             try{
-              console.log(result);
               let result2 = JSON.parse(result);
               let filter_tdds_id = [];
               Object.keys(result2).forEach(function(key_group) {
-                console.log(result2[key_group]);
                   result2[key_group].forEach(function(filter_tdds){
-                    console.log(id_dictionary);
                     Object.keys(id_dictionary).forEach(function(keys_uui) {
                       if(id_dictionary[keys_uui] == `${filter_tdds}_join_${key_group}` ){
                           filter_tdds_id.push(keys_uui);
@@ -220,36 +215,23 @@ var give_all_variables = function(){
     type: "POST",
     url: `getAvailableAttributes/`,
     success: function(result){
-      console.log(result);
       try{
         let variables_groups = result['attrs'];
 
-        // countries_available = data['countries']
-        // const chunk = (arr, size) =>
-        //   Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-        //     arr.slice(i * size, i * size + size)
-        //   );
-        // let arr=chunk(variables_groups, 1);
 
         var HSTableHtml =
             `<table id="data-table" class="table table-striped table-bordered table-condensed"><tbody>`
 
           variables_groups.forEach(l_arr => {
             HSTableHtml +=  '<tr class="odd gradeX">'
-            // l_arr.forEach(i =>{
-              // let new_i = i.replace(/ /g,"_");
               HSTableHtml +=  `<td><input type="checkbox" class="filter_check" name="variables" value = "${l_arr}" /> ${l_arr}</td>`;
-            // })
-
                 HSTableHtml += '</tr>';
           })
 
           HSTableHtml += "</tbody></table>"
         $("#modalVariablesFilter").find("#groups_variables").html(HSTableHtml);
-        // $("#KeywordLoading").addClass("hidden");
       }
       catch(e){
-        // $("#KeywordLoading").addClass("hidden");
         $.notify(
             {
                 message: `There was an error trying to retrieve the different countries contained by the web services in the app`
@@ -464,7 +446,6 @@ var make_list_groups = function(){
     let groupsDiv = $("#current-GroupThredds").find(".panel.panel-default");
     let arrayGroups = Object.values(groupsDiv);
     let finalGroupArray=[];
-    // console.log(arrayGroups)
     arrayGroups.forEach(function(g){
       if(g.id){
         let stringGroups = g.id.split("_")[0];
@@ -818,10 +799,8 @@ var addServiceToTable = function(){
         attributes: attr,
         timestamp: timestamp,
     };
-    console.log(databaseInfo);
     add_services_list.push(databaseInfo);
     let options = '';
-    console.log(variables_list);
     for(let i = 0; i< variables_list.length; i++){
       options += `<option>${variables_list[i]}</option>`;
     }
@@ -900,24 +879,18 @@ var updateFilepath = function() {
     // $("#loading-modal").modal("show");
     if ($(this).attr("class") == "folder") {
         let newURL = $(this).attr("data-url");
-        // console.log(newURL);
         $("#url").val(newURL);
         getFoldersAndFiles();
-        // console.log(URLpath);
     }
     else if ($(this).attr("class") == "file") {
         $('#loading-group').removeClass("hidden");
-
-        // console.log((this));
         let newURL = $(this).attr("data-opendap-url");
-        // console.log(newURL);
         $("#url").val(newURL);
 
         $("#layer-display-container").css("display", "inline");
         $("#file-info-div").css("display", "flex");
         opendapURL = $(this).attr("data-opendap-url");
         subsetURL = $(this).attr("data-subset-url");
-        // console.log(opendapURL);
         wmsURL = $(this).attr("data-wms-url");
 
         $("#attributes").empty();
@@ -956,7 +929,6 @@ var variableMetadata = function() {
 }
 
 var addVariables = function(variables) {
-    // console.log(variables);
     let keys = Object.keys(variables);
     keys.sort();
     let html = "";
@@ -997,7 +969,6 @@ var addFileMetadata = function(fileMetadata) {
 }
 
 var getFoldersAndFiles = function() {
-  // console.log($("#url").val())
   let request_obj = {
     url:$("#url").val()
   }
@@ -1012,7 +983,6 @@ var getFoldersAndFiles = function() {
         method: "GET",
         success: function (result) {
           try{
-            // console.log(result);
               $("#folders_structures").show();
 
               var dataTree = result["dataTree"];
@@ -1043,8 +1013,6 @@ var getFoldersAndFiles = function() {
                   let html =
                   `<tbody>`
 
-                  // console.log(dataTree);
-                  // console.log(Object.keys(dataTree["files"]).length );
                   if(Object.keys(dataTree["files"]).length !== 0){
                     for (var file in dataTree["files"]) {
                         html += `
@@ -1234,7 +1202,6 @@ var createDBArray = function() {
         description: $('#addGroup-description').val(),
         attributes: add_services_list,
     };
-    console.log(group_info);
 
     $.ajax({
         url: "add-group/",
@@ -1243,7 +1210,6 @@ var createDBArray = function() {
         type: 'POST',
         success: function (data) {
           add_services_list = [];
-          // console.log(data);
           let unique_id_group = uuidv4();
           id_dictionary[unique_id_group] = $('#addGroup-title').val();
           let group = data

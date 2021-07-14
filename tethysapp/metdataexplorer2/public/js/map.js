@@ -9,7 +9,6 @@ var MAP_PACKAGE = (function(){
       zoomSnap: .5,
       boxZoom: true,
       fullscreenControl: true,
-      // maxBounds: L.latLngBounds(L.latLng(-100.0, -270.0), L.latLng(100.0, 270.0)),
       timeDimension: true,
       timeDimensionControl: true,
       timeDimensionControlOptions: {
@@ -70,7 +69,6 @@ var MAP_PACKAGE = (function(){
                   async: false,
                   success: function (result) {
                       let geojson = result['geojson'];
-                      // console.log(geojson)
                       makeGeojsonLayer(geojson);
                       mapObj.flyToBounds(shpLayer.getBounds());
                   },
@@ -138,7 +136,6 @@ var MAP_PACKAGE = (function(){
     drawnItems.on('click', function (e) {
         let coord = e.layer.getLatLngs();
         getTimeseries(coord);
-        // console.log("draw item");
     });
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
@@ -155,15 +152,8 @@ var MAP_PACKAGE = (function(){
           type_of_series = e.layerType;
         } else {
             drawnItems.addLayer(e.layer);
-            // console.log(e.layer);
-            // let coord = e.layer.getLatLngs();
             input_spatial = JSON.stringify(e.layer.toGeoJSON());
             type_of_series = e.layerType;
-            // console.log(input_spatial);
-            // getFullArray();
-            // getSingleTS();
-            // getTimeseries(coord);
-
         }
       }
       else{
@@ -181,18 +171,12 @@ var MAP_PACKAGE = (function(){
 
 })();
 var getThreddsBounds = function() {
-    // $('#main-body').css('display', 'block');
-    // $('#db-forms').css('display', 'none');
-    // $('#add-shape-resource-modal').modal('hide');
     let polygonDrawer = new L.Draw.Polygon(mapObj);
     polygonDrawer.enable();
 }
 
 var data_layer = function(layernameUI,wmsURL,layer,range,style) {
-  // console.log("data  layer");
-  // console.log(URL_threddsProxy);
   let wmsURL2;
-  // console.log(wmsURL);
   try {
     if (wmsURL.indexOf("http://") != -1) {
       console.log("Http endpoint found, changing to proxy URL");
@@ -201,10 +185,7 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
     else{
       wmsURL2 = wmsURL;
     }
-    // console.log(wmsURL2);
-    // const layer = $('#variable-input').val();
-    // const range = $('#wmslayer-bounds').val();
-    // const style = $('#wmslayer-style').val();
+
     const wmsLayer = L.tileLayer.wms(wmsURL2, {
       layers: layer,
       dimension: 'time',
@@ -224,7 +205,6 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
       cache: 20,
     });
     layers_dict[`${layernameUI}_check`] = wmsLayerTime
-    // firstlayeradded = true;
     return wmsLayerTime.addTo(mapObj);
   } catch(err) {
     console.log(err);
@@ -235,38 +215,26 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
 var updateWMSLayer = function(layernameUI,x) {
   try{
     wmsURL = x['wmsURL'];
-    // console.log(wmsURL);
     layer = x['variable'];
-    // console.log(layer);
     range =x['range'];
-    // console.log(range);
     style = x['style'];
-    // console.log(style);
     opacity =x['opacity'];
-    // console.log(opacity);
-    // console.log(layernameUI);
-      // if (firstlayeradded == true) {
-      if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
-          layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-          mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-          // layerControlObj.removeLayer(dataLayerObj);
-          // mapObj.removeLayer(dataLayerObj);
-          delete layers_dict[`${layernameUI}_check`];
-          // x['selected'] = false;
-          // console.log("taking off");
-      }
-      else{
-        Object.keys(layers_dict).forEach(function(key) {
-          layerControlObj.removeLayer(layers_dict[key]);
-          mapObj.removeLayer(layers_dict[key]);
-          delete layers_dict[key];
+    if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
+        layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+        mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+        delete layers_dict[`${layernameUI}_check`];
+    }
+    else{
+      Object.keys(layers_dict).forEach(function(key) {
+        layerControlObj.removeLayer(layers_dict[key]);
+        mapObj.removeLayer(layers_dict[key]);
+        delete layers_dict[key];
 
-        });
-        dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
-        dataLayerObj.setOpacity(opacity);
-        layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-        // console.log("showing");
-      }
+      });
+      dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+      dataLayerObj.setOpacity(opacity);
+      layerControlObj.addOverlay(dataLayerObj, "Data Layer");
+    }
   }
   catch(e){
     console.log(e);
@@ -276,18 +244,10 @@ var updateWMSLayer = function(layernameUI,x) {
 var updateWMSLayer2 = function(layernameUI,x) {
   try{
     wmsURL = x['wmsURL'];
-    // console.log(wmsURL);
     layer = x['variable'];
-    // console.log(layer);
     range =x['range'];
-    // console.log(range);
     style = x['style'];
-    // console.log(style);
     opacity =x['opacity'];
-    // console.log(opacity);
-    // console.log(layernameUI);
-      // if (firstlayeradded == true) {
-
 
     Object.keys(layers_dict).forEach(function(key) {
       layerControlObj.removeLayer(layers_dict[key]);
@@ -298,7 +258,6 @@ var updateWMSLayer2 = function(layernameUI,x) {
     dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
     dataLayerObj.setOpacity(opacity);
     layerControlObj.addOverlay(dataLayerObj, "Data Layer");
-    // console.log("showing");
 
   }
   catch(e){
@@ -322,7 +281,6 @@ var removeActiveLayer = function(layernameUI){
 var removeWMSLayer = function() {
     layerControlObj.removeLayer(dataLayerObj);
     mapObj.removeLayer(dataLayerObj);
-    // firstlayeradded = false;
     $("#layer-display-container").css("display", "none");
 }
 
@@ -340,12 +298,6 @@ var changeOpacity = function(layernameUI, opacity){
 
 
 //let insetMapObj = insetMap('inset-map-one');
-
-
-
-
-
-
 
 
 // Inset map
