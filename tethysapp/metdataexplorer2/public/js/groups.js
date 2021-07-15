@@ -883,7 +883,7 @@ var updateFilepath = function() {
         getFoldersAndFiles();
     }
     else if ($(this).attr("class") == "file") {
-        $('#loading-group').removeClass("hidden");
+        $('#GeneralLoading').removeClass("hidden");
         let newURL = $(this).attr("data-opendap-url");
         $("#url").val(newURL);
 
@@ -902,10 +902,9 @@ var updateFilepath = function() {
         addFileMetadata(variablesAndFileMetadata[1]);
         $("#groups_variables_div").show();
 
-        $('#loading-group').addClass("hidden");
+        $('#GeneralLoading').addClass("hidden");
 
     }
-    $("#loading-modal").modal("hide");
 }
 
 var variableMetadata = function() {
@@ -1054,7 +1053,7 @@ var getFoldersAndFiles = function() {
 
           }
           catch(e){
-            $('#loading-group').addClass("hidden");
+            $('#GeneralLoading').addClass("hidden");
             $.notify(
                 {
                     message: `Not able to identify the THREDDS endpoint`
@@ -1078,7 +1077,7 @@ var getFoldersAndFiles = function() {
         },
         error: function(error){
           console.log(error);
-          $('#loading-group').addClass("hidden");
+          $('#GeneralLoading').addClass("hidden");
           $.notify(
               {
                   message: `Invalid THREDDS Endpoint`

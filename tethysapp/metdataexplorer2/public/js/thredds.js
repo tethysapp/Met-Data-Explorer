@@ -210,11 +210,11 @@ var load_individual_thredds_for_group = function(group_name){
      group: group_name
    };
    $("#GeneralLoading").css({
-      position:'fixed',
-      "z-index": 9999,
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)'
+      'position':'fixed',
+      'z-index': '100000',
+      'top': '50%',
+      'left': '50%',
+      'transform': 'translate(-50%, -50%)'
     });
    $("#GeneralLoading").removeClass("hidden");
        $.ajax({

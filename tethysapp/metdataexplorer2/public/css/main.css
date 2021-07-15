@@ -150,7 +150,6 @@ td{
 
 #filetree-div{
   height: 300px;
-  overflow-x: hidden;
   cursor: pointer;
 
 }
@@ -503,7 +502,8 @@ tr:hover {
 }
 
 .group-name{
-  color: "#666";
+  color: #FFFFFF;
+  padding: 1em;
 }
 #buttonsBar{
   margin-left: 10%;
