@@ -199,6 +199,8 @@ var display_vars_from_OpenDabs = function(){
     $(`#table_wrapper2`).show();
     $(html2).appendTo('#attributes2');
   }
+
+  $(".tables_mul").selectpicker("selectAll");
   $(".tables_mul").selectpicker("refresh");
 
   $("#groups_variables_div2").show();
