@@ -903,7 +903,7 @@ var make_varaibles_appear = function () {
         }
 
         $(html2).appendTo('#attributes');
-
+        $(".tables_mul").selectpicker("selectAll");
         let description = $('#metadata-div').attr('data-description');
         $('#dimensions').append(html);
         $('#description-input').append(description);

@@ -870,7 +870,7 @@ var addAttribute = function(attribute, dimensionString, units, color) {
                       <label>${attribute}</label>
                     </td>
                     <td>
-                      <select id = "${attribute}_time" class="selectpicker tables_mul" data-live-search="false" data-width="50%" data-size="mini" data-style="btn-info">${options}</select>
+                      <select id = "${attribute}_time" class="selectpicker tables_mul" data-live-search="false" data-width="100%" data-style="btn-primary" multiple>${options}</select>
                     </td>
                   </tr>`
     }
