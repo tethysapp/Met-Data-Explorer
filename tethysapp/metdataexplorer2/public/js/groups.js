@@ -812,7 +812,7 @@ var addServiceToTable = function(){
       </td>
       <td>
         ${$('#addService-title').val()}
-        <button id= "btn-metadata-service" type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#modalMetaDataServiceInfo"><span class="glyphicon glyphicon-question-sign"></button>
+        <button id= "btn-metadata-service-${$('#addService-title').val()}" type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#modalMetaDataServiceInfo"><span class="glyphicon glyphicon-question-sign"></button>
       </td>
       <td>
         <select id= "${$('#addService-title').val()}_vars" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini" data-style="btn-info">${options}</select>
@@ -821,9 +821,12 @@ var addServiceToTable = function(){
     `
     $("#added_thredds_files_table_body").append(html_row);
     $(`#${$('#addService-title').val()}_vars`).selectpicker('refresh');
-    let table_sign = metadata_button_modal(databaseInfo);
-    $('#metadata_service_info').empty();
-    $(table_sign).appendTo("#metadata_service_info");
+    $(`#btn-metadata-service-${$('#addService-title').val()}`).on("click", function(){
+      let table_sign = metadata_button_modal(databaseInfo);
+      $('#metadata_service_info').empty();
+      $(table_sign).appendTo("#metadata_service_info");
+    })
+
   }
   catch(error){
     console.log(error);
