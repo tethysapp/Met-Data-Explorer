@@ -1,0 +1,32 @@
+{% load staticfiles %}
+
+<div id="modalDropdownInfo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"> List of Variables</h4>
+            </div>
+            <div class="modal-body">
+              <div id="metadata_att_dropdown">
+                <table id="attr_dim" class="table table-hover table-condensed">
+                  <thead>
+                    <tr>
+                      <th scope="col">Variable</th>
+                      <th scope="col">Dimensions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attributes_dims">
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -815,7 +815,8 @@ var addServiceToTable = function(){
         <button id= "btn-metadata-service-${$('#addService-title').val()}" type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#modalMetaDataServiceInfo"><span class="glyphicon glyphicon-question-sign"></button>
       </td>
       <td>
-        <select id= "${$('#addService-title').val()}_vars" class="selectpicker" data-live-search="false" data-width="fit" data-size="mini" data-style="btn-info">${options}</select>
+        ${Object.keys(attr).length}
+        <button id= "btn-metadata-dropdown-${$('#addService-title').val()}" type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#modalDropdownInfo"><span class="glyphicon glyphicon-question-sign"></button>
       </td>
     </tr>
     `
@@ -826,6 +827,39 @@ var addServiceToTable = function(){
       $('#metadata_service_info').empty();
       $(table_sign).appendTo("#metadata_service_info");
     })
+
+    $(`#btn-metadata-dropdown-${$('#addService-title').val()}`).on("click", function(){
+      $( "#attributes_dims" ).empty();
+
+      let html = '';
+      for(let i = 0; i< variables_list.length; i++){
+        let options = '';
+        for(let j = 0; j< attr[variables_list[i]]['dimensions'].length; j++){
+          options += `<option>${attr[variables_list[i]]['dimensions'][j]}</option>`;
+        }
+        html  += `<tr>
+                      <td class = "attrbute_name">
+                        <label>${variables_list[i]}</label>
+                      </td>
+                      <td>
+                        <select  class="selectpicker modal_dim" data-style="btn-info" multiple>${options}</select>
+                      </td>
+                    </tr>`
+
+       // $( "#attributes_dims" ).append(html);
+       // $(`${variables_list[i]}_time`).selectpicker("render");
+      }
+      $(html).appendTo("#attributes_dims");
+      $('.modal_dim').selectpicker('selectAll');
+
+      $(".modal_dim").selectpicker("refresh");
+
+      // $(".selectpicker").selectpicker("show");
+
+    })
+
+
+    // $(html).appendTo("#attributes_dims");
 
   }
   catch(error){
