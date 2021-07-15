@@ -115,11 +115,11 @@ def get_variables_and_file_metadata(request):
             VAR_LO = ds[variable].units
         except Exception as e:
             print("no units")
-        for dimension in ds[variable].dimensions:
-
-            dimension_list.append(dimension)
-        array = {'dimensions': dimension_list, 'units': 'false', 'color': 'false'}
-        variables[variable] = array
+        if len(ds[variable].dimensions) > 2:
+            for dimension in ds[variable].dimensions:
+                dimension_list.append(dimension)
+            array = {'dimensions': dimension_list, 'units': 'false', 'color': 'false'}
+            variables[variable] = array
 
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
 
