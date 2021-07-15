@@ -340,9 +340,10 @@ var load_individual_thredds_for_group = function(group_name){
                     layers_style[layernameUI2]['dimensions'].forEach(function(dim){
                       let option;
                       option = `<option value=${dim} >${dim} </option>`;
-                      dim_orders_id.append(option)
+                      dim_orders_id.append(option);
                       dim_orders_id.selectpicker("refresh");
                     })
+                    dim_orders_id.selectpicker('selectAll');
 
 
                     $('#show_wms').bootstrapToggle('on');
@@ -880,9 +881,10 @@ var addSingleThreddsServer = function(){
               layers_style[layernameUI2]['dimensions'].forEach(function(dim){
                 let option;
                 option = `<option value=${dim} >${dim} </option>`;
-                dim_orders_id.append(option)
+                dim_orders_id.append(option);
                 dim_orders_id.selectpicker("refresh");
               })
+              dim_orders_id.selectpicker('selectAll');
 
               $('#show_wms').bootstrapToggle('on');
 

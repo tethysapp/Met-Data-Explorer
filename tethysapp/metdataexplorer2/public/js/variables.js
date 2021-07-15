@@ -28,9 +28,10 @@ var VARIABLES_PACKAGE = (function(){
       dimensions.forEach(function(dim){
         let option;
         option = `<option value=${dim} >${dim} </option>`;
-        dim_orders_id.append(option)
+        dim_orders_id.append(option);
         dim_orders_id.selectpicker("refresh");
       })
+      dim_orders_id.selectpicker('selectAll');
 
 
     })
@@ -656,9 +657,10 @@ var addVariablesToTD = function(){
            layers_style[layernameUI2]['dimensions'].forEach(function(dim){
              let option;
              option = `<option value=${dim} >${dim} </option>`;
-             dim_orders_id.append(option)
+             dim_orders_id.append(option);
              dim_orders_id.selectpicker("refresh");
            })
+           dim_orders_id.selectpicker('selectAll');
 
 
 
