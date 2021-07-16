@@ -160,7 +160,12 @@ def add_vars(request):
         session = SessionMaker()
         tdds_object2 = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
         group_obj['metadata_file'] = tdds_object2.metadata_td_file
-
+        group_obj['title'] = tdds_object2.title
+        group_obj['description'] = tdds_object2.description
+        group_obj['url'] = tdds_object2.url
+        group_obj['url_wms'] = tdds_object2.url_wms
+        group_obj['url_subset'] = tdds_object2.url_subset
+        group_obj['epsg'] = tdds_object2.epsg
         old_attr_arr = []
         for old_attr in tdds_object2.attributes:
             variable_obj = {}

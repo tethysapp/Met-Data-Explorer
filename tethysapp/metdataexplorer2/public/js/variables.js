@@ -552,7 +552,7 @@ var addVariablesToTD = function(){
             // let table_content = get_table_vars(attr2,current_tdds_id);
 
             $(table_content).appendTo("#table_var_body");
-            let info_file = make_metadata_file_table(result['metadata_file']);
+            let info_file = make_metadata_file_table(result['metadata_file'],result);
             $(info_file).appendTo("#siteDes");
           }
           // for (let i = 0; i< attr.length; ++i){
@@ -628,7 +628,7 @@ var addVariablesToTD = function(){
            ///MAKE TABLE//
            let table_content = get_table_vars(attr2,current_tdds_id);
 
-           let info_file = make_metadata_file_table(result['metadata_file']);
+           let info_file = make_metadata_file_table(result['metadata_file'], result);
            $(info_file).appendTo("#siteDes");
 
            $(table_content).appendTo("#table_div");

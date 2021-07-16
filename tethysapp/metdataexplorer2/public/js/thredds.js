@@ -313,7 +313,7 @@ var load_individual_thredds_for_group = function(group_name){
                     ///MAKE TABLE//
                     let table_content = get_table_vars(attributes,new_title);
 
-                    let info_file = make_metadata_file_table(metadata_file);
+                    let info_file = make_metadata_file_table(metadata_file,server);
                     $(info_file).appendTo("#siteDes");
 
                     $(table_content).appendTo("#table_div");
@@ -774,7 +774,7 @@ var addSingleThreddsServer = function(){
         url_subset:subsetURL,
         epsg: epsg,
         spatial: spatial_shape,
-        description: $('#addService-title').val(),
+        description: $('#addService-description').val(),
         attributes: attr,
         timestamp: timestamp,
     };
@@ -856,7 +856,7 @@ var addSingleThreddsServer = function(){
 
               let table_content = get_table_vars(attr_array,new_title);
               $(table_content).appendTo("#table_div");
-              let info_file = make_metadata_file_table(data['services'][0]['metadata_file']);
+              let info_file = make_metadata_file_table(data['services'][0]['metadata_file'],databaseInfo);
               $(info_file).appendTo("#siteDes");
 
 

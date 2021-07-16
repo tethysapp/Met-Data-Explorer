@@ -795,7 +795,7 @@ var addServiceToTable = function(){
         url_subset:subsetURL,
         epsg: epsg,
         spatial: spatial_shape,
-        description: $('#addService-title').val(),
+        description: $('#addService-description').val(),
         attributes: attr,
         timestamp: timestamp,
     };

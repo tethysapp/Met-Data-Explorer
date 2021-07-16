@@ -223,14 +223,15 @@ var metadata_button_modal = function(infoService){
   return table_content
 
 }
-var make_metadata_file_table = function(metadata_string){
+var make_metadata_file_table = function(metadata_string,layer_obj){
   let table_content = '<table id = "table_metadata_file" class="table table-hover table-condensed"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
   // let var_metad = JSON.parse(attribute['metadata_var']);
   let mtda_objt = JSON.parse(metadata_string);
 
   let all_file_keys = Object.keys(mtda_objt);
-
+  let extra_meta = get_extra_file_metdata(layer_obj);
+  table_content += extra_meta;
   for(let j = 0; j< all_file_keys.length; ++j){
     table_content += `<tr><td>${all_file_keys[j]}</td><td>${mtda_objt[all_file_keys[j]]}</td></tr>`
   }
@@ -889,6 +890,18 @@ var get_metadata_button = function(attribute){
     table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
   }
   table_content += "</tbody> </table>"
+  return table_content
+}
+
+var get_extra_file_metdata = function(layer_obj){
+
+  let table_content =  `<tr><td>Name</td><td>${layer_obj["title"]}</td></tr>`
+  table_content +=  `<tr><td>Description</td><td>${layer_obj["description"]}</td></tr>`
+  table_content +=  `<tr><td>OPENDAP Enpoint</td><td>${layer_obj["url"]}</td></tr>`
+  table_content +=  `<tr><td>WMS Endpoint</td><td>${layer_obj["url_wms"]}</td></tr>`
+  table_content +=  `<tr><td>Subset Endpoint</td><td>${layer_obj["url_subset"]}</td></tr>`
+  table_content +=  `<tr><td>EPSG</td><td>${layer_obj['epsg']}</td></tr>`
+
   return table_content
 }
 // var check_if_td_contained = function(td_name,tds_array){
