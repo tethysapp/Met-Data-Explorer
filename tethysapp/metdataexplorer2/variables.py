@@ -84,10 +84,17 @@ def get_data_bounds(request):
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group_single).filter(Thredds.title == tdds_single).first()
     var_row = session.query(Variables).filter(Variables.name == variable_single).join(Thredds).filter(Thredds.title == tdds_single).join(Groups).filter(Groups.name == group_single).first()
     # print(type(var_row.range))
+    da = xarray.open_dataset(tdds_group.url.strip(),chunks={"time": '100MB'})
+    # print(da.to_dict(data=False))
+    hola = da.coords.keys()
+    print(da.coords.keys())
+
+    for hl in hola:
+        if hl == 'height':
+            print(da.coords[hl].to_dict()['data'])
     if var_row.range is None:
         # print("hol")
         da = xarray.open_dataset(tdds_group.url.strip(),chunks={"time": '100MB'})
-        # print(da)
         data = da[variable_single].compute()
         # print(variable_single)
         max = data.max().values
