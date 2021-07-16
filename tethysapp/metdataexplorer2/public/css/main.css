@@ -1,3 +1,9 @@
+
+#groups_thredds{
+  margin-top: 1.5em;
+}
+
+
 .div_hor{
   display: flex;
   flex-direction: row;
@@ -73,11 +79,7 @@ ul {
 #current-GroupThredds {
     width: 100%;
     height: 100%;
-    /* background-color: #5a6268; */
-    /* overflow-y: auto; */
-    padding: 0.25em;
-    padding-bottom: 2em;
-    padding-top: 1em;
+
 }
 
 #current-GroupThredds ul {
@@ -166,11 +168,6 @@ td{
 #current-GroupThredds {
     width: 100%;
     height: 100%;
-    /* background-color: #5a6268; */
-    overflow-y: scroll;
-    padding: 0.25em;
-    padding-bottom: 2em;
-    padding-top: 1em;
 }
 #file-info-div{
   display: flex;
@@ -381,6 +378,9 @@ tr:hover {
   background: #efefef;
   padding: 0 0px;
   padding-top: 1%;
+}
+#app-content-wrapper #app-content #app-navigation .nav{
+  margin: 0.3em;
 }
 #map2{
   width: 100%;
