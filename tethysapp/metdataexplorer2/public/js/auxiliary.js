@@ -150,7 +150,7 @@ var uploadShapefile = function() {
             if(attr_shp.length == 0){
               $.notify(
                   {
-                      message: `Please, upload a different shapefile that contains at least a common property in all the features of the shapefile`
+                      message: `Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.`
                   },
                   {
                       type: "info",
@@ -167,38 +167,38 @@ var uploadShapefile = function() {
                   }
               )
             }
-            else{
-              input_spatial = filename
-              // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
-              let feature_select = $("#features_file");
-              feature_select.empty();
-              feature_select.selectpicker('refresh');
+            // else{
+            input_spatial = filename
+            // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
+            let feature_select = $("#features_file");
+            feature_select.empty();
+            feature_select.selectpicker('refresh');
 
-              attr_shp.forEach(function(attr){
-                let option;
-                option = `<option value=${attr} >${attr} </option>`;
-                feature_select.append(option)
-                feature_select.selectpicker("refresh");
-              });
-              var myStyle = {
-                  "color": "#E2E5DE",
-                  "weight": 5,
-                  "opacity": 0.5
-              };
+            attr_shp.forEach(function(attr){
+              let option;
+              option = `<option value=${attr} >${attr} </option>`;
+              feature_select.append(option)
+              feature_select.selectpicker("refresh");
+            });
+            var myStyle = {
+                "color": "#E2E5DE",
+                "weight": 5,
+                "opacity": 0.5
+            };
 
-              jsonLayer = L.geoJSON(geoJsonObject, {
-                  style: myStyle
-              })
-              jsonLayer.addTo(mapObj);
-              mapObj.flyToBounds(jsonLayer.getBounds());
+            jsonLayer = L.geoJSON(geoJsonObject, {
+                style: myStyle
+            })
+            jsonLayer.addTo(mapObj);
+            mapObj.flyToBounds(jsonLayer.getBounds());
 
-              if (alreadyMade == true) {
-                  console.log('You already have a shape with this name. Please rename your file and try again.');
-              }
-              else {
-                  $('#externalSPTL_modal').modal('hide');
-              }
+            if (alreadyMade == true) {
+                console.log('You already have a shape with this name. Please rename your file and try again.');
             }
+            else {
+                $('#externalSPTL_modal').modal('hide');
+            }
+            // }
 
           }
           catch(e){
