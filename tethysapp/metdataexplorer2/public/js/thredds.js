@@ -225,6 +225,7 @@ var load_individual_thredds_for_group = function(group_name){
            dataType: "JSON",
            data: group_name_obj,
            success: result => {
+             console.log(result);
              try{
                let servers = result["thredds"]
                //USE A FUNCTION TO FIND THE LI ASSOCIATED WITH THAT GROUP  AND DELETE IT FROM THE MAP AND MAKE ALL
@@ -255,7 +256,8 @@ var load_individual_thredds_for_group = function(group_name){
                        description,
                        timestamp,
                        attributes,
-                       metadata_file
+                       metadata_file,
+                       extra_coordinate
                    } = server
                    let unique_id_tds = uuidv4();
                    id_dictionary[unique_id_tds] = `${title}_join_${group_name}`
@@ -333,6 +335,7 @@ var load_individual_thredds_for_group = function(group_name){
                     layers_style[layernameUI2]['epsg'] = epsg;
                     layers_style[layernameUI2]['selected'] = false;
                     layers_style[layernameUI2]['dimensions'] = attributes[0]['dimensions'];
+                    layers_style[layernameUI2]['extra_dim'] = JSON.parse(extra_coordinate);
                     layers_dict_wms = layers_style;
 
                     // make the dims dropdown for the first varriable //
@@ -346,6 +349,45 @@ var load_individual_thredds_for_group = function(group_name){
                       dim_orders_id.selectpicker("refresh");
                     })
                     dim_orders_id.selectpicker('selectAll');
+
+                    // extra dim //
+                    let extra_dim_order = $("#extra_dim");
+                    // extra_dim_order.empty();
+                    // extra_dim_order.selectpicker("refresh");
+                    // extra_dim_order.selectpicker('hide');
+
+                    console.log(layers_style[layernameUI2]['dimensions']);
+                    if(layers_style[layernameUI2]['dimensions'].length > 3){
+                      console.log("entro 4");
+                      extra_dim_order.empty();
+                      extra_dim_order.selectpicker("refresh");
+                      extra_dim_order.selectpicker('hide');
+                      let extra_json =layers_style[layernameUI2]['extra_dim'];
+                      layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+                        if(dim != "lat" && dim !="lon"){
+                          if(!dim.includes("time")){
+                            console.log("las tiene");
+                            let option;
+                            option = `<option value=${dim}> Select a ${dim} val </option>`;
+                            extra_dim_order.append(option);
+                            console.log(extra_json[dim]);
+                            extra_json[dim].forEach(function(val_e){
+                              // console.log(val_e);
+                              let option2 = `<option value=${val_e}> ${val_e} </option>`;
+                              extra_dim_order.append(option2);
+                            })
+                            extra_dim_order.selectpicker("refresh");
+                            extra_dim_order.selectpicker('show');
+
+                          }
+                        }
+                      })
+                    }
+                    else{
+                      extra_dim_order.empty();
+                      extra_dim_order.selectpicker("refresh");
+                      extra_dim_order.selectpicker('hide');
+                    }
 
 
                     $('#show_wms').bootstrapToggle('on');
@@ -382,6 +424,7 @@ var load_individual_thredds_for_group = function(group_name){
                       layers_style[layernameUI]['epsg'] = epsg;
                       layers_style[layernameUI]['selected'] = false;
                       layers_style[layernameUI]['dimensions'] = attributes[i]['dimensions'];
+                      layers_style[layernameUI]['extra_dim'] = JSON.parse(extra_coordinate);
 
                       layers_dict_wms = layers_style;
 
@@ -393,6 +436,7 @@ var load_individual_thredds_for_group = function(group_name){
 
 
                     }
+
                     $("#GeneralLoading").addClass("hidden");
                     last_selected_id = new_title;
 
@@ -691,9 +735,10 @@ var addSingleThreddsServer = function(){
             var x = document.getElementById(`${var_string}_time`);
             if(x != null){
               var i;
-              for (i = 0; i < x.length; i++) {
-                  allDimensions.push(x.options[i].text);
-              }
+              allDimensions = $(`#${var_string}_time`).val();
+              // for (i = 0; i < x.length; i++) {
+              //     allDimensions.push(x.options[i].text);
+              // }
               attr[var_string] = {
                   name: var_string,
                   dimensions: allDimensions,
@@ -824,6 +869,12 @@ var addSingleThreddsServer = function(){
               let newHtml = html_for_servers(can_delete_groups,new_title,group_name_e3, url, wmsURL, subsetURL);
               $(newHtml).appendTo(`#${id_group_separator}`);
 
+              // UPDATE THE DICT VAR //
+              let array_var_ = []
+              attr_array.forEach(function(att_single){
+                array_var_.push(att_single['name']);
+              })
+              dict_file_vars[new_title] = array_var_;
 
               $(`#${new_title}`).on("click",function(){
                 current_tdds = id_dictionary[new_title].split('_join_')[0];
@@ -874,11 +925,13 @@ var addSingleThreddsServer = function(){
               layers_style[layernameUI2]['epsg'] = epsg;
               layers_style[layernameUI2]['selected'] = false;
               layers_style[layernameUI2]['dimensions'] = attr_array[0]['dimensions'];
+              layers_style[layernameUI2]['extra_dim'] = JSON.parse(data['services'][0]['extra_coordinate']);
               layers_dict_wms = layers_style;
 
               // make the dims dropdown for the first varriable //
               let dim_orders_id = $("#dim_select");
               dim_orders_id.empty();
+              dim_orders_id.selectpicker("refresh");
 
               layers_style[layernameUI2]['dimensions'].forEach(function(dim){
                 let option;
@@ -887,6 +940,45 @@ var addSingleThreddsServer = function(){
                 dim_orders_id.selectpicker("refresh");
               })
               dim_orders_id.selectpicker('selectAll');
+
+              // extra dim //
+              let extra_dim_order = $("#extra_dim");
+
+
+              console.log(layers_style[layernameUI2]['dimensions']);
+              if(layers_style[layernameUI2]['dimensions'].length > 3){
+                console.log("entro 4");
+                extra_dim_order.empty();
+                extra_dim_order.selectpicker("refresh");
+                extra_dim_order.selectpicker('hide');
+                let extra_json =layers_style[layernameUI2]['extra_dim'];
+                layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+                  if(dim != "lat" && dim !="lon"){
+                    if(!dim.includes("time")){
+                      console.log("las tiene");
+                      let option;
+                      option = `<option value=${dim}> Select a ${dim} val </option>`;
+                      extra_dim_order.append(option);
+                      console.log(extra_json[dim]);
+                      extra_json[dim].forEach(function(val_e){
+                        // console.log(val_e);
+                        let option2 = `<option value=${val_e}> ${val_e} </option>`;
+                        extra_dim_order.append(option2);
+                      })
+                      extra_dim_order.selectpicker("refresh");
+                      extra_dim_order.selectpicker('show');
+
+                    }
+                  }
+                })
+              }
+              else{
+                extra_dim_order.empty();
+                extra_dim_order.selectpicker("refresh");
+                extra_dim_order.selectpicker('hide');
+              }
+
+
 
               $('#show_wms').bootstrapToggle('on');
 
@@ -921,6 +1013,8 @@ var addSingleThreddsServer = function(){
                 layers_style[layernameUI]['epsg'] = epsg;
                 layers_style[layernameUI]['selected'] = false;
                 layers_style[layernameUI]['dimensions'] = attr_array[i]['dimensions'];
+                layers_style[layernameUI]['extra_dim'] = JSON.parse(data['services'][0]['extra_coordinate']);
+
                 layers_dict_wms = layers_style;
 
                 // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //

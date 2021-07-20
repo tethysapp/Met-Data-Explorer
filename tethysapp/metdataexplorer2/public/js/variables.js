@@ -33,6 +33,41 @@ var VARIABLES_PACKAGE = (function(){
       })
       dim_orders_id.selectpicker('selectAll');
 
+      // extra dim //
+
+      let extra_dim_order = $("#extra_dim");
+      console.log(layers_dict_wms[layernameUI]['dimensions']);
+      if(layers_dict_wms[layernameUI]['dimensions'].length > 3){
+        console.log("entro 4");
+        extra_dim_order.empty();
+        extra_dim_order.selectpicker("refresh");
+        extra_dim_order.selectpicker('hide');
+        let extra_json =layers_dict_wms[layernameUI]['extra_dim'];
+        layers_dict_wms[layernameUI]['dimensions'].forEach(function(dim){
+          if(dim != "lat" && dim !="lon"){
+            if(!dim.includes("time")){
+              console.log("las tiene");
+              let option;
+              option = `<option value=${dim}> Select a ${dim} val </option>`;
+              extra_dim_order.append(option);
+              console.log(extra_json[dim]);
+              extra_json[dim].forEach(function(val_e){
+                // console.log(val_e);
+                let option2 = `<option value=${val_e}> ${val_e} </option>`;
+                extra_dim_order.append(option2);
+              })
+              extra_dim_order.selectpicker("refresh");
+              extra_dim_order.selectpicker('show');
+            }
+          }
+        })
+      }
+      else{
+        extra_dim_order.empty();
+        extra_dim_order.selectpicker("refresh");
+        extra_dim_order.selectpicker('hide');
+      }
+
 
     })
     $("#variable_met_info").on("click", function(){
@@ -580,6 +615,7 @@ var addVariablesToTD = function(){
             layers_style[layernameUI]['epsg'] = attr2[single_att_key]['epsg'];
             layers_style[layernameUI]['selected'] = false;
             layers_style[layernameUI]['dimensions'] = attr2[single_att_key]['dimensions'];
+            layers_style[layernameUI]['extra_dim'] = JSON.parse(result['extra_coordinate']);
 
 
             layers_dict_wms = layers_style;
@@ -648,6 +684,8 @@ var addVariablesToTD = function(){
            layers_style[layernameUI2]['epsg'] = attr2[0]['epsg'];
            layers_style[layernameUI2]['selected'] = false;
            layers_style[layernameUI2]['dimensions'] = attr2[0]['dimensions'];
+           layers_style[layernameUI2]['extra_dim'] = JSON.parse(result['extra_coordinate']);
+
            layers_dict_wms = layers_style;
 
            // make the dims dropdown for the first varriable //
@@ -662,7 +700,41 @@ var addVariablesToTD = function(){
            })
            dim_orders_id.selectpicker('selectAll');
 
+           // extra dim //
+           let extra_dim_order = $("#extra_dim");
 
+           console.log(layers_style[layernameUI2]['dimensions']);
+           if(layers_style[layernameUI2]['dimensions'].length > 3){
+             console.log("entro 4");
+             extra_dim_order.empty();
+             extra_dim_order.selectpicker('refresh');
+             extra_dim_order.selectpicker('hide');
+             let extra_json =layers_style[layernameUI2]['extra_dim'];
+             layers_style[layernameUI2]['dimensions'].forEach(function(dim){
+               if(dim != "lat" && dim !="lon"){
+                 if(!dim.includes("time")){
+                   console.log("las tiene");
+                   let option;
+                   option = `<option value=${dim}> Select a ${dim} val </option>`;
+                   extra_dim_order.append(option);
+                   console.log(extra_json[dim]);
+                   extra_json[dim].forEach(function(val_e){
+                     // console.log(val_e);
+                     let option2 = `<option value=${val_e}> ${val_e} </option>`;
+                     extra_dim_order.append(option2);
+                   })
+                   extra_dim_order.selectpicker("refresh");
+                   extra_dim_order.selectpicker('show');
+
+                 }
+               }
+             })
+           }
+           else{
+             extra_dim_order.empty();
+             extra_dim_order.selectpicker('refresh');
+             extra_dim_order.selectpicker('hide');
+           }
 
            updateWMSLayer2(layernameUI2,layers_style[layernameUI2]);
            $('#show_wms').bootstrapToggle('on');
@@ -700,6 +772,7 @@ var addVariablesToTD = function(){
              layers_style[layernameUI]['epsg'] = attr2[i]['epsg'];
              layers_style[layernameUI]['selected'] = false;
              layers_style[layernameUI]['dimensions'] = attr2[i]['dimensions'];
+             layers_style[layernameUI]['extra_dim'] = JSON.parse(result['extra_coordinate']);
 
              layers_dict_wms = layers_style;
 

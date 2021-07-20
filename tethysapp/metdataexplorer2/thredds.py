@@ -10,6 +10,8 @@ from .model import Variables, Thredds, Groups
 from siphon.catalog import TDSCatalog
 import requests
 import netCDF4
+import xarray
+import pandas as pd
 from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
 # http://186.149.199.244/ftp/
@@ -149,6 +151,29 @@ def add_tdds(request):
         except Exception as e:
             print(e)
 
+        file_attr_ex = {}
+        try:
+            da = xarray.open_dataset(tdds_info['url'].strip(),chunks={"time": '100MB'})
+            attr_dims = da.coords.keys()
+            print(attr_dims)
+            for hl in attr_dims:
+                if hl != 'lat' and hl != 'lon':
+                    if 'time' not in hl:
+                        file_attr_ex[hl] = da.coords[hl].to_dict()['data']
+        except Exception as e:
+            print(e)
+            nc = netCDF4.Dataset(tdds_info['url'])
+            dims = nc.dimensions.keys()
+            for dim in dims:
+                if dim in nc.variables:
+                    if dim != 'lat' and dim != 'lon':
+                        if 'time' not in dim:
+                            h = nc.variables[dim]
+                            hs = pd.Series(h[:])
+                            file_attr_ex[dim] = hs.to_list()
+
+        # print(file_attr_ex)
+
         thredds_one = Thredds(server_type=tdds_info['type'],
                          title=tdds_info['title'],
                          url = tdds_info['url'],
@@ -159,7 +184,8 @@ def add_tdds(request):
                          # spatial = json.dumps(tdds_info['spatial']),
                          description = tdds_info['description'],
                          timestamp = tdds_info['timestamp'],
-                         metadata_td_file = json.dumps(file_tempt_dict))
+                         metadata_td_file = json.dumps(file_tempt_dict),
+                         extra_coordinate = json.dumps(file_attr_ex))
 
         ## Attributes addition and metadata ##
         for key in tdds_info['attributes']:
@@ -181,6 +207,7 @@ def add_tdds(request):
 
         group_thredds.thredds_server.append(thredds_one)
         tdds_info['metadata_file'] = json.dumps(file_tempt_dict)
+        tdds_info['extra_coordinate'] = json.dumps(file_attr_ex)
         services_array.append(tdds_info)
 
         session.add(group_thredds)

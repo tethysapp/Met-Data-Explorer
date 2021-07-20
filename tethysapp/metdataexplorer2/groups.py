@@ -8,7 +8,7 @@ import netCDF4
 import logging
 from .model import Variables, Thredds, Groups
 import json
-import xarray as xr
+import xarray
 
 # from .model import Thredds, Groups
 from .app import Metdataexplorer2 as app
@@ -44,7 +44,6 @@ def give_all_attributes(request):
         list_vars.append(variable.name)
     return_objt['attrs'] = list_vars
     return JsonResponse(return_objt)
-
 
 def thredds_proxy(request):
     if 'main_url' in request.GET:
@@ -161,6 +160,29 @@ def add_group(request):
             except Exception as e:
                 print(e)
 
+            file_attr_ex = {}
+            try:
+                da = xarray.open_dataset(servi['url'].strip(),chunks={"time": '100MB'})
+                attr_dims = da.coords.keys()
+
+                for hl in attr_dims:
+                    if hl != 'lat' and hl != 'lon':
+                        if 'time' not in hl:
+                            file_attr_ex[hl] = da.coords[hl].to_dict()['data']
+            except Exception as e:
+                print(e)
+                nc = netCDF4.Dataset(servi['url'])
+                dims = nc.dimensions.keys()
+                for dim in dims:
+                    if dim in nc.variables:
+                        if dim != 'lat' and dim != 'lon':
+                            if 'time' not in dim:
+                                h = nc.variables[dim]
+                                hs = pd.Series(h[:])
+                                file_attr_ex[dim] = hs.to_list()
+
+            print(file_attr_ex)
+
             thredds_one = Thredds(server_type=servi['type'],
                              title=servi['title'],
                              url = servi['url'],
@@ -171,7 +193,8 @@ def add_group(request):
                              spatial = json.dumps({}),
                              description = servi['description'],
                              timestamp = servi['timestamp'],
-                             metadata_td_file = json.dumps(file_tempt_dict))
+                             metadata_td_file = json.dumps(file_tempt_dict),
+                             extra_coordinate = json.dumps(file_attr_ex))
 
             ## Attributes addition and metadata ##
             for key in servi['attributes']:
@@ -226,8 +249,8 @@ def load_group(request):
         layer_obj["description"] = trds.description
         layer_obj["timestamp"] = trds.timestamp
         layer_obj["metadata_file"] = trds.metadata_td_file
+        layer_obj["extra_coordinate"] = trds.extra_coordinate
         layer_obj["attributes"] = []
-
 
 
         for attribute_single in trds.attributes:
