@@ -303,7 +303,7 @@ def get_full_array(request):
     attr_variable['name'] = var_row.name
 
     attribute_array['attributes'] = attr_variable
-    xds = xarray.open_dataset(tdds_group.url)
+    # xds = xarray.open_dataset(tdds_group.url)
     # print(xds)
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
