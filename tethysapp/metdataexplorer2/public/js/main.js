@@ -19,7 +19,7 @@ var MET_DATA_EXPLORER_PACKAGE = (function(){
       }
 
     })
-
+    $("#extra_dim").selectpicker('hide');
     load_groups_start();
   })
 

@@ -904,6 +904,7 @@ var get_extra_file_metdata = function(layer_obj){
 
   return table_content
 }
+
 // var check_if_td_contained = function(td_name,tds_array){
 //   let checked = false;
 //   tds_array.forEach(function(single_tds){
