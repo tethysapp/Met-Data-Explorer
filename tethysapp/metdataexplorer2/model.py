@@ -42,8 +42,9 @@ class Thredds(Base):
     attributes = relationship("Variables", back_populates="thredds_servers", cascade = "all,delete, delete-orphan")
     timestamp = Column(String(2000))
     metadata_td_file = Column(JSON)
+    extra_coordinate = Column(JSON)
 
-    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp, metadata_td_file):
+    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp, metadata_td_file,extra_coordinate ):
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -54,6 +55,7 @@ class Thredds(Base):
         self.description = description
         self.timestamp = timestamp
         self.metadata_td_file = metadata_td_file
+        self.extra_coordinate = extra_coordinate
 
 
 class Groups(Base):
