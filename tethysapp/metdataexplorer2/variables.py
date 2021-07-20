@@ -14,7 +14,7 @@ from .timestamp import iterate_files
 from .app import Metdataexplorer2 as app
 import xarray
 import glob
-
+import pandas
 
 Persistent_Store_Name = 'thredds_db'
 def shp_to_geojson(shp_filepath, filename):
@@ -85,15 +85,18 @@ def get_data_bounds(request):
     var_row = session.query(Variables).filter(Variables.name == variable_single).join(Thredds).filter(Thredds.title == tdds_single).join(Groups).filter(Groups.name == group_single).first()
     # print(type(var_row.range))
     if var_row.range is None:
-        # print("hol")
+        # netcdf = netCDF4.Dataset(tdds_group.url)
+        # var = netcdf.variables[variable_single]
+        # print(var)
+        # # var_array = var.data.flatten()
+        # min = var[:].min()
+        # max = var[:].max()
+
         da = xarray.open_dataset(tdds_group.url.strip(),chunks={"time": '100MB'})
         data = da[variable_single].compute()
-        # print(variable_single)
         max = data.max().values
         min = data.min().values
-        # return_obj['min'] = min
-        # return_obj['max'] = max
-        # print(min, max)
+
         range_string = f'{min},{max}'
         return_obj['range'] = range_string
         var_row.range = range_string

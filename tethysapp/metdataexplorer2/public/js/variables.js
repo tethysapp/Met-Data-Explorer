@@ -483,8 +483,6 @@ var drawGraphTwo = function() {
     Plotly.Plots.resize(chart[0]);
 }
 
-
-
 var deleteVariablesToTD = function(){
   let $modalAddVars = $("#modalDeleteVariable");
   var datastring = $modalAddVars.serialize();
@@ -514,6 +512,11 @@ var deleteVariablesToTD = function(){
           $("#variables_graph").selectpicker("refresh");
           $('#show_wms').bootstrapToggle('on');
 
+          delete layers_dict_wms[layernameUI];
+          let index_remove = current_vars.indexOf(single_var);
+          if (index_remove > -1) {
+            current_vars.splice(index_remove, 1);
+          }
 
         });
 
@@ -630,8 +633,8 @@ var addVariablesToTD = function(){
             // let table_content = get_table_vars(attr2,current_tdds_id);
 
             $(table_content).appendTo("#table_var_body");
-            let info_file = make_metadata_file_table(result['metadata_file'],result);
-            $(info_file).appendTo("#siteDes");
+            // let info_file = make_metadata_file_table(result['metadata_file'],result);
+            // $(info_file).appendTo("#siteDes");
           }
           // for (let i = 0; i< attr.length; ++i){
           Object.keys(attr2).forEach(function(single_att_key) {

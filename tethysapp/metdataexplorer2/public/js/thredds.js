@@ -1268,7 +1268,7 @@ var delete_single_tdds = function(){
                 // DEFINE THE LAYER ATTRIBUTES //
                 let layernameUI = `${attributes[title][i]}_${new_title}`
                 removeActiveLayer(layernameUI)
-
+                delete layers_dict_wms[layernameUI]
               }
 
 
