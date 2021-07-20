@@ -716,9 +716,11 @@ var addServiceToTable = function(){
             var x = document.getElementById(`${var_string}_time`);
             if(x != null){
               var i;
-              for (i = 0; i < x.length; i++) {
-                  allDimensions.push(x.options[i].text);
-              }
+              allDimensions = $(`#${var_string}_time`).val();
+              
+              // for (i = 0; i < x.length; i++) {
+              //     allDimensions.push(x.options[i].text);
+              // }
               attr[var_string] = {
                   dimensions: allDimensions,
                   units: units,
