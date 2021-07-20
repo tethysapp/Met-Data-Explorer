@@ -93,11 +93,53 @@ var VARIABLES_PACKAGE = (function(){
           dataType: "json",
           success: function(result) {
             let geoJsonObject = result
-            let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
+
+            let check = {};
+            geoJsonObject['features'].forEach(function(fed){
+              Object.keys(fed['properties']).forEach(function(single_k){
+                if(!check.hasOwnProperty(single_k)){
+                  check[single_k] = [];
+                  check[single_k].push(single_k);
+                }
+                else{
+                  check[single_k].push(single_k);
+                }
+
+              })
+            })
+            let attr_shp = [];
+            Object.keys(check).forEach(function(ch_key){
+              if(check[ch_key].length == geoJsonObject['features'].length){
+                attr_shp.push(ch_key)
+              }
+            })
+            console.log(geoJsonObject['features']);
+            console.log(attr_shp);
+            if(attr_shp.length == 0){
+              $.notify(
+                  {
+                      message: `Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.`
+                  },
+                  {
+                      type: "info",
+                      allow_dismiss: true,
+                      z_index: 20000,
+                      delay: 5000,
+                      animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                      },
+                      onShow: function() {
+                          this.css({'width':'auto','height':'auto'});
+                      }
+                  }
+              )
+            }
+
+            // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
             let feature_select = $("#features_file");
             feature_select.empty();
             feature_select.selectpicker('refresh');
-
             attr_shp.forEach(function(attr){
               let option;
               option = `<option value=${attr} >${attr} </option>`;
