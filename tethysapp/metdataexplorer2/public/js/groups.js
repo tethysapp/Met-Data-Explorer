@@ -717,7 +717,7 @@ var addServiceToTable = function(){
             if(x != null){
               var i;
               allDimensions = $(`#${var_string}_time`).val();
-              
+
               // for (i = 0; i < x.length; i++) {
               //     allDimensions.push(x.options[i].text);
               // }
@@ -942,6 +942,7 @@ var updateFilepath = function() {
         $("#groups_variables_div").show();
 
         $('#GeneralLoading').addClass("hidden");
+        $('#modalFilesStruct').modal('hide');
 
     }
 }
@@ -1013,6 +1014,7 @@ var getFoldersAndFiles = function() {
 
   $('#name-in-form').attr('data-type', 'folder');
   $('#GeneralLoading').removeClass("hidden");
+
     $.ajax({
         url: 'getFilesAndFolders/',
         data: request_obj,
@@ -1021,7 +1023,6 @@ var getFoldersAndFiles = function() {
         method: "GET",
         success: function (result) {
           try{
-              $("#folders_structures").show();
 
               var dataTree = result["dataTree"];
               if (dataTree == "Invalid URL") {
@@ -1089,6 +1090,9 @@ var getFoldersAndFiles = function() {
                   }
               }
               $('#GeneralLoading').addClass("hidden");
+              $('#modalFilesStruct').modal('show');
+              $("#folders_structures").show();
+
 
           }
           catch(e){

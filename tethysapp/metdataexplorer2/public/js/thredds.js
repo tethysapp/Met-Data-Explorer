@@ -678,7 +678,7 @@ var addSingleThreddsServer = function(){
       )
       return false
     }
-    if($("#filetree-div").is(':hidden')){
+    if($("#table_wrapper").is(':hidden')){
       $.notify(
           {
             message: "Please Provide a THREDDS Endpoint"
@@ -1030,6 +1030,13 @@ var addSingleThreddsServer = function(){
 
             }
             $("#GeneralLoading").addClass("hidden");
+
+            $("#modalAddServices").modal("hide");
+            $('#modalAddServiceForm')[0].reset();
+            $("#attributes").empty();
+            $("#groups_variables_div").hide();
+            $("#vars_search").removeClass("hidden");
+
             $.notify(
                 {
                   message: `Added new TDS File`

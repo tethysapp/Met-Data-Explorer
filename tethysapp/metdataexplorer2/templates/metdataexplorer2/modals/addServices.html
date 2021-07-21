@@ -18,7 +18,7 @@
                 <!-- <input type="text" class="form-control" name="addGroup-description" id="addGroup-description" placeholder="Please enter a valid description for the HydroServer Group"> -->
                 <br>
                 <div class="form-row">
-                  <label for="epsg-input" style="float: left;">EPSG Code:
+                  <label for="epsg-input" style="float: left;">EPSG Code (Required):
                     <button id= "btn-info-epsg" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-info-sign"></span></button>
                   </label>
                   <input id="epsg-input" class="form-control">
@@ -49,7 +49,7 @@
                           </label>
                           <div class="buttons_url">
                             <input type="text" class="form-control" name="url" id="url">
-                            <button id= "btn-check_available_serv" type="button" class="btn btn-info" data-toggle="modal" data-target="#modalFilesStruct"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                            <button id= "btn-check_available_serv" type="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-right"></span></button>
                           </div>
 
                         </div>
@@ -61,34 +61,9 @@
 
                     <img id="loading-group" class="view-file hidden" src="{% static 'metdataexplorer2/images/loading.gif' %}" />
                 </div>
-                <!-- <div class="form-row">
-                    <div class="col-md-12 mb-3 form-group hidden" id="available_services">
-                      <br>
 
-                      <div class="accordion" id="folders_structures">
-                        <div class="panel-group" id="current-Files" role="tablist" aria-multiselectable="true">
-                          <div class="panel panel-default">
-                            <div class="panel-heading buttonAppearance" role="tab">
-                                <button id= "btn-uplevel" type="button" class="btn btn-info"> <i class="far fa-folder-open"></i> </button>
-                                <br>
-                                <a role="button" data-toggle="collapse" data-target="#collapse_structure" href="#collapse_structure" aria-expanded="true" aria-controls="collapse_structure">
-                                <span class="group-name"> Folders/Files </span>
-                                </a>
-                            </div>
-                            <div id="collapse_structure" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_${title}">
-                              <div class="panel-body">
-                                <table id="filetree-div" class="table table-hover inner-div">
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div> -->
-
-                <div class="form-row hidden">
-                  <div class="col-md-12 mb-3 form-group" id="metadata_available">
+                <div id= "vars_search" class="form-row hidden">
+                  <div class="col-md-12 mb-3 form-group hidden" id="metadata_available">
                     <div id="file-info-div">
                       <div class = "variables_times">
                         <label for="variable-input">Variables:</label>
