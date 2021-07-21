@@ -9,6 +9,7 @@ import logging
 from .model import Variables, Thredds, Groups
 import json
 import xarray
+import pandas as pd
 
 # from .model import Thredds, Groups
 from .app import Metdataexplorer2 as app
