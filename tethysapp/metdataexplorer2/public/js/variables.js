@@ -577,6 +577,27 @@ var addVariablesToTD = function(){
           }
       }
   })
+  if(Object.keys(attr).length <= 0){
+    $.notify(
+        {
+          message: "Please select at least one variable."
+        },
+        {
+            type: "info",
+            allow_dismiss: true,
+            z_index: 20000,
+            delay: 5000,
+            animate: {
+              enter: 'animated fadeInRight',
+              exit: 'animated fadeOutRight'
+            },
+            onShow: function() {
+                this.css({'width':'auto','height':'auto'});
+            }
+        }
+    )
+    return false
+  }
   let json_request = {
     attributes: JSON.stringify(attr),
     current_tdds: current_tdds,
