@@ -702,6 +702,69 @@ var addServiceToTable = function(){
       )
       return false
     }
+    if($("#epsg-input").val() == ""){
+      $.notify(
+          {
+            message: "Please enter a EPSG Code."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+    if($("#table_wrapper").is(':hidden')){
+      $.notify(
+          {
+            message: "Please Provide a THREDDS Endpoint"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
+    if($("#attributes_table").is(':hidden')){
+      $.notify(
+          {
+            message: "Please Select a THREDDS File from the given file/folder structure"
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+      return false
+    }
     var url = $('#url').val();
     var timestamp = 'false';
     let units = 'false';
@@ -860,7 +923,11 @@ var addServiceToTable = function(){
 
     })
 
-
+    $("#modalAddServices").modal("hide");
+    $('#modalAddServiceForm')[0].reset();
+    $("#attributes").empty();
+    $("#groups_variables_div").hide();
+    $("#vars_search").removeClass("hidden");
     // $(html).appendTo("#attributes_dims");
 
   }
