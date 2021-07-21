@@ -1,3 +1,17 @@
+#GeneralLoading, #loading-add-group, #loading-add-service, #loading-folders{
+  position:fixed;
+  z-index: 100000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+#metadata_att_dropdown{
+  height:300px;
+}
+
 #addService-description{
   height: 150px;
 }

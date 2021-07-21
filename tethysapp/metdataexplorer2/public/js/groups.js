@@ -62,7 +62,9 @@ var GROUPS_PACKAGE = (function(){
 
 
     document.getElementById('search_attr').addEventListener("keyup", searchVariables_func);
-
+    $("#add_var").on("click", function(){
+      $("GeneralLoading").removeClass("hidden")
+    })
     // THREDDS LISTENER //
 
     //DELETION SERVICE
@@ -500,6 +502,7 @@ var make_list_groups = function(){
 }
 
 var load_groups_start = function(){
+
     $.ajax({
         type: "GET",
         url: `get-groups-list/`,
@@ -550,9 +553,12 @@ var load_groups_start = function(){
                  ind = ind +1;
 
              })
+             $("#GeneralLoading").addClass("hidden");
+
            }
            catch(e){
              $("#GeneralLoading").addClass("hidden");
+
              console.log(e);
 
              $.notify(
@@ -578,7 +584,8 @@ var load_groups_start = function(){
 
     },
     error: function(error) {
-        $("#GeneralLoading").addClass("hidden")
+        $("#GeneralLoading").addClass("hidden");
+
         console.log(error);
         $.notify(
             {
@@ -899,17 +906,25 @@ var addServiceToTable = function(){
       let html = '';
       for(let i = 0; i< variables_list.length; i++){
         let options = '';
+        let options2 = '';
         for(let j = 0; j< attr[variables_list[i]]['dimensions'].length; j++){
           options += `<option>${attr[variables_list[i]]['dimensions'][j]}</option>`;
+          if(j < attr[variables_list[i]]['dimensions'].length -1){
+            options2 += `${attr[variables_list[i]]['dimensions'][j]}, `
+          }
+          else{
+            options2 += `${attr[variables_list[i]]['dimensions'][j]}`
+          }
         }
         html  += `<tr>
                       <td class = "attrbute_name">
                         <label>${variables_list[i]}</label>
                       </td>
                       <td>
-                        <select  class="selectpicker modal_dim" data-style="btn-info" multiple>${options}</select>
+                        ${options2}
                       </td>
                     </tr>`
+                    // <select  class="selectpicker modal_dim" data-style="btn-info" multiple>${options}</select>
 
        // $( "#attributes_dims" ).append(html);
        // $(`${variables_list[i]}_time`).selectpicker("render");
@@ -977,7 +992,6 @@ var make_varaibles_appear = function () {
         $('#dimensions').append(html);
         $('#description-input').append(description);
         urlInfoBox = true;
-        $('#loading-modal').modal('hide');
     }
 }
 
@@ -989,7 +1003,8 @@ var updateFilepath = function() {
         getFoldersAndFiles();
     }
     else if ($(this).attr("class") == "file") {
-        $('#GeneralLoading').removeClass("hidden");
+        $('#loading-folders').removeClass("hidden");
+
         let newURL = $(this).attr("data-opendap-url");
         $("#url").val(newURL);
 
@@ -1008,7 +1023,8 @@ var updateFilepath = function() {
         addFileMetadata(variablesAndFileMetadata[1]);
         $("#groups_variables_div").show();
 
-        $('#GeneralLoading').addClass("hidden");
+        // $('#loading-folders').addClass("hidden");
+
         $('#modalFilesStruct').modal('hide');
 
     }
@@ -1080,7 +1096,7 @@ var getFoldersAndFiles = function() {
   }
 
   $('#name-in-form').attr('data-type', 'folder');
-  $('#GeneralLoading').removeClass("hidden");
+  $('#loading-add-service').removeClass("hidden");
 
     $.ajax({
         url: 'getFilesAndFolders/',
@@ -1156,14 +1172,14 @@ var getFoldersAndFiles = function() {
                       URLpath.push(correctURL);
                   }
               }
-              $('#GeneralLoading').addClass("hidden");
+              $('#loading-add-service').addClass("hidden");
               $('#modalFilesStruct').modal('show');
               $("#folders_structures").show();
 
 
           }
           catch(e){
-            $('#GeneralLoading').addClass("hidden");
+            $('#loading-add-service').addClass("hidden");
             $.notify(
                 {
                     message: `Not able to identify the THREDDS endpoint`
@@ -1187,7 +1203,7 @@ var getFoldersAndFiles = function() {
         },
         error: function(error){
           console.log(error);
-          $('#GeneralLoading').addClass("hidden");
+          $('#loading-add-service').addClass("hidden");
           $.notify(
               {
                   message: `Invalid THREDDS Endpoint`
@@ -1211,6 +1227,8 @@ var getFoldersAndFiles = function() {
 };
 
 var createDBArray = function() {
+  $("#loading-add-group").removeClass("hidden");
+
   try{
     if(check_for_same_names("Group",$("#addGroup-title").val()) == true){
       $.notify(
@@ -1331,7 +1349,7 @@ var createDBArray = function() {
           $(`#${title}-noGroups`).show();
           load_individual_thredds_for_group(title);
 
-          $("#GeneralLoading").addClass("hidden");
+          $("#loading-add-group").addClass("hidden");
 
           $("#modalAddGroupServerForm").each(function() {
               this.reset();
@@ -1377,7 +1395,7 @@ var createDBArray = function() {
   }
   catch(error){
     add_services_list = [];
-    $("#GeneralLoading").addClass("hidden");
+    $("#loading-add-group").addClass("hidden");
 
     console.log(error);
     $.notify(

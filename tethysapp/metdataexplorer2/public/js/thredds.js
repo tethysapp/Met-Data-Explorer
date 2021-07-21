@@ -211,13 +211,6 @@ var load_individual_thredds_for_group = function(group_name){
    let group_name_obj={
      group: group_name
    };
-   $("#GeneralLoading").css({
-      'position':'fixed',
-      'z-index': '100000',
-      'top': '50%',
-      'left': '50%',
-      'transform': 'translate(-50%, -50%)'
-    });
    $("#GeneralLoading").removeClass("hidden");
        $.ajax({
            type: "GET",

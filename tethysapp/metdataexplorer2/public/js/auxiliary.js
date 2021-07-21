@@ -295,10 +295,11 @@ var metadata_button_modal = function(infoService){
   let all_file_keys = Object.keys(mtda_objt);
 
   for(let j = 0; j< all_file_keys.length; ++j){
-    if(all_file_keys[j] != 'attributes'){
+    if(all_file_keys[j] != 'attributes' && all_file_keys[j] != 'spatial'){
       table_content += `<tr><td>${all_file_keys[j]}</td><td>${mtda_objt[all_file_keys[j]]}</td></tr>`;
     }
-    else {
+
+    if(all_file_keys[j] == 'attributes'){
       table_content += `<tr><td>${all_file_keys[j]}</td><td>${Object.keys(mtda_objt[all_file_keys[j]]).length}</td></tr>`;
     }
   }
@@ -398,6 +399,7 @@ var getVariablesAndFileMetadata = function (opendapURL) {
         success: function (result) {
             variables = result["variables_sorted"];
             fileMetadata = result["file_metadata"];
+            $("#loading-folders").addClass("hidden")
         }
     })
     return [variables, fileMetadata];
