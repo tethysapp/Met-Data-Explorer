@@ -19,6 +19,15 @@ var MET_DATA_EXPLORER_PACKAGE = (function(){
       }
 
     })
+    $("#btn-info-tdsURL").on("click", function(){
+      if($("#info-tdsURL").attr("class") == "hidden"){
+        $("#info-tdsURL").removeClass("hidden");
+      }
+      else{
+        $("#info-tdsURL").addClass("hidden");
+      }
+
+    })
     $("#extra_dim").selectpicker('hide');
     load_groups_start();
   })

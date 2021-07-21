@@ -44,15 +44,21 @@
                 <div class="form-row">
                     <div class="col-md-12 mb-3 form-group" id = "littleSearch">
                         <div class="input_url">
-                          <label for="url">THREDDS Catalog Endpoint/URL (Required):</label>
+                          <label for="url">
+                            THREDDS Catalog Endpoint/URL (Required):<button id= "btn-info-tdsURL" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-info-sign"></span></button>
+                          </label>
                           <div class="buttons_url">
                             <input type="text" class="form-control" name="url" id="url">
-
                             <button id= "btn-check_available_serv" type="button" class="btn btn-info" data-toggle="modal" data-target="#modalFilesStruct"><span class="glyphicon glyphicon-arrow-right"></span></button>
                           </div>
+
                         </div>
 
                     </div>
+                    <p id="info-tdsURL" class="hidden">
+                      <em>An endpoint ending in catalog.html or catalog.xml is required. OPENDAP endpoints will not work since the app extract that information from the TDS catalog endpoint</em>
+                    </p>
+
                     <img id="loading-group" class="view-file hidden" src="{% static 'metdataexplorer2/images/loading.gif' %}" />
                 </div>
                 <!-- <div class="form-row">
