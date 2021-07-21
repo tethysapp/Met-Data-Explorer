@@ -48,14 +48,14 @@
                           <div class="buttons_url">
                             <input type="text" class="form-control" name="url" id="url">
 
-                            <button id= "btn-check_available_serv" type="button" class="btn btn-info"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                            <button id= "btn-check_available_serv" type="button" class="btn btn-info" data-toggle="modal" data-target="#modalFilesStruct"><span class="glyphicon glyphicon-arrow-right"></span></button>
                           </div>
                         </div>
 
                     </div>
                     <img id="loading-group" class="view-file hidden" src="{% static 'metdataexplorer2/images/loading.gif' %}" />
                 </div>
-                <div class="form-row">
+                <!-- <div class="form-row">
                     <div class="col-md-12 mb-3 form-group hidden" id="available_services">
                       <br>
 
@@ -79,7 +79,7 @@
                         </div>
                       </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="form-row hidden">
                   <div class="col-md-12 mb-3 form-group" id="metadata_available">

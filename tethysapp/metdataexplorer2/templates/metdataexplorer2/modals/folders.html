@@ -1,0 +1,40 @@
+{% load staticfiles %}
+
+<div id="modalFilesStruct" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content myModal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add a Thredds Server File</h4>
+            </div>
+            <div class="modal-body">
+              <form id="modalFilesStructForm">
+                <div class="form-row">
+                    <div class="col-md-12 mb-3 form-group hidden" id="available_services">
+                      <br>
+
+                      <div class="accordion" id="folders_structures">
+                        <div class="panel-group" id="current-Files" role="tablist" aria-multiselectable="true">
+                          <div class="panel panel-default">
+                            <div class="panel-heading buttonAppearance" role="tab">
+                                <button id= "btn-uplevel" type="button" class="btn btn-info"> <i class="far fa-folder-open"></i> </button>
+                                <br>
+                                <a role="button" data-toggle="collapse" data-target="#collapse_structure" href="#collapse_structure" aria-expanded="true" aria-controls="collapse_structure">
+                                <span class="group-name"> Folders/Files </span>
+                                </a>
+                            </div>
+                            <div id="collapse_structure" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_${title}">
+                              <div class="panel-body">
+                                <table id="filetree-div" class="table table-hover inner-div">
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </div>
+</div>
