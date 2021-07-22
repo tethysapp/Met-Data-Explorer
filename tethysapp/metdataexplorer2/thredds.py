@@ -41,28 +41,33 @@ def edit_tdds(request):
             description = request.POST.get('description')
             epsg = request.POST.get('epsg')
             spatial = request.POST.get('spatial')
-            url = request.POST.get('url')
 
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group).filter(Thredds.title == title_old).first()
             if title_new != '':
                 tdds_group.title = title_new
+                session.commit()
+
             if description != '' :
                 tdds_group.description = description
+                session.commit()
+
             if epsg != '' :
                 tdds_group.epsg = epsg
+                session.commit()
+
             if spatial != '':
                 tdds_group.spatial = spatial
-            if url != '':
-                ds = TDSCatalog(url)
-                files = ds.datasets
-                files_dict = {}
-                files_dict = files[0].access_urls
-                tdds_group.url = files_dict['OPENDAP']
-                tdds_group.url_wms = files_dict['WMS']
-                tdds_group.url_subset = files_dict['NetcdfSubset']
+                session.commit()
 
-
-            session.commit()
+            # if url != '':
+            #     ds = TDSCatalog(url)
+            #     files = ds.datasets
+            #     files_dict = {}
+            #     files_dict = files[0].access_urls
+            #     tdds_group.url = files_dict['OPENDAP']
+            #     tdds_group.url_wms = files_dict['WMS']
+            #     tdds_group.url_subset = files_dict['NetcdfSubset']
+            #     session.commit()
             session.close()
             return_objt['message'] = "updated tdds"
         except Exception as e:
