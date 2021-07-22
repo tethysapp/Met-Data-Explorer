@@ -1231,6 +1231,8 @@ var createDBArray = function() {
 
   try{
     if(check_for_same_names("Group",$("#addGroup-title").val()) == true){
+      $("#loading-add-group").removeClass("hidden");
+
       $.notify(
           {
             message: "There is already a GRoup with that name, Please Provide other name"
@@ -1253,6 +1255,8 @@ var createDBArray = function() {
     }
     //CHECKS IF THE INPUT IS EMPTY ///
     if($("#addGroup-title").val() == ""){
+      $("#loading-add-group").addClass("hidden");
+
       $.notify(
           {
             message: "Please enter a title. This field cannot be blank."
@@ -1275,6 +1279,8 @@ var createDBArray = function() {
     }
 
     if ($("#addGroup-title").val() != "") {
+      $("#loading-add-group").addClass("hidden");
+
       var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
       var specials=/[*|\":<>[\]{}`\\()';@&$]/;
       var title = $("#addGroup-title").val()
@@ -1303,6 +1309,8 @@ var createDBArray = function() {
 
     //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
     if($("#addGroup-description").val() == ""){
+      $("#loading-add-group").addClass("hidden");
+
       $.notify(
           {
             message: "Please enter a description for this group. This field cannot be blank."
