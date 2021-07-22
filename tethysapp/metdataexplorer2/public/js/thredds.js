@@ -32,6 +32,25 @@ var THREDDS_PACKAGE = (function(){
     });
 
     $('#btn-edit-service').on("click", edit_single_tdds)
+    $(document).on("click", "#edit_file", function(){
+      console.log(current_tdds);
+      console.log(current_Group);
+      let request_obj = {
+        group: current_Group,
+        tds: current_tdds
+      }
+      $.ajax({
+          type: "GET",
+          url: `get-edit_info/`,
+          dataType: "JSON",
+          data: request_obj,
+          success: function(result) {
+            $("#editService-title").val(result['title']);
+            $("#editService-description").val(result['description']);
+            $("#epsg-input2").val(result['epsg']);
+          }
+      })
+    })
   })
 
 })()

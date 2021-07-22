@@ -221,3 +221,15 @@ def add_tdds(request):
         group_obj['services'] = services_array
 
     return JsonResponse(group_obj)
+
+def get_edit_info(request):
+    return_obj = {}
+    tds = request.GET.get('tds')
+    group = request.GET.get('group')
+    SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
+    session = SessionMaker()  # Initiate a session
+    tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group).filter(Thredds.title == tds).first()
+    return_obj['title'] = tdds_group.title
+    return_obj['description'] = tdds_group.description
+    return_obj['epsg'] = tdds_group.epsg
+    return JsonResponse(return_obj)

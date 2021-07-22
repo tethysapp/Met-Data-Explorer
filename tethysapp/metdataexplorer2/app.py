@@ -81,6 +81,11 @@ class Metdataexplorer2(TethysAppBase):
                 controller='metdataexplorer2.thredds.edit_tdds'
             ),
             UrlMap(
+                name='get-edit_info',
+                url='get-edit_info/',
+                controller='metdataexplorer2.thredds.get_edit_info'
+            ),
+            UrlMap(
                 name='delete-vars',
                 url='delete-vars/',
                 controller='metdataexplorer2.variables.delete_vars'
