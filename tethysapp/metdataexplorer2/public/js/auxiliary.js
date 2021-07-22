@@ -113,6 +113,8 @@ var uploadShapefile = function() {
     Object.keys(files).forEach(function (file) {
         data.append('files', files[file]);
     });
+    console.log(data);
+    console.log(files);
     $.ajax({
         url: 'upload-shapefile/',
         type: 'POST',
@@ -968,14 +970,22 @@ var addAttribute = function(attribute, dimensionString, units, color) {
 var get_metadata_button = function(attribute){
   let table_content = '<table id = "table_metadata" class="table table-hover table-responsive table-sm"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
-  console.log(attribute);
   let var_metad = attribute;
   // let var_metad = JSON.parse(attribute);
   // let all_vars_keys = Object.keys(var_metad);
   let all_vars_keys = Object.keys(attribute);
 
   for(let j = 0; j< all_vars_keys.length; ++j){
-    table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
+    if(all_vars_keys[j] != 'metadata_var'){
+      table_content += `<tr><td>${all_vars_keys[j]}</td><td>${var_metad[all_vars_keys[j]]}</td></tr>`
+    }
+    else{
+      let new_small_met = JSON.parse(var_metad[all_vars_keys[j]]);
+      let keys_new_met = Object.keys(new_small_met);
+      for(let k = 0; k < keys_new_met.length; ++k){
+        table_content += `<tr><td>${keys_new_met[k]}</td><td>${new_small_met[keys_new_met[k]]}</td></tr>`
+      }
+    }
   }
   table_content += "</tbody> </table>"
   return table_content
