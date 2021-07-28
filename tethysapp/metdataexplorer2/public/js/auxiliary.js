@@ -133,17 +133,19 @@ var uploadShapefile = function() {
               Object.keys(fed['properties']).forEach(function(single_k){
                 if(!check.hasOwnProperty(single_k)){
                   check[single_k] = [];
-                  check[single_k].push(single_k);
+                  check[single_k].push(fed['properties'][single_k]);
                 }
                 else{
-                  check[single_k].push(single_k);
+                  check[single_k].push(fed['properties'][single_k]);
                 }
 
               })
             })
             let attr_shp = [];
             Object.keys(check).forEach(function(ch_key){
-              if(check[ch_key].length == geoJsonObject['features'].length){
+              let unique_check = check[ch_key].filter((v,i,a)=>a.indexOf(v)==i)
+              // if(check[ch_key].length == geoJsonObject['features'].length){
+              if(unique_check.length == geoJsonObject['features'].length){
                 attr_shp.push(ch_key)
               }
             })
