@@ -271,21 +271,22 @@ def get_full_array(request):
     dimensions_sel = request.GET.getlist('dimensions_sel[]')
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
-    epsg_offset = request.GET.get('epsg_offset')
-    print("offset", epsg_offset)
+    # epsg_offset = request.GET.get('epsg_offset')
+    # print("offset", epsg_offset)
     # print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
     attribute_array['title'] = tdds_group.title
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
-    if epsg_offset != '':
-        # print("not empty")
-        attribute_array['epsg'] = epsg_offset
-    else:
-        # print("empty")
-        attribute_array['epsg'] = tdds_group.epsg
-        # print(tdds_group.epsg)
+    attribute_array['epsg'] = tdds_group.epsg
+    print(attribute_array['epsg'])
+    # if epsg_offset != '':
+    #     # print("not empty")
+    #     attribute_array['epsg'] = epsg_offset
+    # else:
+    #     # print("empty")
+    #     attribute_array['epsg'] = tdds_group.epsg
 
 
     attribute_array['type'] = 'file'
@@ -390,8 +391,7 @@ def get_geojson_and_data(spatial, epsg):
                 moved_geom.append(translate(element, xoff=360))
             if minx < 0 and maxx >= 0:
                 if isinstance(element, MultiPolygon):
-
-                    print(element.type)
+                    # print(element.type)
                     multipolygon_list = []
                     for single_pol in element.geoms:
                         x, y = single_pol.exterior.coords.xy
@@ -442,8 +442,7 @@ def get_geojson_and_data(spatial, epsg):
                 moved_geom.append(translate(element, xoff=360))
             if minx < 0 and maxx >= 0:
                 if isinstance(element, MultiPolygon):
-
-                    print(element.type)
+                    # print(element.type)
                     multipolygon_list = []
                     for single_pol in element.geoms:
                         x, y = single_pol.exterior.coords.xy
@@ -479,16 +478,17 @@ def get_geojson_and_data(spatial, epsg):
         print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
         if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
             geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
-        if len(epsg) > 4:
+        # if len(epsg) > 4:
             # shift_lat = int(epsg.split(',')[2][2:])
             # shift_lon = int(epsg.split(',')[1][2:])
             # print(shift_lat, shift_lon)
 
-            print(geojson_geometry.crs.area_of_use)
-            print(geojson_geometry.crs.area_of_use.north)
-            print(geojson_geometry.crs.area_of_use.south)
-            print(geojson_geometry.crs.area_of_use.east)
-            print(geojson_geometry.crs.area_of_use.west)
+            # print(geojson_geometry.crs.area_of_use)
+            # print(geojson_geometry.crs.area_of_use.north)
+            # print(geojson_geometry.crs.area_of_use.south)
+            # print(geojson_geometry.crs.area_of_use.east)
+            # print(geojson_geometry.crs.area_of_use.west)
+
             # print(geojson_geometry['geometry'])
             # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
 
