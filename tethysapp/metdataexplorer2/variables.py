@@ -15,6 +15,11 @@ from .app import Metdataexplorer2 as app
 import xarray
 import glob
 import pandas
+from shapely.affinity import translate
+from shapely.geometry.polygon import Polygon
+from shapely.geometry.multipolygon import MultiPolygon
+from shapely import wkt
+
 
 Persistent_Store_Name = 'thredds_db'
 def shp_to_geojson(shp_filepath, filename):
@@ -36,6 +41,7 @@ def shp_to_geojson(shp_filepath, filename):
 
 def upload_shapefile(request):
     files = request.FILES.getlist('files')
+    print(files)
     shp_path = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces')
 
     # write the new files to the directory
@@ -266,7 +272,7 @@ def get_full_array(request):
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
     epsg_offset = request.GET.get('epsg_offset')
-    # print(epsg_offset)
+    print("offset", epsg_offset)
     # print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
@@ -357,6 +363,7 @@ def get_geojson_and_data(spatial, epsg):
     geojson_path = os.path.join(tempfile.gettempdir(), 'temp.json')
     # print(type(spatial))
     if type(spatial) == dict:
+        print("bol1")
         spatial['properties']['id'] = 'Shape'
         data = os.path.join(tempfile.gettempdir(), 'new_geo_temp.json')
         with open(data, 'w') as f:
@@ -364,24 +371,132 @@ def get_geojson_and_data(spatial, epsg):
         geojson_geometry = gpd.read_file(data)
         os.remove(data)
     elif spatial[:4] == 'http':
+        print("bol2")
+
         data = requests.Request('GET', spatial).url
         geojson_geometry = gpd.read_file(data)
+        print(geojson_geometry.geometry)
+        splitted_geom = []
+        moved_geom = []
+
+        for row in geojson_geometry["geometry"]:
+            splitted_geom.append(row)
+        # print(splitted_geom)
+        for element in splitted_geom:
+            minx, miny, maxx, maxy = element.bounds
+            if minx >= 0 and maxx >= 0:
+                moved_geom.append(translate(element, xoff=0))
+            if minx < 0 and maxx < 0:
+                moved_geom.append(translate(element, xoff=360))
+            if minx < 0 and maxx >= 0:
+                if isinstance(element, MultiPolygon):
+
+                    print(element.type)
+                    multipolygon_list = []
+                    for single_pol in element.geoms:
+                        x, y = single_pol.exterior.coords.xy
+                        element2= []
+                        for single_x, single_y in zip(x.tolist(), y.tolist()):
+                            if single_x < 0:
+                                single_x2 = single_x + 360
+                                element2.append(single_x2)
+                            else:
+                                element2.append(single_x)
+                        polygonMade = Polygon(list(zip(element2,y.tolist()))).wkt
+                        multipolygon_list.append(polygonMade)
+                    list_polygons =  [wkt.loads(poly) for poly in multipolygon_list]
+
+                    moved_geom.append(MultiPolygon(list_polygons))
+
+                if element.geom_type =='Polygon':
+                    x, y = element.exterior.coords.xy
+                    element2= []
+                    for single_x, single_y in zip(x.tolist(), y.tolist()):
+                        if single_x < 0:
+                            single_x2 = single_x + 360
+                            element2.append(single_x2)
+                        else:
+                            element2.append(single_x)
+                    polygonMade = Polygon(list(zip(element2,y.tolist())))
+                    moved_geom.append(polygonMade)
+
+        geojson_geometry["geometry"] = moved_geom
+        print(geojson_geometry['geometry'])
     else:
+        print("bol3")
         data = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', spatial + '.geojson')
         geojson_geometry = gpd.read_file(data)
 
+        print(geojson_geometry.geometry)
+        splitted_geom = []
+        moved_geom = []
+
+        for row in geojson_geometry["geometry"]:
+            splitted_geom.append(row)
+        # print(splitted_geom)
+        for element in splitted_geom:
+            minx, miny, maxx, maxy = element.bounds
+            if minx >= 0 and maxx >= 0:
+                moved_geom.append(translate(element, xoff=0))
+            if minx < 0 and maxx < 0:
+                moved_geom.append(translate(element, xoff=360))
+            if minx < 0 and maxx >= 0:
+                if isinstance(element, MultiPolygon):
+
+                    print(element.type)
+                    multipolygon_list = []
+                    for single_pol in element.geoms:
+                        x, y = single_pol.exterior.coords.xy
+                        element2= []
+                        for single_x, single_y in zip(x.tolist(), y.tolist()):
+                            if single_x < 0:
+                                single_x2 = single_x + 360
+                                element2.append(single_x2)
+                            else:
+                                element2.append(single_x)
+                        polygonMade = Polygon(list(zip(element2,y.tolist()))).wkt
+                        multipolygon_list.append(polygonMade)
+                    list_polygons =  [wkt.loads(poly) for poly in multipolygon_list]
+
+                    moved_geom.append(MultiPolygon(list_polygons))
+
+                if element.geom_type =='Polygon':
+                    x, y = element.exterior.coords.xy
+                    element2= []
+                    for single_x, single_y in zip(x.tolist(), y.tolist()):
+                        if single_x < 0:
+                            single_x2 = single_x + 360
+                            element2.append(single_x2)
+                        else:
+                            element2.append(single_x)
+                    polygonMade = Polygon(list(zip(element2,y.tolist())))
+                    moved_geom.append(polygonMade)
+
+        geojson_geometry["geometry"] = moved_geom
+        print(geojson_geometry['geometry'])
     if not str(epsg) == 'false':
-        # print(len(epsg))
-        # print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
+        print(len(epsg))
+        print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
         if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
             geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
         if len(epsg) > 4:
-            shift_lat = int(epsg.split(',')[2][2:])
-            shift_lon = int(epsg.split(',')[1][2:])
+            # shift_lat = int(epsg.split(',')[2][2:])
+            # shift_lon = int(epsg.split(',')[1][2:])
             # print(shift_lat, shift_lon)
-            # print(geojson_geometry['geometry'])
-            geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
 
+            print(geojson_geometry.crs.area_of_use)
+            print(geojson_geometry.crs.area_of_use.north)
+            print(geojson_geometry.crs.area_of_use.south)
+            print(geojson_geometry.crs.area_of_use.east)
+            print(geojson_geometry.crs.area_of_use.west)
+            # print(geojson_geometry['geometry'])
+            # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
+
+
+            # print(geojson_geometry.crs.area_of_use)
+            #
+            # print(geojson_geometry.crs.area_of_use.east)
+            # print(type(geojson_geometry.crs.area_of_use.west))
     geojson_geometry.to_file(geojson_path, driver="GeoJSON")
 
     return geojson_path
@@ -397,6 +512,9 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     # else:
 
     geojson_geometry = gpd.read_file(geojson_path)
+    print(geojson_geometry['geometry'])
+
+
     # print(geojson_geometry.geometry)
     # print(geojson_geometry.geometry[0].geom_type)
     # print(geojson_geometry.geometry[0].bounds)
@@ -406,19 +524,37 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         if type_ask == 'marker':
             # print("point")
             try:
-                timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+                print(geojson_geometry.geometry[0].bounds[2])
+                if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=360, yoff=0)
+                    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2]+360)
+                else:
+                    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
                 return timeseries_array
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
+                print(e)
                 return timeseries_array
 
 
         if type_ask == "rectangle":
-            # print("bounding_box")
             try:
-                timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+
+                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                    print("1")
+                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]+360), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    print("2")
+                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]+360))
+                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    print("3")
+                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]+360), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]+360))
+                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                    print("4")
+                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
                 return timeseries_array
 
@@ -428,9 +564,10 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
 
 
         if type_ask == "polygon":
-            # print("polygon")
             try:
                 timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
                 return timeseries_array
 
             except Exception as e:
@@ -438,13 +575,13 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
         else:
-            # print(type_ask)
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
                 return timeseries_array
 
             except Exception as e:
+                print(e)
                 timeseries_array['error'] = str(e)
                 return timeseries_array
 
@@ -454,7 +591,15 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         if type_ask == 'marker':
             # print("point")
             try:
-                timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+                # timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+                # timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                # return timeseries_array
+
+                if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    timeseries_array = series.point(None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2]+360)
+                else:
+                    timeseries_array = series.point(None, extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[2])
+
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
                 return timeseries_array
 
@@ -465,9 +610,23 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         if type_ask == "rectangle":
             # print("bounding_box")
             try:
-                timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+                # timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None,extra_dim, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+                # timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                # return timeseries_array
+
+                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                    print("1")
+                    timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]+360), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
+                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    print("2")
+                    timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]+360))
+                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                    print("3")
+                    timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]+360), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]+360))
+                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                    print("4")
+                    timeseries_array = series.bound((None,extra_dim, geojson_geometry.geometry[0].bounds[1], geojson_geometry.geometry[0].bounds[0]), (None, geojson_geometry.geometry[0].bounds[3], geojson_geometry.geometry[0].bounds[2]))
                 timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-                return timeseries_array
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
