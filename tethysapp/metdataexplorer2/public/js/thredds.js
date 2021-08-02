@@ -690,27 +690,27 @@ var addSingleThreddsServer = function(){
       )
       return false
     }
-    if($("#epsg-input").val() == ""){
-      $.notify(
-          {
-            message: "Please enter a EPSG Code."
-          },
-          {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function() {
-                  this.css({'width':'auto','height':'auto'});
-              }
-          }
-      )
-      return false
-    }
+    // if($("#epsg-input").val() == ""){
+    //   $.notify(
+    //       {
+    //         message: "Please enter a EPSG Code."
+    //       },
+    //       {
+    //           type: "info",
+    //           allow_dismiss: true,
+    //           z_index: 20000,
+    //           delay: 5000,
+    //           animate: {
+    //             enter: 'animated fadeInRight',
+    //             exit: 'animated fadeOutRight'
+    //           },
+    //           onShow: function() {
+    //               this.css({'width':'auto','height':'auto'});
+    //           }
+    //       }
+    //   )
+    //   return false
+    // }
     if($("#table_wrapper").is(':hidden')){
       $.notify(
           {
@@ -1414,7 +1414,8 @@ var delete_single_tdds = function(){
 var edit_single_tdds = function(){
   let serviceTitle = '';
   let serviceDescription = '';
-  let epsg_edit = '';
+  // let epsg_edit = '';
+  let epsg_edit = false;
   let spatial_edit = '';
   let url_edit = '';
   if($("#editService-title").val() != ""){

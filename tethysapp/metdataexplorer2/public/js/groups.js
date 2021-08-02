@@ -709,27 +709,27 @@ var addServiceToTable = function(){
       )
       return false
     }
-    if($("#epsg-input").val() == ""){
-      $.notify(
-          {
-            message: "Please enter a EPSG Code."
-          },
-          {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function() {
-                  this.css({'width':'auto','height':'auto'});
-              }
-          }
-      )
-      return false
-    }
+    // if($("#epsg-input").val() == ""){
+    //   $.notify(
+    //       {
+    //         message: "Please enter a EPSG Code."
+    //       },
+    //       {
+    //           type: "info",
+    //           allow_dismiss: true,
+    //           z_index: 20000,
+    //           delay: 5000,
+    //           animate: {
+    //             enter: 'animated fadeInRight',
+    //             exit: 'animated fadeOutRight'
+    //           },
+    //           onShow: function() {
+    //               this.css({'width':'auto','height':'auto'});
+    //           }
+    //       }
+    //   )
+    //   return false
+    // }
     if($("#table_wrapper").is(':hidden')){
       $.notify(
           {

@@ -1021,7 +1021,8 @@ var getSingleTS = function(){
 
 var getFullArray= function() {
     let extra_dim = $("#extra_dim").val();
-    let extra_epsg = $("#epsg_change").val();
+    let extra_epsg = false;
+    // let extra_epsg = $("#epsg_change").val();
 
     let request_obj = {
       group: current_Group,

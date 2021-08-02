@@ -1000,7 +1000,7 @@ var get_extra_file_metdata = function(layer_obj){
   table_content +=  `<tr><td>OPENDAP Enpoint</td><td>${layer_obj["url"]}</td></tr>`
   table_content +=  `<tr><td>WMS Endpoint</td><td>${layer_obj["url_wms"]}</td></tr>`
   table_content +=  `<tr><td>Subset Endpoint</td><td>${layer_obj["url_subset"]}</td></tr>`
-  table_content +=  `<tr><td>EPSG</td><td>${layer_obj['epsg']}</td></tr>`
+  // table_content +=  `<tr><td>EPSG</td><td>${layer_obj['epsg']}</td></tr>`
 
   return table_content
 }
