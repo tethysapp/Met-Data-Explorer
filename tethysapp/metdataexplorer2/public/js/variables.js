@@ -575,6 +575,7 @@ var addVariablesToTD = function(){
                 color: color,
             }
           }
+          current_vars.push(var_string)
       }
   })
   if(Object.keys(attr).length <= 0){
