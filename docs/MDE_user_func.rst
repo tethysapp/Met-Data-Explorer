@@ -99,34 +99,21 @@ The steps to retrieve Time series using the "Draw on Map" method are the followi
 
 1. Select the variable of interest.
 2. Select the option "Draw on Map".
-3. Select all the dimensions (e.g. time, lat, lon).
-4. If the variable has more than 3 dimensions, then provide a value for the 4th dimension.
-5. Provide a EPSG (European Petroleum Survey Group), x offset, and y offset if the the drawing item and gridded data are in different coordinate system.
-6. Select the type of plots.
-7. Plot the time series.
-8. Download in the desired format.
+3. If the variable has more than 3 dimensions, then provide a value for the 4th dimension.
+4. Select the type of plots.
+5. Plot the time series.
+6. Download in the desired format.
 
 .. image:: images/1.10.png
    :width: 1000
    :align: center
 
 .. note::
-   The 4th dimension is other than time, latitude or longitude.The value for the 4th dimension can be found by opening
-   the OPeNDAP service in your browser and looking for the name of the variable. For example, a dimension called isobaric will be listed
-   in the OPeNDAP service in the following way: isobaric1: Array of 32 bit Reals [isobaric1 = 0..40]. This means that the value of the
-   4th dimension can be any between 0 to 40
+   The 4th dimension is other than time, latitude or longitude. The different values r value for the 4th dimension are found by the MDE automatically.
+   The value for the 4th dimension can be found manually by opening the OPeNDAP service in your browser and looking for the name of the variable.
+   For example, a dimension called isobaric will be listed in the OPeNDAP service in the following way: isobaric1: Array of 32 bit Reals [isobaric1 = 0..40]. This means that the value of the
+   4th dimension can be any between 0 to 40.
 
-In order to extract a time series, the drawing item and gridded data on which it is used must be in the same coordinate system.
-This includes the location of the origin within the coordinate system. Often, the location of the origin is shifted in respect
-to the location set by the EPSG  definition of a coordinate system. If this is the case with
-your data, you can specify the shift in x, longitude, or y, latitude, that will align your feature with your gridded data.
-
-.. note::
-   In the EPSG Code input bar you can define a shift in coordinates. First, add the EPSG code (eg. 4326) followed by “,x:”
-   amount to shift in x “,y:” amount to shift in y. So a fully formatted EPSG code with a shift defined would look like
-   this: 4326,x:360,y:180. This would shift all the coordinates in your drawn feature 360 degrees to the right and 180
-   degrees up. Be careful when computing the amount by which to shift your coordinates.
-   For a drawn feature with longitude coordinates from -180 to 180 to match a gridded dataset with longitude coordinates from 0 to 360, the geojson coordinates would need to be shifted by 360 and not just by 180.
 
 Adding a Shape Feature
 ----------------------
@@ -158,13 +145,10 @@ The steps to retrieve Time series using the "Adding a Shape Feature" method are 
 1. Select the variable of interest.
 2. Select between the options: "Use a Shapefile" or "WMF GeoServer Link".
 3. Upload the shapefile or provide the WMF service URL.
-4. Select all the dimensions (e.g. time, lat, lon).
-5. If the variable has more than 3 dimensions, then provide a value for the 4th dimension.
-6. Provide a EPSG (European Petroleum Survey Group), x offset, and y offset if the the drawing item and gridded data are in different coordinate system.
-7. Provide the behavior type: dissolve or features.
-8. If you select the "features" type for the behavior type, then select an attribute shared by each feature in the shapefile or WMF service URL that contains unique values.
-9. Select the type of plots.
-10. Plot the time series.
+4. Provide the behavior type: dissolve or features.
+5. If you select the "features" type for the behavior type, then select an attribute shared by each feature in the shapefile or WMF service URL that contains unique values.
+6. Select the type of plots.
+7. Plot the time series.
 
 .. image:: images/1.11.png
    :width: 1000
