@@ -133,7 +133,7 @@ a dialogue box will appear allowing you to select a shapefile from your desktop.
    :width: 1000
    :align: center
 
-The second option is to access a geojson feature through a Geoserver or other application that provides WFS8 (Web Feature Service) access.
+The second option is to access a geojson feature through a Geoserver or other application that provides WFS (Web Feature Service) access.
 When selected a dialogue box with an input box to enter the WFS service URL will appear. Any other properly formatted WFS URL can be pasted.
 
 .. image:: images/1.13.png
