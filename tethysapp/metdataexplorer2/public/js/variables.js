@@ -1019,6 +1019,17 @@ var getSingleTS = function(){
   });
 }
 
+var getPlotData = function() {
+    let xArray = [];
+    let yArray = [];
+    for (let key in values_donwload_json['datetime']) {
+        xArray.push(values_donwload_json['datetime'][key]);
+        yArray.push(values_donwload_json['values'][key]);
+    }
+    initialize_graphs(xArray, yArray,`${$("#variables_graph").val()} Mean`,`${$("#variables_graph").val()}`,"",`${$("#variables_graph").val()}`,$("#type_graph_select2").val());
+}
+
+$('#graph').resizable({containment: "parent", handles: "n"});
 
 var getFullArray= function() {
     let extra_dim = $("#extra_dim").val();

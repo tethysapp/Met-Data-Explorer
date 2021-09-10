@@ -59,7 +59,7 @@ def thredds_proxy(request):
 
 def get_files_and_folders(request):
     url = request.GET.get('url')
-    # print(url)
+    print(url)
     data_tree = {}
     folders_dict = {}
     files_dict = {}

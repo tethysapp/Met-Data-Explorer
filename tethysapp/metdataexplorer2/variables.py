@@ -273,7 +273,7 @@ def get_full_array(request):
     extra_dim = request.GET.get('extra_dim')
     epsg_offset = request.GET.get('epsg_offset')
     # print("offset", epsg_offset)
-    # print(extra_dim)
+    print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(Thredds.title == actual_tdds).first()
 
     attribute_array['title'] = tdds_group.title
