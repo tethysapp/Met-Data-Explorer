@@ -108,8 +108,12 @@ def get_data_bounds(request):
         var_row.range = range_string
         session.commit()
         session.close()
+        print('test string 1')
+        print(range_string)
     else:
         return_obj['range'] = var_row.range
+        print('test string 2v')
+        print(return_obj)
 
     # da = xarray.open_dataset(tdds_group.url.strip())
     # print(da)

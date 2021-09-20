@@ -36,49 +36,49 @@ var MAP_PACKAGE = (function(){
     }
   };
 
-  var clickShpLayer = function (e) {
-      let coords = e.sourceTarget._bounds;
-      let coord = {
-          0: {
-              0: {'lat': coords['_southWest']['lat'], 'lng': coords['_southWest']['lng']},
-              1: {'lat': coords['_northEast']['lat'], 'lng': coords['_southWest']['lng']},
-              2: {'lat': coords['_northEast']['lat'], 'lng': coords['_northEast']['lng']},
-              3: {'lat': coords['_southWest']['lat'], 'lng': coords['_northEast']['lng']}
-          }
-      };
-      getTimeseries(coord);
-  };
+//  var clickShpLayer = function (e) {
+//      let coords = e.sourceTarget._bounds;
+//      let coord = {
+//          0: {
+//              0: {'lat': coords['_southWest']['lat'], 'lng': coords['_southWest']['lng']},
+//              1: {'lat': coords['_northEast']['lat'], 'lng': coords['_southWest']['lng']},
+//              2: {'lat': coords['_northEast']['lat'], 'lng': coords['_northEast']['lng']},
+//              3: {'lat': coords['_southWest']['lat'], 'lng': coords['_northEast']['lng']}
+//          }
+//      };
+//      getTimeseries(coord);
+//  };
 
 
-  var configureBounds = function(bounds) {
-      if (typeof(bounds) === 'string') {
-          if (bounds.slice(0, 4) == 'http') {
-              $.getJSON(bounds,function(data){
-                  makeGeojsonLayer(data);
-                  mapObj.flyToBounds(shpLayer.getBounds());
-              });
-          } else {
-              $.ajax({
-                  url: URL_getGeojson,
-                  data: {
-                      name: bounds,
-                  },
-                  dataType: "json",
-                  contentType: "application/json",
-                  method: "GET",
-                  async: false,
-                  success: function (result) {
-                      let geojson = result['geojson'];
-                      makeGeojsonLayer(geojson);
-                      mapObj.flyToBounds(shpLayer.getBounds());
-                  },
-              });
-          }
-      } else {
-          makeGeojsonLayer(bounds);
-          mapObj.flyToBounds(shpLayer.getBounds());
-      }
-  }
+//  var configureBounds = function(bounds) {
+//      if (typeof(bounds) === 'string') {
+//          if (bounds.slice(0, 4) == 'http') {
+//              $.getJSON(bounds,function(data){
+//                  makeGeojsonLayer(data);
+//                  mapObj.flyToBounds(shpLayer.getBounds());
+//              });
+//          } else {
+//              $.ajax({
+//                  url: URL_getGeojson,
+//                  data: {
+//                      name: bounds,
+//                  },
+//                  dataType: "json",
+ //                 contentType: "application/json",
+//                  method: "GET",
+//                  async: false,
+//                  success: function (result) {
+//                      let geojson = result['geojson'];
+//                      makeGeojsonLayer(geojson);
+//                      mapObj.flyToBounds(shpLayer.getBounds());
+//                  },
+//              });
+//          }
+//      } else {
+//          makeGeojsonLayer(bounds);
+//          mapObj.flyToBounds(shpLayer.getBounds());
+//      }
+//  }
 
 
   $(function(){
@@ -103,7 +103,7 @@ var MAP_PACKAGE = (function(){
         },
         draw: {
             marker: true,
-            polyline: true,
+            polyline: false,
             circlemarker: true,
             circle: false,
             polygon: true,
@@ -114,7 +114,6 @@ var MAP_PACKAGE = (function(){
 
     /* Add the controls to the map */
     mapObj.addControl(drawControl);
-
 
     // $(".leaflet-draw-section").hide();
 

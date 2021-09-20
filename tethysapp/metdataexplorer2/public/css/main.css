@@ -1174,6 +1174,10 @@ tr:hover {
   }
 }
 
+option[aria-disabled=true] {
+    opacity: .5;
+}
+
 /* Smartphones (portrait) ----------- */
 @media screen and (max-width : 500px) {
   /* Styles */

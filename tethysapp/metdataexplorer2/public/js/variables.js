@@ -23,6 +23,7 @@ var VARIABLES_PACKAGE = (function(){
       });
       let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
       let dimensions = layers_dict_wms[layernameUI]['dimensions'];
+
       let dim_orders_id = $("#dim_select");
       dim_orders_id.empty();
       dimensions.forEach(function(dim){
@@ -61,11 +62,21 @@ var VARIABLES_PACKAGE = (function(){
             }
           }
         })
+        let spatial_input_select = $("#spatial_input");
+        spatial_input_select.find('[value=upload_shp]').prop('disabled', true);
+        spatial_input_select.find('[value=geoserv_link]').prop('disabled', true);
+        spatial_input_select.find('[value=draw_map]').prop('selected', true).trigger('change');
+        spatial_input_select.selectpicker("refresh");
       }
       else{
         extra_dim_order.empty();
         extra_dim_order.selectpicker("refresh");
         extra_dim_order.selectpicker('hide');
+
+        let spatial_input_select = $("#spatial_input");
+        spatial_input_select.find('[value=upload_shp]').prop('disabled', false);
+        spatial_input_select.find('[value=geoserv_link]').prop('disabled', false);
+        spatial_input_select.selectpicker("refresh");
       }
 
 

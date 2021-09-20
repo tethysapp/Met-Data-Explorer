@@ -47,11 +47,11 @@ def edit_tdds(request):
                 tdds_group.title = title_new
                 session.commit()
 
-            if description != '' :
+            if description != '':
                 tdds_group.description = description
                 session.commit()
 
-            if epsg != '' :
+            if epsg != '':
                 tdds_group.epsg = epsg
                 session.commit()
 
