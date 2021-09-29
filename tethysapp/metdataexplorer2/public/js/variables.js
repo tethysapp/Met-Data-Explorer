@@ -1220,7 +1220,7 @@ var getFullArray= function() {
 
 var refreshContainer = function(container) {
     let conf = confirm('Do you want to refresh this container?');
-    console.log(conf);
+    console.log("this is a change");
     console.log(current_tdds);
     console.log(current_Group);
 }
