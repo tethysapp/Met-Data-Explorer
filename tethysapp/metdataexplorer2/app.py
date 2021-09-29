@@ -1,6 +1,7 @@
+from tethys_sdk.app_settings import PersistentStoreDatabaseSetting
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.permissions import Permission, PermissionGroup
-from tethys_sdk.app_settings import PersistentStoreDatabaseSetting
+
 
 class Metdataexplorer2(TethysAppBase):
     """
@@ -131,34 +132,31 @@ class Metdataexplorer2(TethysAppBase):
                 controller='metdataexplorer2.variables.upload_shapefile'
             ),
 
-
         )
 
         return url_maps
 
     def permissions(self):
-
         # Viewer Permissions
         delete_groups = Permission(
-            name = 'delete_groups',
-            description = 'Delete a Thredds group from the App',
+            name='delete_groups',
+            description='Delete a Thredds group from the App',
         )
         # Viewer Permissions
         add_groups = Permission(
-            name = 'add_groups',
-            description = 'Add a Thredds group to the App'
+            name='add_groups',
+            description='Add a Thredds group to the App'
         )
         admin = PermissionGroup(
             name='admin',
-            permissions=(delete_groups,add_groups)
+            permissions=(delete_groups, add_groups)
         )
 
-
-        permissions = (admin, )
+        permissions = (admin,)
 
         return permissions
 
-    #### Persistant storage ###
+    # Persistant storage
     def persistent_store_settings(self):
         ps_settings = (
             PersistentStoreDatabaseSetting(

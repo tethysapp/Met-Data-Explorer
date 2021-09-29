@@ -1059,7 +1059,7 @@ var addVariables = function(variables) {
     }
     $("#variable-input").empty()
     $(html).appendTo("#variable-input");
-
+    console.log("dimensions" + $("#variable-input option:selected").attr('data-dimensions'));
     addDimensions($("#variable-input option:selected").attr('data-dimensions'));
     $("#variable-input").selectpicker("refresh");
 

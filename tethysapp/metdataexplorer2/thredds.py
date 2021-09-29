@@ -1,22 +1,18 @@
-from django.http import JsonResponse, HttpResponse
-import grids
-import tempfile
-import os
 import json
-import requests
-import geopandas as gpd
-from geojson import dump
-from .model import Variables, Thredds, Groups
-from siphon.catalog import TDSCatalog
-import requests
+
 import netCDF4
-import xarray
 import pandas as pd
-from .timestamp import iterate_files
+import xarray
+from django.http import JsonResponse
+
 from .app import Metdataexplorer2 as app
+from .model import Variables, Thredds, Groups
+
 # http://186.149.199.244/ftp/
 
 Persistent_Store_Name = 'thredds_db'
+
+
 ######*****************************************************************************************################
 ############################## DELETE THE HYDROSERVER OF AN SPECIFIC GROUP ####################################
 ######*****************************************************************************************################
@@ -32,7 +28,7 @@ def edit_tdds(request):
     if request.is_ajax() and request.method == 'POST':
         try:
             # print(request.POST)
-            title_old =request.POST.get('old_title')
+            title_old = request.POST.get('old_title')
             # print(title_old)
             title_new = request.POST.get('new_title')
             # print(title_new)
@@ -42,7 +38,8 @@ def edit_tdds(request):
             epsg = request.POST.get('epsg')
             spatial = request.POST.get('spatial')
 
-            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group).filter(Thredds.title == title_old).first()
+            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == group).filter(
+                Thredds.title == title_old).first()
             if title_new != '':
                 tdds_group.title = title_new
                 session.commit()
@@ -76,6 +73,7 @@ def edit_tdds(request):
 
     return JsonResponse(return_objt)
 
+
 def delete_single_thredd(request):
     list_catalog = {}
     list_catalog2 = {}
@@ -86,11 +84,11 @@ def delete_single_thredd(request):
 
     # Query DB for hydroservers
     if request.is_ajax() and request.method == 'POST':
-        titles=request.POST.getlist('server')
+        titles = request.POST.getlist('server')
         group = request.POST.get('actual-group')
         # print(titles)
         # print(group)
-        i=0;
+        i = 0;
         for title in titles:
             # tdds_group = session.query(Thredds).filter(Thredds.title == title).first().delete(
             #     synchronize_session='evaluate')  # Deleting the record from the local catalog
@@ -102,7 +100,6 @@ def delete_single_thredd(request):
                     # print(td_single_obj.group.name)
                     # print(td_single_obj.title)
                     tdds_group = td_single_obj
-
 
             if tdds_group:
                 list_my_attr = []
@@ -117,15 +114,17 @@ def delete_single_thredd(request):
 
             # Returning the deleted title. To let the user know that the particular
             # title is deleted.
-            i_string=str(i);
+            i_string = str(i);
             list_catalog[i_string] = title
-            i=i+1
+            i = i + 1
         final_list['title_tdds'] = list_catalog
         final_list['attr_tdds'] = list_catalog2
         # print(final_list)
     return JsonResponse(final_list)
+
+
 def add_tdds(request):
-    group_obj={}
+    group_obj = {}
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
@@ -136,7 +135,8 @@ def add_tdds(request):
         group_thredds = session.query(Groups).filter(Groups.name == tdds_info['group'])[0]
         for single_tds in group_thredds.thredds_server:
             if single_tds.title == tdds_info['title']:
-                group_obj['error'] = "There is already a Thredds file added with that name in the Group, Please Provide other name"
+                group_obj[
+                    'error'] = "There is already a Thredds file added with that name in the Group, Please Provide other name"
                 return JsonResponse(group_obj)
 
         ## File Metadata ##
@@ -151,14 +151,13 @@ def add_tdds(request):
         ## INITIALIZING THE THREDDS FILES ##
         try:
             for metadata_string in ds.__dict__:
-
                 file_tempt_dict[metadata_string] = str(ds.__dict__[metadata_string])
         except Exception as e:
             print(e)
 
         file_attr_ex = {}
         try:
-            da = xarray.open_dataset(tdds_info['url'].strip(),chunks={"time": '100MB'})
+            da = xarray.open_dataset(tdds_info['url'].strip(), chunks={"time": '100MB'})
             attr_dims = da.coords.keys()
             print(attr_dims)
             for hl in attr_dims:
@@ -180,17 +179,17 @@ def add_tdds(request):
         # print(file_attr_ex)
 
         thredds_one = Thredds(server_type=tdds_info['type'],
-                         title=tdds_info['title'],
-                         url = tdds_info['url'],
-                         url_wms = tdds_info['url_wms'],
-                         url_subset = tdds_info['url_subset'],
-                         epsg=tdds_info['epsg'],
-                         spatial = json.dumps({}),
-                         # spatial = json.dumps(tdds_info['spatial']),
-                         description = tdds_info['description'],
-                         timestamp = tdds_info['timestamp'],
-                         metadata_td_file = json.dumps(file_tempt_dict),
-                         extra_coordinate = json.dumps(file_attr_ex))
+                              title=tdds_info['title'],
+                              url=tdds_info['url'],
+                              url_wms=tdds_info['url_wms'],
+                              url_subset=tdds_info['url_subset'],
+                              epsg=tdds_info['epsg'],
+                              spatial=json.dumps({}),
+                              # spatial = json.dumps(tdds_info['spatial']),
+                              description=tdds_info['description'],
+                              timestamp=tdds_info['timestamp'],
+                              metadata_td_file=json.dumps(file_tempt_dict),
+                              extra_coordinate=json.dumps(file_attr_ex))
 
         ## Attributes addition and metadata ##
         for key in tdds_info['attributes']:
@@ -202,11 +201,10 @@ def add_tdds(request):
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
 
-
-            variable_one = Variables(name= key,dimensions =tdds_info['attributes'][key]['dimensions'],
-                                units = tdds_info['attributes'][key]['units'],
-                                color = tdds_info['attributes'][key]['color'],
-                                metadata_variable = json.dumps(variable_tempt_dict))
+            variable_one = Variables(name=key, dimensions=tdds_info['attributes'][key]['dimensions'],
+                                     units=tdds_info['attributes'][key]['units'],
+                                     color=tdds_info['attributes'][key]['color'],
+                                     metadata_variable=json.dumps(variable_tempt_dict))
 
             thredds_one.attributes.append(variable_one)
 
@@ -221,6 +219,7 @@ def add_tdds(request):
         group_obj['services'] = services_array
 
     return JsonResponse(group_obj)
+
 
 def get_edit_info(request):
     return_obj = {}

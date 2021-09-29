@@ -782,7 +782,10 @@ var html_for_servers = function (isAdmin, title,group_name, url_opendap, url_wms
       <li class="ui-state-default" layer-name="${title}" id="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}">
 
         <span  id= "${title}_span" layer-name="${title}" data-opendap-url="${url_opendap}" data-wms-url="${url_wms}" data-subset-url="${url_subset}" class="server-name tool_tip_h" data-toggle="tooltip" data-placement="right" title="${good_title}">${good_title}</span>
-
+        
+        <button id = "refresh_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" onclick="refreshContainer(this.parent)">
+        <span class="glyphicon glyphicon-refresh"></span>
+        </button>
         <button id = "edit_file" class="btn btn-default btn-xs" data-toggle="modal" data-dismiss="modal" data-target="#modalEditServices">
           <span class="glyphicon glyphicon-cog"></span>
         </button>

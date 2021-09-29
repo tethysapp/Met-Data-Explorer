@@ -1,8 +1,7 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.dialects.postgresql import JSON, JSONB
-
 from sqlalchemy import Column, String, Integer, ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -18,12 +17,14 @@ class Variables(Base):
     range = Column(String(100))
     thredds_servers = relationship("Thredds", back_populates="attributes")
     metadata_variable = Column(JSON)
-    def __init__(self, name, dimensions,units,color,metadata_variable):
+
+    def __init__(self, name, dimensions, units, color, metadata_variable):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
         self.metadata_variable = metadata_variable
+
 
 class Thredds(Base):
     __tablename__ = 'thredds'
@@ -39,12 +40,13 @@ class Thredds(Base):
     epsg = Column(String(100))
     spatial = Column(String(2000))
     description = Column(String(4000))
-    attributes = relationship("Variables", back_populates="thredds_servers", cascade = "all,delete, delete-orphan")
+    attributes = relationship("Variables", back_populates="thredds_servers", cascade="all,delete, delete-orphan")
     timestamp = Column(String(2000))
     metadata_td_file = Column(JSON)
     extra_coordinate = Column(JSON)
 
-    def __init__(self, server_type, title, url, url_wms, url_subset,epsg, spatial, description, timestamp, metadata_td_file,extra_coordinate ):
+    def __init__(self, server_type, title, url, url_wms, url_subset, epsg, spatial, description, timestamp,
+                 metadata_td_file, extra_coordinate):
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -64,7 +66,7 @@ class Groups(Base):
     id = Column(Integer, primary_key=True)  # Record number.
     name = Column(String(100))
     description = Column(String(2000))
-    thredds_server = relationship("Thredds", back_populates ="group", cascade = "all,delete, delete-orphan")
+    thredds_server = relationship("Thredds", back_populates="group", cascade="all,delete, delete-orphan")
 
     def __init__(self, name, description):
         self.name = name
