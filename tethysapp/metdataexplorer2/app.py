@@ -131,6 +131,11 @@ class Metdataexplorer2(TethysAppBase):
                 url='upload-shapefile/',
                 controller='metdataexplorer2.variables.upload_shapefile'
             ),
+            UrlMap(
+                name='refresh_file',
+                url='refresh_file/',
+                controller='metdataexplorer2.groups.refresh_group'
+            ),
 
         )
 
