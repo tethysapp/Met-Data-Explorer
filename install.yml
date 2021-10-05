@@ -8,8 +8,18 @@ requirements:
   skip: false
   conda:
     channels:
+      - conda-forge
     packages:
-
+      - requests
+      - siphon
+      - netCDF4
+      - numpy
+      - geopandas
+      - pandas
+      - geojson
+      - xarray
+      - pygrib
+      - cfgrib
   pip:
-
+      -grids
 post:
