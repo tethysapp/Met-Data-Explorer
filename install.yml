@@ -20,6 +20,7 @@ requirements:
       - xarray
       - pygrib
       - cfgrib
+      - lxml
   pip:
       -grids
 post:

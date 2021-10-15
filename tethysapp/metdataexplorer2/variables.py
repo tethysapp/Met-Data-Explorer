@@ -385,6 +385,7 @@ def get_geojson_and_data(spatial, epsg):
     print(type(spatial))
     if type(spatial) == dict:
         print("bol1")
+
         spatial['properties']['id'] = 'Shape'
         data = os.path.join(tempfile.gettempdir(), 'new_geo_temp.json')
         with open(data, 'w') as f:
@@ -527,7 +528,11 @@ def get_geojson_and_data(spatial, epsg):
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
                               label_type, stats, type_ask, extra_dim):
     timeseries_array = {}
-    series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
+    print('start')
+    print(files)
+    print(var)
+    print(dim_order)
+    series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)#, user='jonesj93', pswd='ED!1z0m5tgb')
 
     # if label_type != 'select_val':
     # timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
@@ -552,11 +557,19 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                     timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
                                                     geojson_geometry.geometry[0].bounds[2] + 360)
                 else:
-                    print('else')
+                    print('bounds')
+                    print(geojson_geometry.geometry[0].bounds[1])
+                    print(geojson_geometry.geometry[0].bounds[2])
                     timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
                                                     geojson_geometry.geometry[0].bounds[2])
 
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                string_time = []
+                for time in timeseries_array['datetime']:
+                    string_time.append(str(time))
+
+                timeseries_array['datetime'] = string_time
+
                 return timeseries_array
 
             except Exception as e:

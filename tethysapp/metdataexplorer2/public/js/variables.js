@@ -1064,6 +1064,7 @@ var getFullArray = function () {
             success: function (result) {
                 try {
                     let data = result['result'];
+                    console.log(data)
                     let timeseries = {};
                     let htmlVariables = '';
                     let i = 1;

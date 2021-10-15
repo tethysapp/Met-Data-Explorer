@@ -177,13 +177,14 @@ var getThreddsBounds = function() {
 var data_layer = function(layernameUI,wmsURL,layer,range,style) {
   let wmsURL2;
   try {
-    if (wmsURL.indexOf("http://") != -1) {
-      console.log("Http endpoint found, changing to proxy URL");
-      wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
-    }
-    else{
-      wmsURL2 = wmsURL;
-    }
+    //if (wmsURL.indexOf("http://") != -1) {
+    console.log("Changing to proxy URL");
+    wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
+    console.log(wmsURL2)
+    //}
+    //else{
+    //  wmsURL2 = wmsURL;
+    //}
 
     const wmsLayer = L.tileLayer.wms(wmsURL2, {
       layers: layer,

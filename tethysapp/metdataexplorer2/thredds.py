@@ -143,6 +143,7 @@ def add_tdds(request):
         file_tempt_dict = {}
 
         try:
+            print(tdds_info['url'])
             ds = netCDF4.Dataset(tdds_info['url'])
 
         except Exception as e:
@@ -166,6 +167,7 @@ def add_tdds(request):
                         file_attr_ex[hl] = da.coords[hl].to_dict()['data']
         except Exception as e:
             print(e)
+            print(tdds_info['url'])
             nc = netCDF4.Dataset(tdds_info['url'])
             dims = nc.dimensions.keys()
             for dim in dims:
