@@ -22,5 +22,5 @@ requirements:
       - cfgrib
       - lxml
   pip:
-      -grids
+      - grids
 post:

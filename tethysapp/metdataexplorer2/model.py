@@ -17,13 +17,19 @@ class Variables(Base):
     range = Column(String(100))
     thredds_servers = relationship("Thredds", back_populates="attributes")
     metadata_variable = Column(JSON)
+    auth_machine = Column(String(2000))
+    auth_user = Column(String(2000))
+    auth_pswd = Column(String(2000))
 
-    def __init__(self, name, dimensions, units, color, metadata_variable):
+    def __init__(self, name, dimensions, units, color, metadata_variable, auth_machine, auth_user, auth_password):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
         self.metadata_variable = metadata_variable
+        self.auth_machine = auth_machine
+        self.auth_user = auth_user
+        self.auth_pswd = auth_password
 
 
 class Thredds(Base):
@@ -44,13 +50,10 @@ class Thredds(Base):
     timestamp = Column(String(2000))
     metadata_td_file = Column(JSON)
     extra_coordinate = Column(JSON)
-    #auth_machine = Column(String(2000))
-    #auth_user = Column(String(2000))
-    #auth_pswd = Column(String(2000))
 
 
     def __init__(self, server_type, title, url, url_wms, url_subset, epsg, spatial, description, timestamp,
-                 metadata_td_file, extra_coordinate):#, auth_machine, auth_user, auth_password):
+                 metadata_td_file, extra_coordinate):
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -62,9 +65,6 @@ class Thredds(Base):
         self.timestamp = timestamp
         self.metadata_td_file = metadata_td_file
         self.extra_coordinate = extra_coordinate
-        #self.auth_machine = auth_machine
-        #self.auth_user = auth_user
-        #self.auth_pswd = auth_password
 
 
 class Groups(Base):
