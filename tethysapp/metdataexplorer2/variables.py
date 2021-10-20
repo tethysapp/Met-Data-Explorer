@@ -333,6 +333,10 @@ def get_full_array(request):
     # print(xds)
     # print(xds.coords['lon'].to_dict())
     # print(xds.coords['lat'].to_dict())
+
+    attribute_array['username'] = 'jonesj93'
+    attribute_array['password'] = 'ED!1z0m5tgb'
+
     data = organize_array(attribute_array, behavior_type, label_type)
     # print(data)
 
@@ -371,7 +375,8 @@ def organize_array(attribute_array, behavior_type, label_type):
     # print(access_urls['OPENDAP'])
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, behavior_type,
                                            label_type, stats_value, attribute_array['type_request'],
-                                           attribute_array['extra_dim'])
+                                           attribute_array['extra_dim'], attribute_array['username'],
+                                           attribute_array['password'])
     # print(timeseries)
     data[variable] = timeseries
     os.remove(geojson_path)
@@ -526,13 +531,14 @@ def get_geojson_and_data(spatial, epsg):
 
 
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
-                              label_type, stats, type_ask, extra_dim):
+                              label_type, stats, type_ask, extra_dim, username, password):
     timeseries_array = {}
-    print('start')
-    print(files)
-    print(var)
-    print(dim_order)
-    series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)#, user='jonesj93', pswd='ED!1z0m5tgb')
+
+    if not password == False:
+        series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
+    else:
+        series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
+
 
     # if label_type != 'select_val':
     # timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)

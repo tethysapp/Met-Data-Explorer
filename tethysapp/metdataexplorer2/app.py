@@ -136,6 +136,21 @@ class Metdataexplorer2(TethysAppBase):
                 url='refresh_file/',
                 controller='metdataexplorer2.groups.refresh_group'
             ),
+            UrlMap(
+                name='get-credentials',
+                url='get-credentials/',
+                controller='metdataexplorer2.authentication.get_credentials'
+            ),
+            UrlMap(
+                name='add-credentials',
+                url='add-credentials/',
+                controller='metdataexplorer2.authentication.write_new_engine'
+            ),
+            UrlMap(
+                name='remove-credentials',
+                url='remove-credentials/',
+                controller='metdataexplorer2.authentication.remove_credentials'
+            )
 
         )
 

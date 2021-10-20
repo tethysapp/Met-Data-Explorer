@@ -20,6 +20,8 @@ var GROUPS_PACKAGE = (function(){
     })
     $("#btn-add-addServiceToTable").on("click",addServiceToTable);
 
+    $("#btn-link-authentication").on("click",getCredentials)
+
     $('#btn-add-addGroup').on("click",function() {
         if ($('#title-input').val() == '') {
             alert('Please specify a name.');
@@ -59,6 +61,7 @@ var GROUPS_PACKAGE = (function(){
     $("#remove_varaible").on("click", remove_var_from_table);
     $("#btn-filter-groups-f").on("click", give_all_variables);
     $("#btn-attr-search").on("click", apply_var_filter);
+    $("#btn-save-auth").on("click", save_credentials);
 
 
     document.getElementById('search_attr').addEventListener("keyup", searchVariables_func);
@@ -967,6 +970,116 @@ var addServiceToTable = function(){
         }
     )
   }
+}
+
+var getCredentials = function () {
+  if ($('#btn-link-authentication').attr('data-added') == 'true') {
+      $("#modalAuthentication").modal('show');
+  } else {
+    $.ajax({
+      type: "GET",
+      url: `get-credentials/`,
+      dataType: "JSON",
+      success: result => {
+        let authList = result;
+        let html = ``;
+        console.log(authList)
+        for (let key in authList){
+          let auth = `${authList[key][0]} ${authList[key][1]} ${authList[key][2]}`;
+          html += `<tr id="new-auth-${authList[key][3]}">
+                     <th scope="col"><span><input type="radio" class="auth-radio" name="auth-select" value='${auth}'></span></th>
+                     <th scope="col"><span><p>${authList[key][0]}</p></span></th>
+                     <th scope="col"><span><p>${authList[key][1]}</p></span></th>
+                     <th scope="col"><span><p>${authList[key][2]}</p></span></th>
+                     <th scope="col"><button class="delete-auth" type="button" data-machine="${authList[key][0]}" data-user="${authList[key][1]}" data-pswd="${authList[key][2]}" data-line="${authList[key][3]}" onclick="removeCredential(this)"><span class="glyphicon glyphicon-trash"></span></button></th>
+                   </tr>`
+        }
+        html += `<tr id="new-auth">
+                   <th scope="col"><span><input type="radio" class="auth-radio" name="auth-select" value="" checked="checked"></span></th>
+                   <th scope="col"><span><p>None</p></span></th>
+                   <th scope="col"><span></span></th>
+                   <th scope="col"><span></span></th>
+                   <th scope="col"><span></span></th>
+                 </tr>
+                 <tr id="new-auth">
+                   <th scope="col"><span></span></th>
+                   <th scope="col"><input id="new-auth-machine" type="text" class="form-control" style="height: 1.7em"></th>
+                   <th scope="col"><input id="new-auth-user" type="text" class="form-control" style="height: 1.7em"></th>
+                   <th scope="col"><input id="new-auth-pswd" type="text" class="form-control" style="height: 1.7em"></th>
+                   <th scope="col"><button id="add-auth" type="button" onclick="addCredential()"><span class="glyphicon glyphicon-plus"></span></button></th>
+                 </tr>`
+        $("#added-auth-credentials").empty().append(html);
+        $("#modalAuthentication").modal('show');
+      }
+    })
+  }
+}
+
+//addCredential('m','u','p')
+
+var addCredential = function () {
+  let data = {
+      machine:$('#new-auth-machine').val(),
+      user:$('#new-auth-user').val(),
+      pswd:$('#new-auth-pswd').val(),
+  };
+  if (data['machine'] == '' || data['user'] == '' || data['pswd'] == '') {
+      $.notify(
+          {
+            message: "All fields are requiered."
+          },
+          {
+              type: "info",
+              allow_dismiss: true,
+              z_index: 20000,
+              delay: 5000,
+              animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+              },
+              onShow: function() {
+                  this.css({'width':'auto','height':'auto'});
+              }
+          }
+      )
+  } else {
+    $.ajax({
+      type: "GET",
+      data: data,
+      url: `add-credentials/`,
+      dataType: "JSON",
+      success: result => {
+        let message = result["message"];
+        console.log(message);
+        getCredentials();
+      }
+    })
+  }
+}
+
+var removeCredential = function (object) {
+  let data = {
+      machine:$(object).attr('data-machine'),
+      user:$(object).attr('data-user'),
+      pswd:$(object).attr('data-pswd'),
+      line:$(object).attr('data-line'),
+  };
+  $.ajax({
+    type: "GET",
+    data: data,
+    url: `remove-credentials/`,
+    dataType: "JSON",
+    success: result => {
+      let message = result["message"];
+      getCredentials();
+    }
+  })
+}
+
+var save_credentials = function () {
+  authentication = $('input[name="auth-select"]:checked').val();
+  $('#btn-link-authentication').attr('data-added', 'true');
+  $('#modalAuthentication').modal('hide');
 }
 
 var make_varaibles_appear = function () {

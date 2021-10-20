@@ -874,6 +874,7 @@ var addSingleThreddsServer = function(){
         description: $('#addService-description').val(),
         attributes: attr,
         timestamp: timestamp,
+        authentication: authentication,
     };
     $.ajax({
         url: "add-thredds/",
@@ -905,6 +906,7 @@ var addSingleThreddsServer = function(){
               return false
             }
             else{
+              //authentication = '';
               let group_name_e3;
               Object.keys(id_dictionary).forEach(function(key) {
                 if(id_dictionary[key] == current_Group ){
