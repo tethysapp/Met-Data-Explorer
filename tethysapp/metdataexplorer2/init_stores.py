@@ -1,9 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 
 from .model import Base
-from .authentication import RC
-
-import os
 
 
 # Initialize an empty database, if the database has not been created already.

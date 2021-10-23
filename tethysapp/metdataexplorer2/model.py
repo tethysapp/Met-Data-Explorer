@@ -20,10 +20,8 @@ class Variables(Base):
     dimensions = Column(JSON)
     metadata_variable = Column(JSON)
 
-
-    def __init__(self, thredds_id, thredds_servers, name, units, color, range, authentication, dimensions, metadata_variable):
-        self.thredds_id = thredds_id
-        self.thredds_servers = thredds_servers
+    def __init__(self, name, units, color, range, authentication,
+                 dimensions, metadata_variable):
         self.name = name
         self.dimensions = dimensions
         self.units = units
@@ -52,12 +50,8 @@ class Thredds(Base):
     metadata_td_file = Column(JSON)
     extra_coordinate = Column(JSON)
 
-
-    def __init__(self, group_id, group, attributes, server_type, title, url, url_wms, url_subset, epsg, spatial,
+    def __init__(self, server_type, title, url, url_wms, url_subset, epsg, spatial,
                  description, timestamp, metadata_td_file, extra_coordinate):
-        self.group_id = group_id
-        self.group = group
-        self.attributes = attributes
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -79,9 +73,7 @@ class Groups(Base):
     name = Column(String(100))
     description = Column(String(2000))
 
-
-    def __init__(self, thredds_server, name, description):
-        self.thredds_server = thredds_server
+    def __init__(self, name, description):
         self.name = name
         self.description = description
 
