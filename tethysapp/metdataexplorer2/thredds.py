@@ -207,9 +207,7 @@ def add_tdds(request):
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
                                      metadata_variable=json.dumps(variable_tempt_dict),
-                                     auth_machine=tdds_info['authentication'].split()[0],
-                                     auth_user=tdds_info['authentication'].split()[1],
-                                     auth_password=tdds_info['authentication'].split()[2])
+                                     authentication=tdds_info['authentication'].split()[0])
 
             thredds_one.attributes.append(variable_one)
 

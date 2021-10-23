@@ -8,37 +8,39 @@ Base = declarative_base()
 
 class Variables(Base):
     __tablename__ = 'variable'
+
     id = Column(Integer, primary_key=True)
-    name = Column(String(100))
     thredds_id = Column(Integer, ForeignKey('thredds.id'))
-    dimensions = Column(JSON)
+    thredds_servers = relationship("Thredds", back_populates="attributes")
+    name = Column(String(100))
     units = Column(String(100))
     color = Column(String(100))
     range = Column(String(100))
-    thredds_servers = relationship("Thredds", back_populates="attributes")
+    authentication = Column(JSON)
+    dimensions = Column(JSON)
     metadata_variable = Column(JSON)
-    auth_machine = Column(String(2000))
-    auth_user = Column(String(2000))
-    auth_pswd = Column(String(2000))
 
-    def __init__(self, name, dimensions, units, color, metadata_variable, auth_machine, auth_user, auth_password):
+
+    def __init__(self, thredds_id, thredds_servers, name, units, color, range, authentication, dimensions, metadata_variable):
+        self.thredds_id = thredds_id
+        self.thredds_servers = thredds_servers
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
+        self.range = range
+        self.authentication = authentication
         self.metadata_variable = metadata_variable
-        self.auth_machine = auth_machine
-        self.auth_user = auth_user
-        self.auth_pswd = auth_password
 
 
 class Thredds(Base):
     __tablename__ = 'thredds'
 
     id = Column(Integer, primary_key=True)
-    server_type = Column(String(100))
     group_id = Column(Integer, ForeignKey('groups.id'))
     group = relationship("Groups", back_populates="thredds_server")
+    attributes = relationship("Variables", back_populates="thredds_servers", cascade="all, delete, delete-orphan")
+    server_type = Column(String(100))
     title = Column(String(2000))
     url = Column(String(2000))
     url_wms = Column(String(2000))
@@ -46,14 +48,16 @@ class Thredds(Base):
     epsg = Column(String(100))
     spatial = Column(String(2000))
     description = Column(String(4000))
-    attributes = relationship("Variables", back_populates="thredds_servers", cascade="all,delete, delete-orphan")
     timestamp = Column(String(2000))
     metadata_td_file = Column(JSON)
     extra_coordinate = Column(JSON)
 
 
-    def __init__(self, server_type, title, url, url_wms, url_subset, epsg, spatial, description, timestamp,
-                 metadata_td_file, extra_coordinate):
+    def __init__(self, group_id, group, attributes, server_type, title, url, url_wms, url_subset, epsg, spatial,
+                 description, timestamp, metadata_td_file, extra_coordinate):
+        self.group_id = group_id
+        self.group = group
+        self.attributes = attributes
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -70,11 +74,14 @@ class Thredds(Base):
 class Groups(Base):
     __tablename__ = 'groups'
 
-    id = Column(Integer, primary_key=True)  # Record number.
+    id = Column(Integer, primary_key=True)
+    thredds_server = relationship("Thredds", back_populates="group", cascade="all,delete, delete-orphan")
     name = Column(String(100))
     description = Column(String(2000))
-    thredds_server = relationship("Thredds", back_populates="group", cascade="all,delete, delete-orphan")
 
-    def __init__(self, name, description):
+
+    def __init__(self, thredds_server, name, description):
+        self.thredds_server = thredds_server
         self.name = name
         self.description = description
+

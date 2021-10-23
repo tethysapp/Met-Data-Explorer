@@ -19,6 +19,7 @@ class Metdataexplorer2(TethysAppBase):
     enable_feedback = False
     feedback_emails = []
 
+
     def url_maps(self):
         """
         Add controllers
@@ -151,10 +152,10 @@ class Metdataexplorer2(TethysAppBase):
                 url='remove-credentials/',
                 controller='metdataexplorer2.authentication.remove_credentials'
             )
-
         )
 
         return url_maps
+
 
     def permissions(self):
         # Viewer Permissions
@@ -176,12 +177,13 @@ class Metdataexplorer2(TethysAppBase):
 
         return permissions
 
+
     # Persistant storage
     def persistent_store_settings(self):
         ps_settings = (
             PersistentStoreDatabaseSetting(
                 name='thredds_db',
-                description='thredds database',
+                description='A database for storing thredds catalogs',
                 initializer='metdataexplorer2.init_stores.init_thredds_db',
                 required=True
             ),
