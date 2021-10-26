@@ -200,7 +200,8 @@ def add_group(request):
                                   description=servi['description'],
                                   timestamp=servi['timestamp'],
                                   metadata_td_file=json.dumps(file_tempt_dict),
-                                  extra_coordinate=json.dumps(file_attr_ex))
+                                  extra_coordinate=json.dumps(file_attr_ex),
+                                  authentication=servi['authentication'])
 
             ## Attributes addition and metadata ##
             for key in servi['attributes']:
@@ -215,8 +216,7 @@ def add_group(request):
                 variable_one = Variables(name=key, dimensions=servi['attributes'][key]['dimensions'],
                                          units=servi['attributes'][key]['units'],
                                          color=servi['attributes'][key]['color'],
-                                         metadata_variable=json.dumps(variable_tempt_dict),
-                                         authentication=servi['authentication'])
+                                         metadata_variable=json.dumps(variable_tempt_dict))
 
                 thredds_one.attributes.append(variable_one)
 

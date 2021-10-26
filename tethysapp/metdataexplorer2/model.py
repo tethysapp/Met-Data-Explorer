@@ -16,18 +16,14 @@ class Variables(Base):
     units = Column(String(100))
     color = Column(String(100))
     range = Column(String(100))
-    authentication = Column(JSON)
     dimensions = Column(JSON)
     metadata_variable = Column(JSON)
-    # range,
-    def __init__(self, name, units, color, authentication,
-                 dimensions, metadata_variable):
+
+    def __init__(self, name, units, color, dimensions, metadata_variable):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
-        #self.range = range
-        self.authentication = authentication
         self.metadata_variable = metadata_variable
 
 
@@ -47,11 +43,12 @@ class Thredds(Base):
     spatial = Column(String(2000))
     description = Column(String(4000))
     timestamp = Column(String(2000))
+    authentication = Column(JSON)
     metadata_td_file = Column(JSON)
     extra_coordinate = Column(JSON)
 
     def __init__(self, server_type, title, url, url_wms, url_subset, epsg, spatial,
-                 description, timestamp, metadata_td_file, extra_coordinate):
+                 description, timestamp, authentication, metadata_td_file, extra_coordinate):
         self.server_type = server_type
         self.title = title
         self.url = url
@@ -61,6 +58,7 @@ class Thredds(Base):
         self.spatial = spatial
         self.description = description
         self.timestamp = timestamp
+        self.authentication = authentication
         self.metadata_td_file = metadata_td_file
         self.extra_coordinate = extra_coordinate
 

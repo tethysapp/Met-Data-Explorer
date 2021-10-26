@@ -308,6 +308,15 @@ def get_full_array(request):
     attribute_array['url_wms'] = tdds_group.url_wms
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
+
+    authentication = tdds_group.authentication
+    print(authentication)
+    attribute_array['username'] = authentication.split(' ')[1]
+    attribute_array['password'] = authentication.split(' ')[2]
+
+    print(attribute_array['username'])
+    print(attribute_array['password'])
+
     if extra_dim != '':
         attribute_array['extra_dim'] = int(extra_dim)
     else:
@@ -328,13 +337,6 @@ def get_full_array(request):
 
     attribute_array['attributes'] = attr_variable
 
-    authentication = var_row.authentication
-    print(authentication)
-    attribute_array['username'] = authentication.split(' ')[1]
-    attribute_array['password'] = authentication.split(' ')[2]
-
-    print(attribute_array['username'])
-    print(attribute_array['password'])
     data = organize_array(attribute_array, behavior_type, label_type)
     print(data)
 

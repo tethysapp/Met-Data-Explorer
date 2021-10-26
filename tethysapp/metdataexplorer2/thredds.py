@@ -190,7 +190,8 @@ def add_tdds(request):
                               description=tdds_info['description'],
                               timestamp=tdds_info['timestamp'],
                               metadata_td_file=json.dumps(file_tempt_dict),
-                              extra_coordinate=json.dumps(file_attr_ex))
+                              extra_coordinate=json.dumps(file_attr_ex),
+                              authentication=tdds_info['authentication'])
 
         ## Attributes addition and metadata ##
         for key in tdds_info['attributes']:
@@ -205,8 +206,7 @@ def add_tdds(request):
             variable_one = Variables(name=key, dimensions=tdds_info['attributes'][key]['dimensions'],
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
-                                     metadata_variable=json.dumps(variable_tempt_dict),
-                                     authentication=tdds_info['authentication'])
+                                     metadata_variable=json.dumps(variable_tempt_dict))
 
             thredds_one.attributes.append(variable_one)
 
