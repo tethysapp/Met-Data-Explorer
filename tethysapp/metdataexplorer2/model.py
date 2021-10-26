@@ -19,14 +19,14 @@ class Variables(Base):
     authentication = Column(JSON)
     dimensions = Column(JSON)
     metadata_variable = Column(JSON)
-
-    def __init__(self, name, units, color, range, authentication,
+    # range,
+    def __init__(self, name, units, color, authentication,
                  dimensions, metadata_variable):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
-        self.range = range
+        #self.range = range
         self.authentication = authentication
         self.metadata_variable = metadata_variable
 

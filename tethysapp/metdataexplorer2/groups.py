@@ -187,6 +187,7 @@ def add_group(request):
                                 file_attr_ex[dim] = hs.to_list()
 
             print(file_attr_ex)
+            print(servi['authentication'])
 
             thredds_one = Thredds(server_type=servi['type'],
                                   title=servi['title'],
@@ -214,7 +215,8 @@ def add_group(request):
                 variable_one = Variables(name=key, dimensions=servi['attributes'][key]['dimensions'],
                                          units=servi['attributes'][key]['units'],
                                          color=servi['attributes'][key]['color'],
-                                         metadata_variable=json.dumps(variable_tempt_dict))
+                                         metadata_variable=json.dumps(variable_tempt_dict),
+                                         authentication=servi['authentication'])
 
                 thredds_one.attributes.append(variable_one)
 

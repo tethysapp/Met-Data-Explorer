@@ -179,7 +179,6 @@ def add_tdds(request):
                             file_attr_ex[dim] = hs.to_list()
 
         # print(file_attr_ex)
-        print(tdds_info['authentication'].split())
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
                               url=tdds_info['url'],
@@ -207,7 +206,7 @@ def add_tdds(request):
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
                                      metadata_variable=json.dumps(variable_tempt_dict),
-                                     authentication=tdds_info['authentication'].split()[0])
+                                     authentication=tdds_info['authentication'])
 
             thredds_one.attributes.append(variable_one)
 

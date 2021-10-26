@@ -207,11 +207,6 @@ var apply_var_filter = function(){
           }
       )
     }
-
-
-
-
-
 }
 
 
@@ -861,6 +856,7 @@ var addServiceToTable = function(){
             spatial_shape = $('#spatial-input').val();
         }
     }
+    console.log(authentication)
     let databaseInfo = {
         type: 'file',
         group: $("#addGroup-title").val(),
@@ -873,6 +869,7 @@ var addServiceToTable = function(){
         description: $('#addService-description').val(),
         attributes: attr,
         timestamp: timestamp,
+        authentication: authentication,
     };
     add_services_list.push(databaseInfo);
     let options = '';

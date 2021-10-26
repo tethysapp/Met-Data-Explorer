@@ -296,7 +296,6 @@ def get_full_array(request):
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     attribute_array['epsg'] = tdds_group.epsg
-    print(attribute_array['epsg'])
     if epsg_offset != '':
         # print("not empty")
         attribute_array['epsg'] = epsg_offset
@@ -324,21 +323,20 @@ def get_full_array(request):
     attr_variable = {}
     attr_variable['color'] = var_row.color
     attr_variable['dimensions'] = dimensions_sel
-    # attr_variable['dimensions'] = var_row.dimensions
     attr_variable['units'] = var_row.units
     attr_variable['name'] = var_row.name
 
     attribute_array['attributes'] = attr_variable
-    # xds = xarray.open_dataset(tdds_group.url)
-    # print(xds)
-    # print(xds.coords['lon'].to_dict())
-    # print(xds.coords['lat'].to_dict())
 
-    attribute_array['username'] = 'jonesj93'
-    attribute_array['password'] = 'ED!1z0m5tgb'
+    authentication = var_row.authentication
+    print(authentication)
+    attribute_array['username'] = authentication.split(' ')[1]
+    attribute_array['password'] = authentication.split(' ')[2]
 
+    print(attribute_array['username'])
+    print(attribute_array['password'])
     data = organize_array(attribute_array, behavior_type, label_type)
-    # print(data)
+    print(data)
 
     return JsonResponse({'result': data})
 
