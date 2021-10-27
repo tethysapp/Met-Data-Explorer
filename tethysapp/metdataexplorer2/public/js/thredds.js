@@ -858,6 +858,8 @@ var addSingleThreddsServer = function () {
         spatial_shape = $('#spatial-input').val();
       }
     }
+
+    let authentication = $('#btn-link-authentication').attr('data-auth');
     let databaseInfo = {
       type: 'file',
       group: current_Group,
@@ -871,9 +873,9 @@ var addSingleThreddsServer = function () {
       attributes: attr,
       timestamp: timestamp,
       authentication: {
-        machine: $('#'),
-        user: ,
-        pswd: ,
+        machine: authentication['machine'],
+        user: authentication['user'],
+        pswd: authentication['pswd'],
       },
     };
     $.ajax({

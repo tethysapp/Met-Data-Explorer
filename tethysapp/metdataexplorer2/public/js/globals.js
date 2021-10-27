@@ -31,5 +31,4 @@ let values_donwload_json ={};
 let last_selected_id;
 let jsonLayer;
 let type_of_series;
-let authentication = '';
 // let array_services = []

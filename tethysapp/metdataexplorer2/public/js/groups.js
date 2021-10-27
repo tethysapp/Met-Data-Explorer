@@ -847,7 +847,7 @@ var addServiceToTable = function () {
         spatial_shape = $('#spatial-input').val();
       }
     }
-    console.log(authentication)
+    console.log($('#btn-link-authentication').attr('data-auth'))
     let databaseInfo = {
       type: 'file',
       group: $("#addGroup-title").val(),
@@ -860,7 +860,7 @@ var addServiceToTable = function () {
       description: $('#addService-description').val(),
       attributes: attr,
       timestamp: timestamp,
-      authentication: authentication,
+      authentication: $('#btn-link-authentication').attr('data-auth'),
     };
     add_services_list.push(databaseInfo);
     let options = '';
@@ -971,7 +971,7 @@ var getCredentials = function () {
         let html = ``;
         console.log(authList)
         for (let key in authList) {
-          let auth = `${authList[key][0]} ${authList[key][1]} ${authList[key][2]}`;
+          let auth = `{"machine": "${authList[key][0]}", "user":"${authList[key][1]}", "pswd":"${authList[key][2]}"}`;
           html += `<tr id="new-auth-${authList[key][3]}">
                      <th scope="col"><span><input type="radio" class="auth-radio" name="auth-select" value='${auth}'></span></th>
                      <th scope="col"><span><p>${authList[key][0]}</p></span></th>
@@ -1063,8 +1063,7 @@ var removeCredential = function (object) {
 }
 
 var save_credentials = function () {
-  authentication = $('input[name="auth-select"]:checked').val();
-  $('#btn-link-authentication').attr('data-added', 'true');
+  $('#btn-link-authentication').attr('data-added', $('input[name="auth-select"]:checked').val());
   $('#modalAuthentication').modal('hide');
 }
 
