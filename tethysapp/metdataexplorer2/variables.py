@@ -309,13 +309,13 @@ def get_full_array(request):
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
 
-    authentication = tdds_group.authentication
-    print(authentication)
-    attribute_array['username'] = authentication.split(' ')[1]
-    attribute_array['password'] = authentication.split(' ')[2]
-
-    print(attribute_array['username'])
-    print(attribute_array['password'])
+    authentication = json.loads(tdds_group.authentication)
+    if authentication == {}:
+        attribute_array['username'] = False
+        attribute_array['password'] = False
+    else:
+        attribute_array['username'] = authentication['user']
+        attribute_array['password'] = authentication['pswd']
 
     if extra_dim != '':
         attribute_array['extra_dim'] = int(extra_dim)
@@ -534,10 +534,10 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                               label_type, stats, type_ask, extra_dim, username, password):
     timeseries_array = {}
 
-    if not password == False:
-        series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
-    else:
+    if not password:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
+    else:
+        series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
 
 
     # if label_type != 'select_val':

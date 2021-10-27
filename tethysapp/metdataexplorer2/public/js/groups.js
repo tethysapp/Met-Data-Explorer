@@ -209,7 +209,6 @@ var apply_var_filter = function () {
   }
 }
 
-
 var give_all_variables = function () {
   $.ajax({
     type: "POST",
@@ -256,6 +255,7 @@ var give_all_variables = function () {
   })
 
 }
+
 var remove_var_from_table = function () {
   var selected = [];
   $('#added_thredds_files_table_body input:checked').each(function () {
@@ -959,7 +959,7 @@ var addServiceToTable = function () {
 }
 
 var getCredentials = function () {
-  if ($('#btn-link-authentication').attr('data-added') == 'true') {
+  if ($('#btn-link-authentication').attr('data-auth') !== 'false') {
     $("#modalAuthentication").modal('show');
   } else {
     $.ajax({
@@ -1063,7 +1063,7 @@ var removeCredential = function (object) {
 }
 
 var save_credentials = function () {
-  $('#btn-link-authentication').attr('data-added', $('input[name="auth-select"]:checked').val());
+  $('#btn-link-authentication').attr('data-auth', $('input[name="auth-select"]:checked').val());
   $('#modalAuthentication').modal('hide');
 }
 
@@ -1127,7 +1127,7 @@ var updateFilepath = function () {
   }
 }
 
-var variableMetadata = function () {
+/*var variableMetadata = function () {
   var variableMetadata = {};
   let variable = $("#variable-input").val();
   $.ajax({
@@ -1145,7 +1145,7 @@ var variableMetadata = function () {
     }
   })
   return [variableMetadata];
-}
+}*/
 
 var addVariables = function (variables) {
   let keys = Object.keys(variables);
@@ -1176,9 +1176,9 @@ var addDimensions = function (dimensions) {
 
 }
 
-var addVariableMetadata = function (variableMetadata) {
+/*var addVariableMetadata = function (variableMetadata) {
   $("#var-metadata-div").empty().append(variableMetadata);
-}
+}*/
 
 var addFileMetadata = function (fileMetadata) {
   $('#metadata-div').attr('data-description', fileMetadata);

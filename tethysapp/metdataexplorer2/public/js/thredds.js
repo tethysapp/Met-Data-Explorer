@@ -589,7 +589,7 @@ var get_table_vars = function (attributes, title) {
 
 }
 
-var get_all_the_var_metadata = function (attributes) {
+/*var get_all_the_var_metadata = function (attributes) {
   let table_content = '<table id = "table_vars" class="table table-hover table-responsive table-sm"><thead><tr>'
 
   let unique_headers = [];
@@ -628,7 +628,7 @@ var get_all_the_var_metadata = function (attributes) {
 
   table_content += "</tbody> </table>"
   return table_content
-}
+}*/
 
 var addSingleThreddsServer = function () {
 
@@ -860,6 +860,7 @@ var addSingleThreddsServer = function () {
     }
 
     let authentication = $('#btn-link-authentication').attr('data-auth');
+    console.log(authentication)
     let databaseInfo = {
       type: 'file',
       group: current_Group,
@@ -872,11 +873,7 @@ var addSingleThreddsServer = function () {
       description: $('#addService-description').val(),
       attributes: attr,
       timestamp: timestamp,
-      authentication: {
-        machine: authentication['machine'],
-        user: authentication['user'],
-        pswd: authentication['pswd'],
-      },
+      authentication: authentication,
     };
     $.ajax({
       url: "add-thredds/",

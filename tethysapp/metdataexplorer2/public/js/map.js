@@ -1,5 +1,4 @@
-
-var MAP_PACKAGE = (function(){
+var MAP_PACKAGE = (function () {
 
   var map_init = function () {
     return map = L.map('map', {
@@ -24,7 +23,7 @@ var MAP_PACKAGE = (function(){
       },
     })
   };
-  var basemaps_init = function(mapObj) {
+  var basemaps_init = function (mapObj) {
     // create the basemap layers
     let esri_imagery = L.esri.basemapLayer('Imagery');
     let esri_terrain = L.esri.basemapLayer('Terrain');
@@ -64,7 +63,7 @@ var MAP_PACKAGE = (function(){
 //                      name: bounds,
 //                  },
 //                  dataType: "json",
- //                 contentType: "application/json",
+  //                 contentType: "application/json",
 //                  method: "GET",
 //                  async: false,
 //                  success: function (result) {
@@ -81,14 +80,13 @@ var MAP_PACKAGE = (function(){
 //  }
 
 
-  $(function(){
+  $(function () {
     mapObj = map_init();
-    var getDataBounds = function() {
-        let rectangleDrawer = new L.Draw.Rectangle(mapObj);
-        rectangleDrawer.enable();
-        /* Controls for when drawing on the maps */
+    var getDataBounds = function () {
+      let rectangleDrawer = new L.Draw.Rectangle(mapObj);
+      rectangleDrawer.enable();
+      /* Controls for when drawing on the maps */
     }
-
 
     let basemapObj = basemaps_init(mapObj);
     layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
@@ -97,19 +95,19 @@ var MAP_PACKAGE = (function(){
     let shpLayer;
 
     let drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems,
-            edit: true,
-        },
-        draw: {
-            marker: true,
-            polyline: false,
-            circlemarker: true,
-            circle: false,
-            polygon: true,
-            rectangle: true,
-            trash: true,
-        },
+      edit: {
+        featureGroup: drawnItems,
+        edit: true,
+      },
+      draw: {
+        marker: true,
+        polyline: false,
+        circlemarker: false,
+        circle: false,
+        polygon: true,
+        rectangle: true,
+        trash: true,
+      },
     });
 
     /* Add the controls to the map */
@@ -117,25 +115,24 @@ var MAP_PACKAGE = (function(){
 
     // $(".leaflet-draw-section").hide();
 
-
-    $('#draw-on-map-button').click(function(){
+    $('#draw-on-map-button').click(function () {
       // $('#modalAddGroupThredds').modal('hide');
       urlInfoBox = true;
       $('#modalAddGroupThredds').modal('hide');
       $('#modalAddServices').modal('hide');
       getThreddsBounds();
     });
-    $('#draw-on-map-button2').click(function(){
+    $('#draw-on-map-button2').click(function () {
       isEditing = true;
       $('#modalEditServices').modal('hide');
       getThreddsBounds();
     });
     $('#get-data-button').click(getDataBounds);
 
-    drawnItems.on('click', function (e) {
-        let coord = e.layer.getLatLngs();
-        getTimeseries(coord);
-    });
+    /*drawnItems.on('click', function (e) {
+      let coord = e.layer.getLatLngs();
+      getTimeseries(coord);
+    });*/
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
 
@@ -150,12 +147,11 @@ var MAP_PACKAGE = (function(){
           urlInfoBox = false;
           type_of_series = e.layerType;
         } else {
-            drawnItems.addLayer(e.layer);
-            input_spatial = JSON.stringify(e.layer.toGeoJSON());
-            type_of_series = e.layerType;
+          drawnItems.addLayer(e.layer);
+          input_spatial = JSON.stringify(e.layer.toGeoJSON());
+          type_of_series = e.layerType;
         }
-      }
-      else{
+      } else {
         isEditing = false;
         let coord = e.layer.toGeoJSON();
         $('#spatial-input2').val(JSON.stringify(coord));
@@ -169,12 +165,13 @@ var MAP_PACKAGE = (function(){
   })
 
 })();
-var getThreddsBounds = function() {
-    let polygonDrawer = new L.Draw.Polygon(mapObj);
-    polygonDrawer.enable();
+
+var getThreddsBounds = function () {
+  let polygonDrawer = new L.Draw.Polygon(mapObj);
+  polygonDrawer.enable();
 }
 
-var data_layer = function(layernameUI,wmsURL,layer,range,style) {
+var data_layer = function (layernameUI, wmsURL, layer, range, style) {
   let wmsURL2;
   try {
     //if (wmsURL.indexOf("http://") != -1) {
@@ -206,91 +203,84 @@ var data_layer = function(layernameUI,wmsURL,layer,range,style) {
     });
     layers_dict[`${layernameUI}_check`] = wmsLayerTime
     return wmsLayerTime.addTo(mapObj);
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 }
 
-
-var updateWMSLayer = function(layernameUI,x) {
-  try{
+var updateWMSLayer = function (layernameUI, x) {
+  try {
     wmsURL = x['wmsURL'];
     layer = x['variable'];
-    range =x['range'];
+    range = x['range'];
     style = x['style'];
-    opacity =x['opacity'];
+    opacity = x['opacity'];
     if (mapObj.hasLayer(layers_dict[`${layernameUI}_check`])) {
-        layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-        mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
-        delete layers_dict[`${layernameUI}_check`];
-    }
-    else{
-      Object.keys(layers_dict).forEach(function(key) {
+      layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+      mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
+      delete layers_dict[`${layernameUI}_check`];
+    } else {
+      Object.keys(layers_dict).forEach(function (key) {
         layerControlObj.removeLayer(layers_dict[key]);
         mapObj.removeLayer(layers_dict[key]);
         delete layers_dict[key];
 
       });
-      dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+      dataLayerObj = data_layer(layernameUI, wmsURL, layer, range, style, opacity);
       dataLayerObj.setOpacity(opacity);
       layerControlObj.addOverlay(dataLayerObj, "Data Layer");
     }
-  }
-  catch(e){
+  } catch (e) {
     console.log(e);
   }
 
 }
-var updateWMSLayer2 = function(layernameUI,x) {
-  try{
+var updateWMSLayer2 = function (layernameUI, x) {
+  try {
     wmsURL = x['wmsURL'];
     layer = x['variable'];
-    range =x['range'];
+    range = x['range'];
     style = x['style'];
-    opacity =x['opacity'];
+    opacity = x['opacity'];
 
-    Object.keys(layers_dict).forEach(function(key) {
+    Object.keys(layers_dict).forEach(function (key) {
       layerControlObj.removeLayer(layers_dict[key]);
       mapObj.removeLayer(layers_dict[key]);
       delete layers_dict[key];
 
     });
-    dataLayerObj = data_layer(layernameUI,wmsURL,layer,range,style,opacity);
+    dataLayerObj = data_layer(layernameUI, wmsURL, layer, range, style, opacity);
     dataLayerObj.setOpacity(opacity);
     layerControlObj.addOverlay(dataLayerObj, "Data Layer");
 
-  }
-  catch(e){
+  } catch (e) {
     console.log(e);
   }
 
 }
 
-var removeActiveLayer = function(layernameUI){
-  try{
+var removeActiveLayer = function (layernameUI) {
+  try {
     layerControlObj.removeLayer(layers_dict[`${layernameUI}_check`]);
     mapObj.removeLayer(layers_dict[`${layernameUI}_check`]);
     delete layers_dict[`${layernameUI}_check`];
-  }
-  catch(e){
+  } catch (e) {
     return
   }
-
 }
 
-var removeWMSLayer = function() {
+/*var removeWMSLayer = function() {
     layerControlObj.removeLayer(dataLayerObj);
     mapObj.removeLayer(dataLayerObj);
     $("#layer-display-container").css("display", "none");
-}
+}*/
 
-var changeOpacity = function(layernameUI, opacity){
+var changeOpacity = function (layernameUI, opacity) {
   opacity_new = Math.trunc(opacity * 100);
   $("#opacityValue").html(`${opacity_new} `);
-  try{
+  try {
     layers_dict[`${layernameUI}_check`].setOpacity(opacity);
-  }
-  catch(e){
+  } catch (e) {
     return
   }
 

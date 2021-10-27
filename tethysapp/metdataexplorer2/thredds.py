@@ -178,7 +178,6 @@ def add_tdds(request):
                             hs = pd.Series(h[:])
                             file_attr_ex[dim] = hs.to_list()
 
-        # print(file_attr_ex)
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
                               url=tdds_info['url'],
