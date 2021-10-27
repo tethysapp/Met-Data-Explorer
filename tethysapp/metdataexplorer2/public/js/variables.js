@@ -1022,11 +1022,13 @@ var getSingleTS = function () {
 */
 
 var getPlotData = function () {
+  console.log($("#variables_graph").val());
+  console.log(values_donwload_json)
   let xArray = [];
   let yArray = [];
   for (let key in values_donwload_json['datetime']) {
     xArray.push(values_donwload_json['datetime'][key]);
-    yArray.push(values_donwload_json['values'][key]);
+    yArray.push(values_donwload_json[$("#variables_graph").val()][key]);
   }
   initialize_graphs(xArray, yArray, `${$("#variables_graph").val()} Mean`, `${$("#variables_graph").val()}`, "", `${$("#variables_graph").val()}`, $("#type_graph_select2").val());
 }

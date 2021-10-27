@@ -530,6 +530,13 @@ def get_geojson_and_data(spatial, epsg):
     return geojson_path
 
 
+def format_datetime(dt):
+    string_time = []
+    for time in dt:
+        string_time.append(str(time))
+    return string_time
+
+
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
                               label_type, stats, type_ask, extra_dim, username, password):
     timeseries_array = {}
@@ -570,11 +577,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                                                     geojson_geometry.geometry[0].bounds[2])
 
                 #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-                string_time = []
-                for time in timeseries_array['datetime']:
-                    string_time.append(str(time))
-
-                timeseries_array['datetime'] = string_time
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
 
                 return timeseries_array
 
@@ -611,7 +614,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                                                     (None, geojson_geometry.geometry[0].bounds[3],
                                                      geojson_geometry.geometry[0].bounds[2]))
 
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
 
             except Exception as e:
@@ -621,7 +625,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         if type_ask == "polygon":
             try:
                 timeseries_array = series.shape(mask=geojson_path, statistics=stats)
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
 
                 return timeseries_array
 
@@ -633,7 +638,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type,
                                                 labelby=label_type, statistics=stats)
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
 
             except Exception as e:
@@ -658,7 +664,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                     timeseries_array = series.point(None, extra_dim, geojson_geometry.geometry[0].bounds[1],
                                                     geojson_geometry.geometry[0].bounds[2])
 
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
 
             except Exception as e:
@@ -696,7 +703,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                                                      geojson_geometry.geometry[0].bounds[0]),
                                                     (None, geojson_geometry.geometry[0].bounds[3],
                                                      geojson_geometry.geometry[0].bounds[2]))
-                timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
+                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
