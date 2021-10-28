@@ -157,7 +157,19 @@ def add_tdds(request):
             print(e)
 
         file_attr_ex = {}
+        print('here is the url:')
+        print(tdds_info['url'])
         try:
+            dims = ds.dimensions.keys()
+            for dim in dims:
+                if dim in ds.variables:
+                    if dim != 'lat' and dim != 'lon':
+                        if 'time' not in dim:
+                            h = ds.variables[dim]
+                            hs = pd.Series(h[:])
+                            file_attr_ex[dim] = hs.to_list()
+        except Exception as e:
+            print(e)
             da = xarray.open_dataset(tdds_info['url'].strip(), chunks={"time": '100MB'})
             attr_dims = da.coords.keys()
             print(attr_dims)
@@ -165,18 +177,6 @@ def add_tdds(request):
                 if hl != 'lat' and hl != 'lon':
                     if 'time' not in hl:
                         file_attr_ex[hl] = da.coords[hl].to_dict()['data']
-        except Exception as e:
-            print(e)
-            print(tdds_info['url'])
-            nc = netCDF4.Dataset(tdds_info['url'])
-            dims = nc.dimensions.keys()
-            for dim in dims:
-                if dim in nc.variables:
-                    if dim != 'lat' and dim != 'lon':
-                        if 'time' not in dim:
-                            h = nc.variables[dim]
-                            hs = pd.Series(h[:])
-                            file_attr_ex[dim] = hs.to_list()
 
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
@@ -201,11 +201,22 @@ def add_tdds(request):
             except Exception as e:
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
+            try:
+                bounds = {}
+                bounds[tdds_info['attributes'][key]['dimensions'][1]] = {
+                    'max': max(ds.variables[tdds_info['attributes'][key]['dimensions'][1]][:].astype(float)),
+                    'min': min(ds.variables[tdds_info['attributes'][key]['dimensions'][1]][:]).astype(float)}
+                bounds[tdds_info['attributes'][key]['dimensions'][2]] = {
+                    'max': max(ds.variables[tdds_info['attributes'][key]['dimensions'][2]][:].astype(float)),
+                    'min': min(ds.variables[tdds_info['attributes'][key]['dimensions'][2]][:]).astype(float)}
+            except Exception as e:
+                print(e)
 
             variable_one = Variables(name=key, dimensions=tdds_info['attributes'][key]['dimensions'],
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
-                                     metadata_variable=json.dumps(variable_tempt_dict))
+                                     metadata_variable=json.dumps(variable_tempt_dict),
+                                     bounds=bounds)
 
             thredds_one.attributes.append(variable_one)
 

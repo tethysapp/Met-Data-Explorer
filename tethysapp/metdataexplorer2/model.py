@@ -18,13 +18,15 @@ class Variables(Base):
     range = Column(String(100))
     dimensions = Column(JSON)
     metadata_variable = Column(JSON)
+    bounds = Column(JSON)
 
-    def __init__(self, name, units, color, dimensions, metadata_variable):
+    def __init__(self, name, units, color, dimensions, metadata_variable, bounds):
         self.name = name
         self.dimensions = dimensions
         self.units = units
         self.color = color
         self.metadata_variable = metadata_variable
+        self.bounds = bounds
 
 
 class Thredds(Base):

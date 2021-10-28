@@ -286,22 +286,24 @@ def get_full_array(request):
     dimensions_sel = request.GET.getlist('dimensions_sel[]')
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
-    epsg_offset = request.GET.get('epsg_offset')
+    #epsg_offset = request.GET.get('epsg_offset')
     # print("offset", epsg_offset)
     print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group). \
         filter(Thredds.title == actual_tdds).first()
 
+    print(tdds_group)
+
     attribute_array['title'] = tdds_group.title
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     attribute_array['epsg'] = tdds_group.epsg
-    if epsg_offset != '':
+    #if epsg_offset != '':
         # print("not empty")
-        attribute_array['epsg'] = epsg_offset
-    else:
+    #    attribute_array['epsg'] = epsg_offset
+    #else:
         # print("empty")
-        attribute_array['epsg'] = tdds_group.epsg
+    #    attribute_array['epsg'] = tdds_group.epsg
 
     attribute_array['type'] = 'file'
     attribute_array['url'] = tdds_group.url
@@ -376,7 +378,7 @@ def organize_array(attribute_array, behavior_type, label_type):
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, behavior_type,
                                            label_type, stats_value, attribute_array['type_request'],
                                            attribute_array['extra_dim'], attribute_array['username'],
-                                           attribute_array['password'])
+                                           attribute_array['password'], attribute_array['bounds'])
     # print(timeseries)
     data[variable] = timeseries
     os.remove(geojson_path)
@@ -538,39 +540,34 @@ def format_datetime(dt):
 
 
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
-                              label_type, stats, type_ask, extra_dim, username, password):
+                              label_type, stats, type_ask, extra_dim, username, password, bounds):
     timeseries_array = {}
-
+    print(dim_order)
     if not password:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     else:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
 
-
-    # if label_type != 'select_val':
-    # timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type, labelby=label_type, statistics=stats)
-    # else:
-
     geojson_geometry = gpd.read_file(geojson_path)
-    # print(geojson_geometry['geometry'])
-    # print(geojson_geometry.geometry)
-    # print(geojson_geometry.geometry[0].geom_type)
-    # print(geojson_geometry.geometry[0].bounds)
+
     if len(list(dim_order)) == 3:
         print(type_ask)
         # print("3 dimensions")
         if type_ask == 'marker':
             # print("point")
             try:
-                # print(geojson_geometry.geometry[0].bounds[2])
+                print('stop 1')
+                print(geojson_geometry.geometry[0].bounds[2])
                 print(geojson_geometry.crs.area_of_use.west)
                 if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
                     print('if')
+                    print(geojson_geometry.geometry[0].bounds[1])
+                    print(geojson_geometry.geometry[0].bounds[2] + 360)
                     # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=360, yoff=0)
                     timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
                                                     geojson_geometry.geometry[0].bounds[2] + 360)
                 else:
-                    print('bounds')
+                    print('else')
                     print(geojson_geometry.geometry[0].bounds[1])
                     print(geojson_geometry.geometry[0].bounds[2])
                     timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
