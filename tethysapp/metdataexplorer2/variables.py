@@ -312,7 +312,8 @@ def get_full_array(request):
     attribute_array['type_request'] = type_ask
 
     authentication = json.loads(tdds_group.authentication)
-    if authentication == {}:
+    print(authentication)
+    if not authentication:
         attribute_array['username'] = False
         attribute_array['password'] = False
     else:
