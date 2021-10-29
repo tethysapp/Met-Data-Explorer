@@ -338,6 +338,8 @@ def get_full_array(request):
     attr_variable['units'] = var_row.units
     attr_variable['name'] = var_row.name
 
+    attr_variable['bounds'] = var_row.bounds
+
     attribute_array['attributes'] = attr_variable
 
     data = organize_array(attribute_array, behavior_type, label_type)
@@ -357,31 +359,16 @@ def organize_array(attribute_array, behavior_type, label_type):
         access_urls['NetcdfSubset'] = attribute_array['url_netcdf']
 
     variable = attribute_array['attributes']['name']
-    # variables += 'var=' + variable + '&'
-
-    # for variable in attribute_array['attributes']:
-    #     variables += 'var=' + variable + '&'
-
     epsg = attribute_array['epsg']
     geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
-    # print(geojson_path)
-    # print(geojson_path)
-    data = {}
-
-    dims = attribute_array['attributes']['dimensions']
-
-    dim_order = tuple(dims)
-    # print(dim_order)
+    dim_order = tuple(attribute_array['attributes']['dimensions'])
     stats_value = 'mean'
-    # feature_label = 'id'
-    # print(variable)
-    # print(access_urls['OPENDAP'])
+    print(attribute_array['attributes']['bounds'])
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, behavior_type,
                                            label_type, stats_value, attribute_array['type_request'],
                                            attribute_array['extra_dim'], attribute_array['username'],
-                                           attribute_array['password'], attribute_array['bounds'])
-    # print(timeseries)
-    data[variable] = timeseries
+                                           attribute_array['password'], attribute_array['attributes']['bounds'])
+    data = {variable: timeseries}
     os.remove(geojson_path)
     return data
 
@@ -543,7 +530,6 @@ def format_datetime(dt):
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
                               label_type, stats, type_ask, extra_dim, username, password, bounds):
     timeseries_array = {}
-    print(dim_order)
     if not password:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     else:
@@ -558,26 +544,28 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             # print("point")
             try:
                 print('stop 1')
-                print(geojson_geometry.geometry[0].bounds[2])
-                print(geojson_geometry.crs.area_of_use.west)
-                if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
-                    print('if')
-                    print(geojson_geometry.geometry[0].bounds[1])
-                    print(geojson_geometry.geometry[0].bounds[2] + 360)
+                print(geojson_geometry.geometry.bounds)
+                print(geojson_geometry.geometry)
+                #if geojson_geometry.geometry[0].bounds[1] :
+                #    print
+                #if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                #    print('if')
+                #    print(geojson_geometry.geometry[0].bounds[1])
+                #    print(geojson_geometry.geometry[0].bounds[2] + 360)
                     # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=360, yoff=0)
-                    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
-                                                    geojson_geometry.geometry[0].bounds[2] + 360)
-                else:
-                    print('else')
-                    print(geojson_geometry.geometry[0].bounds[1])
-                    print(geojson_geometry.geometry[0].bounds[2])
-                    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
-                                                    geojson_geometry.geometry[0].bounds[2])
+                #    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
+                #                                    geojson_geometry.geometry[0].bounds[2] + 360)
+                #else:
+                #    print('else')
+                #    print(geojson_geometry.geometry[0].bounds[1])
+                #    print(geojson_geometry.geometry[0].bounds[2])
+                #    timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
+                #                                    geojson_geometry.geometry[0].bounds[2])
 
                 #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
+                #timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
 
-                return timeseries_array
+                #return timeseries_array
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
@@ -586,35 +574,37 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
 
         if type_ask == "rectangle":
             try:
-
-                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] > 0:
-                    # print("1")
-                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
-                                                     geojson_geometry.geometry[0].bounds[0] + 360),
-                                                    (None, geojson_geometry.geometry[0].bounds[3],
-                                                     geojson_geometry.geometry[0].bounds[2]))
-                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                print('stop 2')
+                print(geojson_geometry.geometry.bounds)
+                print(geojson_geometry.geometry)
+                #if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                #    # print("1")
+                #    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
+                #                                     geojson_geometry.geometry[0].bounds[0] + 360),
+                #                                    (None, geojson_geometry.geometry[0].bounds[3],
+                #                                     geojson_geometry.geometry[0].bounds[2]))
+                #if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] < 0:
                     # print("2")
-                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
-                                                     geojson_geometry.geometry[0].bounds[0]),
-                                                    (None, geojson_geometry.geometry[0].bounds[3],
-                                                     geojson_geometry.geometry[0].bounds[2] + 360))
-                if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
-                    # print("3")
-                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
-                                                     geojson_geometry.geometry[0].bounds[0] + 360),
-                                                    (None, geojson_geometry.geometry[0].bounds[3],
-                                                     geojson_geometry.geometry[0].bounds[2] + 360))
-                if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] > 0:
+                #    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
+                #                                     geojson_geometry.geometry[0].bounds[0]),
+                #                                    (None, geojson_geometry.geometry[0].bounds[3],
+                #                                     geojson_geometry.geometry[0].bounds[2] + 360))
+                #if geojson_geometry.geometry[0].bounds[0] < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
+                #    # print("3")
+                #    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
+                #                                     geojson_geometry.geometry[0].bounds[0] + 360),
+                #                                    (None, geojson_geometry.geometry[0].bounds[3],
+                #                                     geojson_geometry.geometry[0].bounds[2] + 360))
+                #if geojson_geometry.geometry[0].bounds[0] > 0 and geojson_geometry.geometry[0].bounds[2] > 0:
                     # print("4")
-                    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
-                                                     geojson_geometry.geometry[0].bounds[0]),
-                                                    (None, geojson_geometry.geometry[0].bounds[3],
-                                                     geojson_geometry.geometry[0].bounds[2]))
+                #    timeseries_array = series.bound((None, geojson_geometry.geometry[0].bounds[1],
+                #                                     geojson_geometry.geometry[0].bounds[0]),
+                #                                    (None, geojson_geometry.geometry[0].bounds[3],
+                #                                     geojson_geometry.geometry[0].bounds[2]))
 
                 #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
-                return timeseries_array
+                #timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
+                #return timeseries_array
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
@@ -622,11 +612,14 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
 
         if type_ask == "polygon":
             try:
-                timeseries_array = series.shape(mask=geojson_path, statistics=stats)
+                print('stop 2')
+                print(geojson_geometry.geometry.bounds)
+                print(geojson_geometry.geometry)
+                #timeseries_array = series.shape(mask=geojson_path, statistics=stats)
                 #timeseries_array['datetime'] = timeseries_array['datetime'].dt.strftime('%Y-%m-%d %H:%M:%S')
-                timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
+                #timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
 
-                return timeseries_array
+                #return timeseries_array
 
             except Exception as e:
                 timeseries_array['error'] = str(e)
@@ -646,7 +639,8 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
 
     if len(list(dim_order)) == 4:
-        # print("4 dimensions")
+        print("4 dimensions")
+        print(dim_order)
 
         if type_ask == 'marker':
             # print("point")
