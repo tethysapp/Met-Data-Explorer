@@ -544,6 +544,9 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
             # print("point")
             try:
                 print('stop 1')
+                print('data bounds:')
+                print(bounds)
+                print('point bounds: ')
                 print(geojson_geometry.geometry.bounds)
                 print(geojson_geometry.geometry)
                 #if geojson_geometry.geometry[0].bounds[1] :
