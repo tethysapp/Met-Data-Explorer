@@ -177,12 +177,11 @@ var data_layer = function (layernameUI, wmsURL, layer, range, style) {
     //if (wmsURL.indexOf("http://") != -1) {
     console.log("Changing to proxy URL");
     wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
-    console.log(wmsURL2)
     //}
     //else{
     //  wmsURL2 = wmsURL;
     //}
-
+    console.log('staring to get images');
     const wmsLayer = L.tileLayer.wms(wmsURL2, {
       layers: layer,
       dimension: 'time',
@@ -194,6 +193,7 @@ var data_layer = function (layernameUI, wmsURL, layer, range, style) {
       styles: style,
       colorscalerange: range,
     });
+    console.log('marker1');
     wmsLayerTime = L.timeDimension.layer.wms(wmsLayer, {
       name: `${layernameUI}_check`,
       requestTimefromCapabilities: true,
@@ -201,7 +201,9 @@ var data_layer = function (layernameUI, wmsURL, layer, range, style) {
       updateTimeDimensionMode: 'replace',
       cache: 20,
     });
+    console.log('marker2');
     layers_dict[`${layernameUI}_check`] = wmsLayerTime
+    console.log('marker3');
     return wmsLayerTime.addTo(mapObj);
   } catch (err) {
     console.log(err);

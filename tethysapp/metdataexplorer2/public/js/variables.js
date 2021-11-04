@@ -1026,9 +1026,10 @@ var getPlotData = function () {
   console.log(values_donwload_json)
   let xArray = [];
   let yArray = [];
-  for (let key in values_donwload_json['datetime']) {
-    xArray.push(values_donwload_json['datetime'][key]);
-    yArray.push(values_donwload_json[$("#variables_graph").val()][key]);
+  let objKeys = Object.keys(values_donwload_json)
+  for (let key in values_donwload_json[objKeys[0]]) {
+    xArray.push(values_donwload_json[objKeys[0]][key]);
+    yArray.push(values_donwload_json[objKeys[1]][key]);
   }
   initialize_graphs(xArray, yArray, `${$("#variables_graph").val()} Mean`, `${$("#variables_graph").val()}`, "", `${$("#variables_graph").val()}`, $("#type_graph_select2").val());
 }

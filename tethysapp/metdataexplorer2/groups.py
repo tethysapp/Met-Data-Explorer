@@ -49,12 +49,13 @@ def give_all_attributes(request):
 
 
 def thredds_proxy(request):
+    print('getting proxy wms images')
     if 'main_url' in request.GET:
         request_url = request.GET.get('main_url')
         query_params = request.GET.dict()
         query_params.pop('main_url', None)
         r = requests.get(request_url, params=query_params)
-
+        print('retuning images')
         return HttpResponse(r.content, content_type="image/png")
     else:
         return JsonResponse({})
