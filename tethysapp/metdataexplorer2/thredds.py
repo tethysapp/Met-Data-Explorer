@@ -177,7 +177,7 @@ def add_tdds(request):
                 if hl != 'lat' and hl != 'lon':
                     if 'time' not in hl:
                         file_attr_ex[hl] = da.coords[hl].to_dict()['data']
-
+        print(file_attr_ex)
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
                               url=tdds_info['url'],
@@ -194,6 +194,7 @@ def add_tdds(request):
 
         ## Attributes addition and metadata ##
         for key in tdds_info['attributes']:
+            print(tdds_info['attributes'][key]['dimensions'])
             variable_tempt_dict = {}
             try:
                 for metadata_string in ds[key].__dict__:
@@ -202,13 +203,31 @@ def add_tdds(request):
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
             try:
-                bounds = {}
-                bounds[tdds_info['attributes'][key]['dimensions'][1]] = {
-                    'max': max(ds.variables[tdds_info['attributes'][key]['dimensions'][1]][:].astype(float)),
-                    'min': min(ds.variables[tdds_info['attributes'][key]['dimensions'][1]][:]).astype(float)}
-                bounds[tdds_info['attributes'][key]['dimensions'][2]] = {
-                    'max': max(ds.variables[tdds_info['attributes'][key]['dimensions'][2]][:].astype(float)),
-                    'min': min(ds.variables[tdds_info['attributes'][key]['dimensions'][2]][:]).astype(float)}
+                lon_list = ['lon', 'longitude', 'x', 'degrees east', 'degrees west']
+                lat_list = ['lat', 'latitude', 'y', 'degrees north', 'degrees south']
+                longitude_dim = False
+                latitude_dim = False
+                for dim in tdds_info['attributes'][key]['dimensions']:
+                    if dim.lower() in lon_list:
+                        longitude_dim = dim
+                    elif dim.lower() in lat_list:
+                        latitude_dim = dim
+                if not longitude_dim and not latitude_dim:
+                    longitude_dim = tdds_info['attributes'][key]['dimensions'][-2]
+                    latitude_dim = tdds_info['attributes'][key]['dimensions'][-1]
+
+                print('first one')
+                print(ds.variables[longitude_dim])
+                print('second one')
+                print(ds.variables[longitude_dim][:])
+                print('end')
+                bounds = {latitude_dim: {
+                    'max': max(dds.variables[longitude_dim][:]).astype(float),
+                    'min': min(ds.variables[longitude_dim][:]).astype(loat)},
+                    longitude_dim: {
+                    'max': max(ds.variables[latitude_dim][:]).astype(float),
+                    'min': min(ds.variables[latitude_dim][:]).astype(float)}}
+                print(bounds)
             except Exception as e:
                 print(e)
 

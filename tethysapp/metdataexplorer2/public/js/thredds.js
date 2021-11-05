@@ -382,16 +382,16 @@ var load_individual_thredds_for_group = function (group_name) {
             // extra_dim_order.selectpicker("refresh");
             // extra_dim_order.selectpicker('hide');
 
-            console.log(layers_style[layernameUI2]['dimensions']);
-            console.log(layernameUI2)
-            console.log(layers_style)
+            //console.log(layers_style[layernameUI2]['dimensions']);
+            //console.log(layernameUI2)
+            //console.log(layers_style)
             if (layers_style[layernameUI2]['dimensions'].length > 3) {
               console.log("entro 4");
               extra_dim_order.empty();
               extra_dim_order.selectpicker("refresh");
               extra_dim_order.selectpicker('hide');
               let extra_json = layers_style[layernameUI2]['extra_dim'];
-              console.log('debug here');
+              console.log('Here is the first forEach:');
               console.log(layers_style[layernameUI2]);
               console.log(extra_json);
               //ToDo fix when extra_json[dim] is empty
@@ -402,6 +402,7 @@ var load_individual_thredds_for_group = function (group_name) {
                     let option;
                     option = `<option value=${dim}> Select a ${dim} val </option>`;
                     extra_dim_order.append(option);
+                    console.log('First One stops here:')
                     console.log(extra_json[dim]);
                     extra_json[dim].forEach(function (val_e) {
                       // console.log(val_e);
@@ -1004,6 +1005,8 @@ var addSingleThreddsServer = function () {
                 extra_dim_order.selectpicker("refresh");
                 extra_dim_order.selectpicker('hide');
                 let extra_json = layers_style[layernameUI2]['extra_dim'];
+                console.log('Here is one forEach:')
+                console.log(layers_style) //ToDo
                 layers_style[layernameUI2]['dimensions'].forEach(function (dim) {
                   if (dim != "lat" && dim != "lon") {
                     if (!dim.includes("time")) {
@@ -1011,6 +1014,7 @@ var addSingleThreddsServer = function () {
                       let option;
                       option = `<option value=${dim}> Select a ${dim} val </option>`;
                       extra_dim_order.append(option);
+                      console.log('This is where is stops:')
                       console.log(extra_json[dim]);
                       extra_json[dim].forEach(function (val_e) {
                         // console.log(val_e);
