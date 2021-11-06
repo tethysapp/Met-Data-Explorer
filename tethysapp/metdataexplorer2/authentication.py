@@ -1,5 +1,4 @@
 import os
-import netrc
 
 from django.http import JsonResponse
 
@@ -63,7 +62,7 @@ def get_credentials(request):
             pos3 = pos2 + 7
             pos4 = line.find(' password ')
             pos5 = pos4 + 10
-            machine = line[8:pos2]
+            machine = line[pos1:pos2]
             user = line[pos3:pos4]
             pswd = line[pos5:].strip()
 
@@ -73,4 +72,3 @@ def get_credentials(request):
     file.close()
 
     return JsonResponse(auth)
-

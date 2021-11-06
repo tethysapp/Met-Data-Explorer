@@ -1,23 +1,16 @@
 import glob
 import json
 import os
-import tempfile
 
 import geopandas as gpd
 import netCDF4
-import requests
 import xarray
 from django.http import JsonResponse
-from geojson import dump
-from shapely import wkt
-from shapely.affinity import translate
-from shapely.geometry.multipolygon import MultiPolygon
-from shapely.geometry.polygon import Polygon
 
 from .app import Metdataexplorer2 as app
 from .model import Variables, Thredds, Groups
 from .timestamp import iterate_files
-from .spatial_func import *
+from .spatial_func import print_geojson_to_file, shift_shape_bounds, get_timeseries_at_geojson
 
 Persistent_Store_Name = 'thredds_db'
 
@@ -33,7 +26,6 @@ def shp_to_geojson(shp_filepath, filename):
                 already_made = True
             else:
                 already_made = False
-    # print(already_made)
     if not already_made:
         shape_file = gpd.read_file(shp_filepath)
         shape_file.to_file(os.path.join(new_directory, filename + '.geojson'), driver='GeoJSON')
@@ -45,7 +37,7 @@ def upload_shapefile(request):
     print(files)
     shp_path = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces')
 
-    # write the new files to the directory
+#    write the new files to the directory
     for n, shp_file in enumerate(files):
         with open(os.path.join(shp_path, shp_file.name), 'wb') as dst:
             for chunk in files[n].chunks():
@@ -76,7 +68,6 @@ def upload_shapefile(request):
     path_to_geojson = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', filename + '.geojson')
     with open(path_to_geojson) as f:
         geojson = json.load(f)
-    # print(geojson)
     return JsonResponse({'filename': filename, 'alreadyMade': already_made, 'geojson': json.dumps(geojson)})
 
 
@@ -93,15 +84,7 @@ def get_data_bounds(request):
         Thredds.title == tdds_single).first()
     var_row = session.query(Variables).filter(Variables.name == variable_single).join(Thredds).filter(
         Thredds.title == tdds_single).join(Groups).filter(Groups.name == group_single).first()
-    # print(type(var_row.range))
     if var_row.range is None:
-        # netcdf = netCDF4.Dataset(tdds_group.url)
-        # var = netcdf.variables[variable_single]
-        # print(var)
-        # # var_array = var.data.flatten()
-        # min = var[:].min()
-        # max = var[:].max()
-
         da = xarray.open_dataset(tdds_group.url.strip(), chunks={"time": '100MB'})
         data = da[variable_single].compute()
         max = data.max().values
@@ -119,13 +102,6 @@ def get_data_bounds(request):
         print('test string 2v')
         print(return_obj)
 
-    # da = xarray.open_dataset(tdds_group.url.strip())
-    # print(da)
-    # print(da[variable_single].compute())
-    # data = da[variable_single].compute()
-    # da.load()
-    # print(da[variable_single].values)
-
     return JsonResponse(return_obj)
 
 
@@ -140,7 +116,7 @@ def add_vars(request):
     unique_vars = []
     if request.is_ajax() and request.method == 'POST':
 
-        ## File Metadata ##
+        # File Metadata
         file_tempt_dict = {}
         tdds_object = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(
             Thredds.title == actual_tdds).first()
@@ -151,7 +127,7 @@ def add_vars(request):
         except Exception as e:
             print(e)
 
-        ## Attributes addition and metadata ##
+        # Attributes addition and metadata
         for key in tdds_info:
             variable_tempt_dict = {}
             try:
@@ -216,10 +192,6 @@ def delete_vars(request):
             variables_tdds = request.POST.getlist('variables_del')
             actual_group = request.POST.get('actual-group')
             actual_tdds = request.POST.get('actual-tdds')
-
-            i = 0
-            tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(
-                Thredds.title == actual_tdds).first()
             for single_var in variables_tdds:
                 var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(
                     Thredds.title == actual_tdds).join(Groups).filter(Groups.name == actual_group).first()
@@ -240,13 +212,10 @@ def getVariablesTds(request):
         Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()
 
-    # Query DB for hydroservers
     if request.is_ajax() and request.method == 'POST':
         try:
             actual_group = request.POST.get('group')
             actual_tdds = request.POST.get('tdds')
-            # print(actual_group)
-            # print(actual_tdds)
             old_attr_arr = []
             tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(
                 Thredds.title == actual_tdds).first()
@@ -276,7 +245,6 @@ def get_full_array(request):
         Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()
     attribute_array = {}
-#    attribute_array = json.loads(request.GET['containerAttributes'])
     actual_group = request.GET.get('group')
     actual_tdds = request.GET.get('tds')
     single_var = request.GET.get('attr_name')
@@ -328,6 +296,7 @@ def get_full_array(request):
         attribute_array['spatial'] = json.loads(input_spatial)
         # print(attribute_array['spatial'])
     except Exception as e:
+        print(e)
         attribute_array['spatial'] = input_spatial
 
     var_row = session.query(Variables).filter(Variables.name == single_var).join(Thredds).filter(
@@ -369,152 +338,3 @@ def organize_array(attribute_array, behavior_type, label_type):
     os.remove(geojson_path)
     os.remove(original_filepath)
     return data
-
-"""
-def get_geojson_and_data(spatial, epsg):
-    print('epsg: ' + str(epsg))
-    print('spatial: ' + str(spatial))
-    geojson_path = os.path.join(tempfile.gettempdir(), 'temp.json')
-    print(type(spatial))
-    if type(spatial) == dict:
-        print("bol1")
-
-        spatial['properties']['id'] = 'Shape'
-        data = os.path.join(tempfile.gettempdir(), 'new_geo_temp.json')
-        with open(data, 'w') as f:
-            dump(spatial, f)
-        geojson_geometry = gpd.read_file(data)
-        os.remove(data)
-        print(geojson_geometry)
-    elif spatial[:4] == 'http':
-        print("bol2")
-
-        data = requests.Request('GET', spatial).url
-        geojson_geometry = gpd.read_file(data)
-        # print(geojson_geometry.geometry)
-        splitted_geom = []
-        moved_geom = []
-
-        for row in geojson_geometry["geometry"]:
-            splitted_geom.append(row)
-        # print(splitted_geom)
-        for element in splitted_geom:
-            minx, miny, maxx, maxy = element.bounds
-            if minx >= 0 and maxx >= 0:
-                moved_geom.append(translate(element, xoff=0))
-            if minx < 0 and maxx < 0:
-                moved_geom.append(translate(element, xoff=360))
-            if minx < 0 and maxx >= 0:
-                if isinstance(element, MultiPolygon):
-                    # print(element.type)
-                    multipolygon_list = []
-                    for single_pol in element.geoms:
-                        x, y = single_pol.exterior.coords.xy
-                        element2 = []
-                        for single_x, single_y in zip(x.tolist(), y.tolist()):
-                            if single_x < 0:
-                                single_x2 = single_x + 360
-                                element2.append(single_x2)
-                            else:
-                                element2.append(single_x)
-                        polygonMade = Polygon(list(zip(element2, y.tolist()))).wkt
-                        multipolygon_list.append(polygonMade)
-                    list_polygons = [wkt.loads(poly) for poly in multipolygon_list]
-
-                    moved_geom.append(MultiPolygon(list_polygons))
-
-                if element.geom_type == 'Polygon':
-                    x, y = element.exterior.coords.xy
-                    element2 = []
-                    for single_x, single_y in zip(x.tolist(), y.tolist()):
-                        if single_x < 0:
-                            single_x2 = single_x + 360
-                            element2.append(single_x2)
-                        else:
-                            element2.append(single_x)
-                    polygonMade = Polygon(list(zip(element2, y.tolist())))
-                    moved_geom.append(polygonMade)
-
-        geojson_geometry["geometry"] = moved_geom
-        print(geojson_geometry['geometry'])
-    else:
-        print("bol3")
-        data = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', spatial + '.geojson')
-        geojson_geometry = gpd.read_file(data)
-        # if not str(epsg) == 'false':
-        # print(len(epsg))
-        # print(str(epsg)[:4],str(geojson_geometry.crs)[5:] )
-        # if not str(epsg)[:4] == str(geojson_geometry.crs)[5:]:
-        # if not str('4326') == str(geojson_geometry.crs)[5:]:
-        # geojson_geometry = geojson_geometry.to_crs('EPSG:' + '4326')
-        # geojson_geometry = geojson_geometry.to_crs('EPSG:' + str(epsg)[:4])
-        # if len(epsg) > 4:
-        # shift_lat = int(epsg.split(',')[2][2:])
-        # shift_lon = int(epsg.split(',')[1][2:])
-        # print(shift_lat, shift_lon)
-
-        # print(geojson_geometry.crs.area_of_use)
-        # print(geojson_geometry.crs.area_of_use.north)
-        # print(geojson_geometry.crs.area_of_use.south)
-        # print(geojson_geometry.crs.area_of_use.east)
-        # print(geojson_geometry.crs.area_of_use.west)
-
-        # print(geojson_geometry['geometry'])
-        # geojson_geometry['geometry'] = geojson_geometry.translate(xoff=shift_lon, yoff=shift_lat)
-
-        # print(geojson_geometry.crs.area_of_use)
-        #
-        # print(geojson_geometry.crs.area_of_use.east)
-        # print(type(geojson_geometry.crs.area_of_use.west))
-        # print(geojson_geometry.geometry)
-        splitted_geom = []
-        moved_geom = []
-
-        for row in geojson_geometry["geometry"]:
-            splitted_geom.append(row)
-        # print(splitted_geom)
-        for element in splitted_geom:
-            minx, miny, maxx, maxy = element.bounds
-            if minx >= 0 and maxx >= 0:
-                moved_geom.append(translate(element, xoff=0))
-            if minx < 0 and maxx < 0:
-                moved_geom.append(translate(element, xoff=360))
-            if minx < 0 and maxx >= 0:
-                if isinstance(element, MultiPolygon):
-                    # print(element.type)
-                    multipolygon_list = []
-                    for single_pol in element.geoms:
-                        x, y = single_pol.exterior.coords.xy
-                        element2 = []
-                        for single_x, single_y in zip(x.tolist(), y.tolist()):
-                            if single_x < 0:
-                                single_x2 = single_x + 360
-                                element2.append(single_x2)
-                            else:
-                                element2.append(single_x)
-                        polygonMade = Polygon(list(zip(element2, y.tolist()))).wkt
-                        multipolygon_list.append(polygonMade)
-                    list_polygons = [wkt.loads(poly) for poly in multipolygon_list]
-
-                    moved_geom.append(MultiPolygon(list_polygons))
-
-                if element.geom_type == 'Polygon':
-                    x, y = element.exterior.coords.xy
-                    element2 = []
-                    for single_x, single_y in zip(x.tolist(), y.tolist()):
-                        if single_x < 0:
-                            single_x2 = single_x + 360
-                            element2.append(single_x2)
-                        else:
-                            element2.append(single_x)
-                    polygonMade = Polygon(list(zip(element2, y.tolist())))
-                    moved_geom.append(polygonMade)
-
-        geojson_geometry["geometry"] = moved_geom
-        # print(geojson_geometry['geometry'])
-
-    geojson_geometry.to_file(geojson_path, driver="GeoJSON")
-    print(geojson_path)
-    return geojson_path
-"""
-

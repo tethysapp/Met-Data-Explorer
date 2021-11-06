@@ -9,7 +9,6 @@ from django.http import JsonResponse, HttpResponse
 from siphon.catalog import TDSCatalog
 from tethys_sdk.permissions import has_permission
 
-# from .model import Thredds, Groups
 from .app import Metdataexplorer2 as app
 from .model import Variables, Thredds, Groups
 
@@ -23,7 +22,6 @@ def filter_by_variable(request):
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
     for selected_var in selected_vars:
-        cr = session.query(Thredds).first()
         tdds_group = session.query(Thredds).join(Variables).filter(Variables.name == selected_var).all()
         for tdds_single in tdds_group:
             if tdds_single.group.name in return_objt:
@@ -69,7 +67,6 @@ def get_files_and_folders(request):
     files_dict = {}
 
     try:
-        # ToDo error on gfs catalog top folder, server error
         ds = TDSCatalog(url)
     except Exception as e:
         print(e)
@@ -95,7 +92,6 @@ def get_files_and_folders(request):
     final_obj = {}
     final_obj['dataTree'] = data_tree
     final_obj['correct_url'] = correct_url
-    # print(final_obj)
     return JsonResponse(final_obj)
 
 
@@ -103,7 +99,6 @@ def get_variables_and_file_metadata(request):
     url = request.GET.get('opendapURL')
     variables = {}
     file_metadata = ''
-    # print(url)
     try:
         ds = netCDF4.Dataset(url)
     except OSError:
@@ -113,12 +108,13 @@ def get_variables_and_file_metadata(request):
 
     for metadata_string in ds.__dict__:
         file_metadata += '<b>' + str(metadata_string) + '</b><br><p>' + str(ds.__dict__[metadata_string]) + '</p>'
-    # print(ds.variables)
     for variable in ds.variables:
         dimension_list = []
         try:
-            VAR_LO = ds[variable].units
+            var_lo = ds[variable].units
+            print(var_lo)
         except Exception as e:
+            print(e)
             print("no units")
         if len(ds[variable].dimensions) > 2:
             for dimension in ds[variable].dimensions:
@@ -136,9 +132,7 @@ def add_group(request):
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
     if request.is_ajax() and request.method == 'POST':
-        # print(request.POST)
         groups_info = json.loads(request.POST.get("data"))
-        # print(groups_info)
         description = groups_info['description']
         title = groups_info['title']
         services = groups_info['attributes']
@@ -146,26 +140,19 @@ def add_group(request):
         group_obj['description'] = description
         group_thredds = Groups(name=title, description=description)
 
-        # hydroservers_group = session.query(Groups).filter(Groups.title == group)[0]
-
         for servi in services:
-            ## File Metadata ##
+            # File Metadata
             file_tempt_dict = {}
-            # variable_metadata = {}
-
             try:
                 ds = netCDF4.Dataset(servi['url'])
-
             except Exception as e:
                 print(e)
-
-            ## INITIALIZING THE THREDDS FILES ##
+            # INITIALIZING THE THREDDS FILES
             try:
                 for metadata_string in ds.__dict__:
                     file_tempt_dict[metadata_string] = str(ds.__dict__[metadata_string])
             except Exception as e:
                 print(e)
-
             file_attr_ex = {}
             try:
                 da = xarray.open_dataset(servi['url'].strip(), chunks={"time": '100MB'})
@@ -196,7 +183,6 @@ def add_group(request):
                                   url_wms=servi['url_wms'],
                                   url_subset=servi['url_subset'],
                                   epsg=servi['epsg'],
-                                  # spatial = json.dumps(servi['spatial']),
                                   spatial=json.dumps({}),
                                   description=servi['description'],
                                   timestamp=servi['timestamp'],
@@ -204,7 +190,7 @@ def add_group(request):
                                   extra_coordinate=json.dumps(file_attr_ex),
                                   authentication=servi['authentication'])
 
-            ## Attributes addition and metadata ##
+            # Attributes addition and metadata
             for key in servi['attributes']:
                 variable_tempt_dict = {}
                 try:
@@ -212,7 +198,6 @@ def add_group(request):
                         variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
                 except Exception as e:
                     print(e)
-                # variable_metadata [key] = variable_tempt_dict
 
                 variable_one = Variables(name=key, dimensions=servi['attributes'][key]['dimensions'],
                                          units=servi['attributes'][key]['units'],
@@ -240,8 +225,6 @@ def refresh_group(request):
     specific_tds = request.GET.get('tds')
     print(specific_group)
 
-    list_catalog = {}
-
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
 
     session = SessionMaker()  # Initiate a session
@@ -252,106 +235,6 @@ def refresh_group(request):
         layer_obj["title"] = trds.title
         if layer_obj["title"] == specific_tds:
             print(layer_obj["title"])
-    '''
-    group_obj = {}
-    single_obj = {}
-    services_array = []
-    SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
-    session = SessionMaker()  # Initiate a session
-    if request.is_ajax() and request.method == 'POST':
-        # print(request.POST)
-        groups_info = json.loads(request.POST.get("data"))
-        # print(groups_info)
-        description = groups_info['description']
-        title = groups_info['title']
-        services = groups_info['attributes']
-        group_obj['title'] = title
-        group_obj['description'] = description
-        group_thredds = Groups(name=title, description=description)
-
-        # hydroservers_group = session.query(Groups).filter(Groups.title == group)[0]
-
-        for servi in services:
-            ## File Metadata ##
-            file_tempt_dict = {}
-            # variable_metadata = {}
-
-            try:
-                ds = netCDF4.Dataset(servi['url'])
-
-            except Exception as e:
-                print(e)
-
-            ## INITIALIZING THE THREDDS FILES ##
-            try:
-                for metadata_string in ds.__dict__:
-                    file_tempt_dict[metadata_string] = str(ds.__dict__[metadata_string])
-            except Exception as e:
-                print(e)
-
-            file_attr_ex = {}
-            try:
-                da = xarray.open_dataset(servi['url'].strip(), chunks={"time": '100MB'})
-                attr_dims = da.coords.keys()
-
-                for hl in attr_dims:
-                    if hl != 'lat' and hl != 'lon':
-                        if 'time' not in hl:
-                            file_attr_ex[hl] = da.coords[hl].to_dict()['data']
-            except Exception as e:
-                print(e)
-                nc = netCDF4.Dataset(servi['url'])
-                dims = nc.dimensions.keys()
-                for dim in dims:
-                    if dim in nc.variables:
-                        if dim != 'lat' and dim != 'lon':
-                            if 'time' not in dim:
-                                h = nc.variables[dim]
-                                hs = pd.Series(h[:])
-                                file_attr_ex[dim] = hs.to_list()
-
-            print(file_attr_ex)
-
-            thredds_one = Thredds(server_type=servi['type'],
-                                  title=servi['title'],
-                                  url=servi['url'],
-                                  url_wms=servi['url_wms'],
-                                  url_subset=servi['url_subset'],
-                                  epsg=servi['epsg'],
-                                  # spatial = json.dumps(servi['spatial']),
-                                  spatial=json.dumps({}),
-                                  description=servi['description'],
-                                  timestamp=servi['timestamp'],
-                                  metadata_td_file=json.dumps(file_tempt_dict),
-                                  extra_coordinate=json.dumps(file_attr_ex))
-
-            ## Attributes addition and metadata ##
-            for key in servi['attributes']:
-                variable_tempt_dict = {}
-                try:
-                    for metadata_string in ds[key].__dict__:
-                        variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
-                except Exception as e:
-                    print(e)
-                # variable_metadata [key] = variable_tempt_dict
-
-                variable_one = Variables(name=key, dimensions=servi['attributes'][key]['dimensions'],
-                                         units=servi['attributes'][key]['units'],
-                                         color=servi['attributes'][key]['color'],
-                                         metadata_variable=json.dumps(variable_tempt_dict))
-
-                thredds_one.attributes.append(variable_one)
-
-            group_thredds.thredds_server.append(thredds_one)
-            single_obj = servi
-            single_obj['metadata_file'] = json.dumps(file_tempt_dict)
-            services_array.append(single_obj)
-
-        session.add(group_thredds)
-        session.commit()
-        session.close()
-        group_obj['services'] = services_array
-        '''
     group_obj['services'] = "this group"
     return JsonResponse(group_obj)
 
@@ -363,7 +246,6 @@ def load_group(request):
 
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
 
-    # print(SessionMaker)
     session = SessionMaker()  # Initiate a session
     thredds_in_group = session.query(Groups).filter(Groups.name == specific_group)[0].thredds_server
     td_list = []
@@ -389,7 +271,6 @@ def load_group(request):
             temp_var_td['units'] = attribute_single.units
             temp_var_td['color'] = attribute_single.color
             temp_var_td['metadata_var'] = attribute_single.metadata_variable
-            # print(temp_var_td)
             layer_obj["attributes"].append(temp_var_td)
         td_list.append(layer_obj)
 
@@ -400,15 +281,12 @@ def load_group(request):
 
 def get_groups_list(request):
     list_catalog = {}
-    # print("get_groups_list controllers.py FUNCTION inside")
     print(Persistent_Store_Name)
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     print('Session Maker:')
     print(SessionMaker)
-    # print(SessionMaker)
     session = SessionMaker()  # Initiate a session
 
-    # Query DB for hydroservers
     thredds_groups = session.query(Groups).all()
 
     thredds_groups_list = []
@@ -424,9 +302,7 @@ def get_groups_list(request):
     return JsonResponse(list_catalog)
 
 
-######*****************************************************************************************################
-############################## DELETE A GROUP OF HYDROSERVERS #############################
-######*****************************************************************************************################
+# DELETE A GROUP OF HYDROSERVERS
 def delete_groups(request):
     list_catalog = {}
     list_groups = {}
@@ -437,16 +313,12 @@ def delete_groups(request):
         SessionMaker = app.get_persistent_store_database(
             Persistent_Store_Name, as_sessionmaker=True)
         session = SessionMaker()
-        # print(request.POST)
         if request.is_ajax() and request.method == 'POST':
             groups = request.POST.getlist('groups[]')
             list_groups['groups'] = groups
             list_response['groups'] = groups
-            # print(groups)
             i = 0
             arrayTitles = []
-            # for group in session.query(Groups).all():
-            #     print(group.title)
             level_response = {}
             for group in groups:
                 level_response[group] = {}
@@ -455,7 +327,7 @@ def delete_groups(request):
                 for single_thredds in thredds_group:
                     title = single_thredds.title
                     arrayTitles.append(title)
-                    i_string = str(i);
+                    i_string = str(i)
                     list_catalog[i_string] = title
                     level_response[group][title] = []
 
@@ -473,46 +345,3 @@ def delete_groups(request):
             list_response['levels'] = level_response
 
     return JsonResponse(list_response)
-
-# def add_thredd(request):
-#     group_obj={}
-#     group_obj['reponse'] = 'failed'
-#
-#     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
-#     session = SessionMaker()  # Initiate a session
-#     if request.is_ajax() and request.method == 'POST':
-#         # print(request.POST)
-#         groups_info = json.loads(request.POST["data"])
-#         print(groups_info)
-#         description = groups_info['description']
-#         title = groups_info['title']
-#         services = groups_info['attributes']
-#         group_obj['title']= title
-#         group_obj['description']= description
-#         group_thredds = Groups(title=title, description=description)
-#
-#         # hydroservers_group = session.query(Groups).filter(Groups.title == group)[0]
-#         for servi in services:
-#             thredds_one = Thredds(server_type=servi['title'],
-#                              title=servi['url'],
-#                              url = servi['description'],
-#                              epsg=servi['epsg'],
-#                              spatial = servi['spatial'],
-#                              description = servi['description'],
-#                              attributes = servi['attributes'],
-#                              timestamp = servi['timestamp'])
-#             for key in servi['attributes']:
-#                 variable_one = Variables(name= key,dimensions =servi['attributes'][key]['dimensions'],
-#                                     units = servi['attributes'][key]['units'],color = servi['attributes'][key]['color'])
-#
-#                 thredds_one.attributes.append(variable_one)
-#
-#             group_thredds.thredds_servers.append(thredds_one)
-#
-#
-#         session.add(group_thredds)
-#         session.commit()
-#         session.close()
-#         group_obj['reponse'] = 'success'
-#
-#     return JsonResponse(group_obj)
