@@ -356,13 +356,15 @@ def organize_array(attribute_array, behavior_type, label_type):
 #    geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
     print(attribute_array['spatial'])
     original_filepath = print_geojson_to_file(attribute_array['spatial'])
+    print('bounds:')
+    print(attribute_array['attributes']['bounds'])
     geojson_path = shift_shape_bounds(attribute_array['attributes']['bounds'], original_filepath)
     dim_order = tuple(attribute_array['attributes']['dimensions'])
     stats_value = 'mean'
     timeseries = get_timeseries_at_geojson([access_urls['OPENDAP']], variable, dim_order, geojson_path, behavior_type,
                                            label_type, stats_value, attribute_array['type_request'],
                                            attribute_array['extra_dim'], attribute_array['username'],
-                                           attribute_array['password'], attribute_array['attributes']['bounds'])
+                                           attribute_array['password'])
     data = {variable: timeseries}
     os.remove(geojson_path)
     os.remove(original_filepath)

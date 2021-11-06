@@ -14,36 +14,36 @@ def print_geojson_to_file(geojson_geometry):
 def check_lat_lon_within(geo_bounds, bounds):
     bounds_keys = list(bounds.keys())
     print('checking lat')
-    if geo_bounds['lat']['min'] <= bounds[bounds_keys[0]]['min'] and geo_bounds['lat']['max'] \
-            <= bounds[bounds_keys[0]]['min']:
+    if geo_bounds['lat']['min'] <= bounds[bounds_keys[1]]['min'] and geo_bounds['lat']['max'] \
+            <= bounds[bounds_keys[1]]['min']:
         print('geojson is below of the data without overlap')
         lat = 1
-    elif geo_bounds['lat']['max'] >= bounds[bounds_keys[0]]['max'] and geo_bounds['lat']['min'] >= \
-            bounds[bounds_keys[0]]['max']:
+    elif geo_bounds['lat']['max'] >= bounds[bounds_keys[1]]['max'] and geo_bounds['lat']['min'] >= \
+            bounds[bounds_keys[1]]['max']:
         print('geojson is above of the data without overlap')
         lat = 2
-    elif geo_bounds['lat']['min'] <= bounds[bounds_keys[0]]['min'] <= geo_bounds['lat']['max']:
+    elif geo_bounds['lat']['min'] <= bounds[bounds_keys[1]]['min'] <= geo_bounds['lat']['max']:
         print('geojson is below of the data with overlap')
         lat = 3
-    elif geo_bounds['lat']['max'] >= bounds[bounds_keys[0]]['max'] >= geo_bounds['lat']['min']:
+    elif geo_bounds['lat']['max'] >= bounds[bounds_keys[1]]['max'] >= geo_bounds['lat']['min']:
         print('geojson is above of the data with overlap')
         lat = 4
     else:
         print('geojson is within the data')
         lat = 5
     print('checking lon')
-    if geo_bounds['lon']['min'] <= bounds[bounds_keys[1]]['min'] and geo_bounds['lon']['max'] \
-            <= bounds[bounds_keys[1]]['min']:
+    if geo_bounds['lon']['min'] <= bounds[bounds_keys[0]]['min'] and geo_bounds['lon']['max'] \
+            <= bounds[bounds_keys[0]]['min']:
         print('geojson is left of the data without overlap')
         lon = 1
-    elif geo_bounds['lon']['max'] >= bounds[bounds_keys[1]]['max'] and geo_bounds['lon']['min'] >= \
-            bounds[bounds_keys[1]]['max']:
+    elif geo_bounds['lon']['max'] >= bounds[bounds_keys[0]]['max'] and geo_bounds['lon']['min'] >= \
+            bounds[bounds_keys[0]]['max']:
         print('geojson is right of the data without overlap')
         lon = 2
-    elif geo_bounds['lon']['min'] <= bounds[bounds_keys[1]]['min'] <= geo_bounds['lon']['max']:
+    elif geo_bounds['lon']['min'] <= bounds[bounds_keys[0]]['min'] <= geo_bounds['lon']['max']:
         print('geojson is left of the data with overlap')
         lon = 3
-    elif geo_bounds['lon']['max'] >= bounds[bounds_keys[1]]['max'] >= geo_bounds['lon']['min']:
+    elif geo_bounds['lon']['max'] >= bounds[bounds_keys[0]]['max'] >= geo_bounds['lon']['min']:
         print('geojson is right of the data with overlap')
         lon = 4
     else:
@@ -132,9 +132,14 @@ def format_datetime(dt):
 
 
 def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type,
-                              label_type, stats, type_ask, extra_dim, username, password, bounds):
+                              label_type, stats, type_ask, extra_dim, username, password):
     timeseries_array = {}
     if not password:
+        print('grids inputs')
+        print(files)
+        print(var)
+        print(dim_order)
+        #dim_order = ('time', 'level', 'lat', 'lon')
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     else:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
@@ -145,12 +150,15 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         print(type_ask)
         if type_ask == 'marker':
             try:
+                print(geojson_geometry.geometry[0].bounds[1])
+                print(geojson_geometry.geometry[0].bounds[2])
                 timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
                                                 geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
             except Exception as e:
                 timeseries_array['error'] = str(e)
+                print('is it this exception')
                 print(e)
                 return timeseries_array
         if type_ask == "rectangle":

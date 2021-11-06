@@ -885,9 +885,10 @@ var addSingleThreddsServer = function () {
       success: function (data) {
         try {
           if (data.hasOwnProperty("error")) {
+            console.log(data["error"])
             $.notify(
                 {
-                  message: `There is Already a Thredds File With This Name In The Group ${current_Group}`
+                  message: data["error"]//`There is Already a Thredds File With This Name In The Group ${current_Group}`
                 },
                 {
                   type: "info",

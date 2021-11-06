@@ -129,6 +129,8 @@ def add_tdds(request):
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
     tdds_info = json.loads(request.POST["data"])
+    lon_list = ['lon', 'longitude', 'x', 'degrees east', 'degrees west']
+    lat_list = ['lat', 'latitude', 'y', 'degrees north', 'degrees south']
 
     if request.is_ajax() and request.method == 'POST':
 
@@ -143,7 +145,6 @@ def add_tdds(request):
         file_tempt_dict = {}
 
         try:
-            print(tdds_info['url'])
             ds = netCDF4.Dataset(tdds_info['url'])
 
         except Exception as e:
@@ -157,27 +158,30 @@ def add_tdds(request):
             print(e)
 
         file_attr_ex = {}
-        print('here is the url:')
-        print(tdds_info['url'])
         try:
             dims = ds.dimensions.keys()
             for dim in dims:
                 if dim in ds.variables:
-                    if dim != 'lat' and dim != 'lon':
-                        if 'time' not in dim:
-                            h = ds.variables[dim]
-                            hs = pd.Series(h[:])
-                            file_attr_ex[dim] = hs.to_list()
+                    if dim not in lat_list:
+                        if dim not in lon_list:
+                            if 'time' not in dim:
+                                h = ds.variables[dim]
+                                hs = pd.Series(h[:])
+                                file_attr_ex[dim] = hs.to_list()
+                else:
+                    print('this is the else')
+                    print(group_obj)
+                    group_obj['error'] = 'Make sure each dimension has an associated variable'
+                    return JsonResponse(group_obj)
+
         except Exception as e:
             print(e)
             da = xarray.open_dataset(tdds_info['url'].strip(), chunks={"time": '100MB'})
             attr_dims = da.coords.keys()
-            print(attr_dims)
             for hl in attr_dims:
                 if hl != 'lat' and hl != 'lon':
                     if 'time' not in hl:
                         file_attr_ex[hl] = da.coords[hl].to_dict()['data']
-        print(file_attr_ex)
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
                               url=tdds_info['url'],
@@ -194,7 +198,6 @@ def add_tdds(request):
 
         ## Attributes addition and metadata ##
         for key in tdds_info['attributes']:
-            print(tdds_info['attributes'][key]['dimensions'])
             variable_tempt_dict = {}
             try:
                 for metadata_string in ds[key].__dict__:
@@ -203,8 +206,6 @@ def add_tdds(request):
                 print(e)
             # variable_metadata [key] = variable_tempt_dict
             try:
-                lon_list = ['lon', 'longitude', 'x', 'degrees east', 'degrees west']
-                lat_list = ['lat', 'latitude', 'y', 'degrees north', 'degrees south']
                 longitude_dim = False
                 latitude_dim = False
                 for dim in tdds_info['attributes'][key]['dimensions']:
@@ -215,16 +216,10 @@ def add_tdds(request):
                 if not longitude_dim and not latitude_dim:
                     longitude_dim = tdds_info['attributes'][key]['dimensions'][-2]
                     latitude_dim = tdds_info['attributes'][key]['dimensions'][-1]
-
-                print('first one')
-                print(ds.variables[longitude_dim])
-                print('second one')
-                print(ds.variables[longitude_dim][:])
-                print('end')
-                bounds = {latitude_dim: {
-                    'max': max(dds.variables[longitude_dim][:]).astype(float),
-                    'min': min(ds.variables[longitude_dim][:]).astype(loat)},
-                    longitude_dim: {
+                bounds = {longitude_dim: {
+                    'max': max(ds.variables[longitude_dim][:]).astype(float),
+                    'min': min(ds.variables[longitude_dim][:]).astype(float)},
+                    latitude_dim: {
                     'max': max(ds.variables[latitude_dim][:]).astype(float),
                     'min': min(ds.variables[latitude_dim][:]).astype(float)}}
                 print(bounds)
