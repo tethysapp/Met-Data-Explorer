@@ -1068,8 +1068,6 @@ var getFullArray = function () {
           let data = result['result'];
           console.log(data)
           let timeseries = {};
-          let htmlVariables = '';
-          let i = 1;
           for (let key in data) {
             if (data[key].hasOwnProperty('error')) {
               $.notify(

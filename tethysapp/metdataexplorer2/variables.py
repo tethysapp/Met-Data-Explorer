@@ -255,12 +255,8 @@ def get_full_array(request):
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
 #    epsg_offset = request.GET.get('epsg_offset')
-#    print("offset", epsg_offset)
-    print(extra_dim)
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group). \
         filter(Thredds.title == actual_tdds).first()
-
-    print(tdds_group)
 
     attribute_array['title'] = tdds_group.title
     attribute_array['description'] = tdds_group.description
@@ -289,12 +285,16 @@ def get_full_array(request):
         attribute_array['password'] = authentication['pswd']
 
     if extra_dim != '':
-        attribute_array['extra_dim'] = int(extra_dim)
+        try:
+            attribute_array['extra_dim'] = int(extra_dim)
+        except Exception as e:
+            print(e)
+            data = {'error': {'error': 'Please select a value for the extra dimension'}}
+            return JsonResponse({'result': data})
     else:
         attribute_array['extra_dim'] = extra_dim
     try:
         attribute_array['spatial'] = json.loads(input_spatial)
-        # print(attribute_array['spatial'])
     except Exception as e:
         print(e)
         attribute_array['spatial'] = input_spatial
