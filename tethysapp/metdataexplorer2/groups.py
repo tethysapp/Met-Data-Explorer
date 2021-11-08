@@ -1,6 +1,5 @@
 import json
 import logging
-
 import netCDF4
 import pandas as pd
 import requests

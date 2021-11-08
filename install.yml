@@ -12,7 +12,7 @@ requirements:
     packages:
       - requests
       - siphon
-      - netcdf4
+      - netCDF4
       - numpy
       - geopandas
       - pandas
@@ -21,8 +21,6 @@ requirements:
       - pygrib
       - cfgrib
       - lxml
-      - setuptools
-      - shapely
   pip:
       - grids
 post:
