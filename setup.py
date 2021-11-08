@@ -16,12 +16,12 @@ resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces'
 
 setup(
     name=release_package,
-    version='1.3.0',
+    version='1.3.1',
     description='',
     long_description='',
     keywords='',
-    author='Elkin Giovanni Romero Bustamante',
-    author_email='gio.busrom@gmail.com',
+    author='Enoch Jones',
+    author_email='jon.enoch.jones@gmail.com',
     url='',
     license='',
     packages=find_namespace_packages(),
