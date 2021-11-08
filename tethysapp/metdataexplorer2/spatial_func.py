@@ -94,7 +94,7 @@ def shift_shape_bounds(bounds, filepath):
         new_shp = {}
         if shape.type == 'Point':
             lonlat = find_shift(shape.coords[0], case)
-            new_shp = geojson.Point (tuple((lonlat[0], lonlat[1])))
+            new_shp = geojson.Point(tuple((lonlat[0], lonlat[1])))
         elif shape.type == 'Polygon':
             new_coords = []
             for coord in shape.exterior.coords:
@@ -115,7 +115,7 @@ def shift_shape_bounds(bounds, filepath):
                 multipolygons.append(poly)
             new_shp = geojson.MultiPolygon([multipolygons])
         new_feature = geojson.Feature(properties={'iterate': 'this needs to change'},
-                                      geometry=new_shp)  # geojson_geometry['STATE'][x]
+                                      geometry=new_shp)
         new_geom.append(new_feature)
         x += 1
     new_fc = geojson.FeatureCollection(crs=str(geojson_geometry.crs), features=new_geom)
@@ -139,7 +139,6 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         print(files)
         print(var)
         print(dim_order)
-        #dim_order = ('time', 'level', 'lat', 'lon')
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     else:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)

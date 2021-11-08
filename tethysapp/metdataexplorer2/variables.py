@@ -112,7 +112,6 @@ def add_vars(request):
     tdds_info = json.loads(request.POST.get("attributes"))
     actual_tdds = request.POST.get("current_tdds")
     actual_group = request.POST.get("current_group")
-    unique_vars = []
     if request.is_ajax() and request.method == 'POST':
 
         # File Metadata
