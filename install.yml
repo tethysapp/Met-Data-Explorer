@@ -12,14 +12,14 @@ requirements:
     packages:
       - requests
       - siphon
-      - netcdf4
+      - netCDF4
       - numpy
       - geopandas
       - pandas
       - geojson
       - xarray
-      #- pygrib
-      #- cfgrib
+      - pygrib
+      - cfgrib
       - setuptools
   pip:
       - grids
