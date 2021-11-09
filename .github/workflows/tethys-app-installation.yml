@@ -2,7 +2,7 @@ name: tethys-app-installation
 
 on:
   release:
-    types: [published]
+    types: published
 
 jobs:
   app-lint:
