@@ -1,6 +1,8 @@
 name: tethys-app-installation
 
-on: [release]
+on:
+  release:
+    type: [created]
 
 jobs:
   app-lint:
