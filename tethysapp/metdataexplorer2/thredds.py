@@ -132,6 +132,7 @@ def add_tdds(request):
         try:
             dims = ds.dimensions.keys()
             for dim in dims:
+                print(dim)
                 if dim in ds.variables:
                     if dim not in lat_list:
                         if dim not in lon_list:
@@ -140,10 +141,10 @@ def add_tdds(request):
                                 hs = pd.Series(h[:])
                                 file_attr_ex[dim] = hs.to_list()
                 else:
-                    print('this is the else')
-                    print(group_obj)
-                    group_obj['error'] = 'Make sure each dimension has an associated variable'
-                    return JsonResponse(group_obj)
+                    print('This dimension does not have an associated variable: ' + dim)
+                    #print(group_obj)
+                    #group_obj['error'] = 'Make sure each dimension has an associated variable'
+                    #return JsonResponse(group_obj)
 
         except Exception as e:
             print(e)
