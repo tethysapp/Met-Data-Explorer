@@ -18,9 +18,8 @@ requirements:
       - pandas
       - geojson
       - xarray
-      - pygrib
-      - cfgrib
-      - lxml
+      #- pygrib
+      #- cfgrib
       - setuptools
   pip:
       - grids

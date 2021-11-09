@@ -171,35 +171,71 @@ var getThreddsBounds = function () {
   polygonDrawer.enable();
 }
 
-var data_layer = function (layernameUI, wmsURL, layer, range, style) {
-  let wmsURL2;
-  try {
+/*
     //if (wmsURL.indexOf("http://") != -1) {
-    console.log("Changing to proxy URL");
-    wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
     //}
     //else{
     //  wmsURL2 = wmsURL;
     //}
     console.log('staring to get images');
+    //const wmsLayer = L.tileLayer.wms(wmsURL2, {
+    //  layers: layer,
+    //  dimension: 'time',
+    //  useCache: true,
+    //  crossOrigin: false,
+    //  format: 'image/png',
+    //  transparent: true,
+    //  BGCOLOR: '0x000000',
+    //  styles: style,
+    //  colorscalerange: range,
+    //});
+ */
+
+/*
+var data_layer = function (layernameUI, wmsURL, layer, range, style) {
+  let wmsURL2;
+  try {
+    wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
+    wmsLayerTime = L.timeDimension.layer.wms(wmsURL2, {
+      name: `${layernameUI}_check`,
+      cacheForward: 200,
+      updateTimeDimension: true,
+      updateTimeDimensionMode: 'replace',
+      requestTimefromCapabilities: false,
+      proxy: URL_threddsProxy,
+
+    });
+    console.log('marker2');
+    layers_dict[`${layernameUI}_check`] = wmsLayerTime
+    console.log('marker3');
+    return wmsLayerTime.addTo(mapObj);
+  } catch (err) {
+    console.log(err);
+  }
+}
+ */
+
+var data_layer = function (layernameUI, wmsURL, layer, range, style) {
+  let wmsURL2;
+  try {
+    wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
     const wmsLayer = L.tileLayer.wms(wmsURL2, {
       layers: layer,
       dimension: 'time',
-      useCache: true,
-      crossOrigin: false,
+      useCache: false,
+      crossOrigin: true,
       format: 'image/png',
       transparent: true,
       BGCOLOR: '0x000000',
       styles: style,
       colorscalerange: range,
     });
-    console.log('marker1');
     wmsLayerTime = L.timeDimension.layer.wms(wmsLayer, {
       name: `${layernameUI}_check`,
-      requestTimefromCapabilities: true,
+      cacheForward: 200,
       updateTimeDimension: true,
       updateTimeDimensionMode: 'replace',
-      cache: 20,
+      requestTimefromCapabilities: false,
     });
     console.log('marker2');
     layers_dict[`${layernameUI}_check`] = wmsLayerTime
