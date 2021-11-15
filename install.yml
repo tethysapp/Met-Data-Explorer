@@ -12,7 +12,7 @@ requirements:
     packages:
       - requests
       - siphon
-      - netCDF4
+      - netcdf4
       - numpy
       - geopandas
       - pandas
