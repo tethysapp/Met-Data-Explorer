@@ -142,9 +142,6 @@ def add_tdds(request):
                                 file_attr_ex[dim] = hs.to_list()
                 else:
                     print('This dimension does not have an associated variable: ' + dim)
-                    #print(group_obj)
-                    #group_obj['error'] = 'Make sure each dimension has an associated variable'
-                    #return JsonResponse(group_obj)
 
         except Exception as e:
             print(e)

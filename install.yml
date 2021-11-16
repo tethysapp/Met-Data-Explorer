@@ -17,10 +17,6 @@ requirements:
       - requests
       - setuptools
       - netcdf4
-#      - siphon
-#      - numpy
-#      - pygrib
-#      - cfgrib
   pip:
       - grids
 post:
