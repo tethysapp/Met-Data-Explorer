@@ -10,17 +10,17 @@ requirements:
     channels:
       - conda-forge
     packages:
-      - requests
-      - siphon
-      - netcdf4
-      - numpy
-      - geopandas
       - pandas
+      - geopandas
       - geojson
       - xarray
-      - pygrib
-      - cfgrib
+      - requests
       - setuptools
+      - netcdf4
+#      - siphon
+#      - numpy
+#      - pygrib
+#      - cfgrib
   pip:
       - grids
 post:

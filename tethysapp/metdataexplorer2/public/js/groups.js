@@ -1094,7 +1094,7 @@ var make_varaibles_appear = function () {
 }
 
 var updateFilepath = function () {
-  // $("#loading-modal").modal("show");
+  $('#loading-add-var').removeClass("hidden");
   if ($(this).attr("class") == "folder") {
     let newURL = $(this).attr("data-url");
     $("#url").val(newURL);
@@ -1121,7 +1121,7 @@ var updateFilepath = function () {
     $("#groups_variables_div").show();
 
     // $('#loading-folders').addClass("hidden");
-
+    $('#loading-add-var').addClass("hidden");
     $('#modalFilesStruct').modal('hide');
 
   }
