@@ -117,7 +117,6 @@ def add_tdds(request):
 
         try:
             ds = netCDF4.Dataset(tdds_info['url'])
-
         except Exception as e:
             print(e)
 
@@ -194,9 +193,21 @@ def add_tdds(request):
             except Exception as e:
                 print(e)
 
+            print(key)
+            print('this is the variable:')
+            print(max(ds.variables[key][:]).astype(float))
+            print(min(ds.variables[key][:]).astype(float))
+            #print(ds.variables[key][:])
+            #max = ds.variables[key][:].max().values
+            #min = ds.variables[key][:].min().values
+            #range_string = f'{min},{max}'
+            #print('range string:')
+            #print(range_string)
+
             variable_one = Variables(name=key, dimensions=tdds_info['attributes'][key]['dimensions'],
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
+                                     #range=range_string,
                                      metadata_variable=json.dumps(variable_tempt_dict),
                                      bounds=bounds)
 

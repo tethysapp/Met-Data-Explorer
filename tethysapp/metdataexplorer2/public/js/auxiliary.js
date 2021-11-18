@@ -146,24 +146,7 @@ var uploadShapefile = function () {
         console.log(geoJsonObject['features']);
         console.log(attr_shp);
         if (attr_shp.length == 0) {
-          $.notify(
-              {
-                message: `Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.`
-              },
-              {
-                type: "info",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_info('Please, upload a different shapefile that contains at least a common property in all the features of the shapefile');
         }
         // else{
         input_spatial = filename
@@ -199,47 +182,12 @@ var uploadShapefile = function () {
 
       } catch (e) {
         console.log(e);
-        $.notify(
-            {
-              message: `There was problem updating the shapefile`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('There was problem updating the shapefile');
       }
-
     },
     error: function (error) {
       console.log(error);
-      $.notify(
-          {
-            message: `There was problem updating the shapefile`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('There was problem updating the shapefile');
     }
   });
 }
@@ -263,24 +211,7 @@ var reset_keywords = function () {
 
     });
   } catch (error) {
-    $.notify(
-        {
-          message: `There is a problem reseting the fitler`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There is a problem reseting the fitler');
   }
 }
 
@@ -342,26 +273,8 @@ var general_search = function (id_search_input, id_table) {
       }
     }
   } catch (error) {
-    $.notify(
-        {
-          message: `We are having a problem trying doing the search `
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There was a problem preforming the search');
   }
-
 }
 
 // for only one group
@@ -752,19 +665,8 @@ var initialize_graphs = function (xArray, yArray, title_graph, xTitle, yTitle, l
 
 
   } catch (e) {
-    $.notify(
-        {
-          message: `Unable to initialize the graphs`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000
-        }
-    )
+    notify_user_danger('Unable to initialize the graphs');
   }
-
 }
 
 var html_for_servers = function (isAdmin, title, group_name, url_opendap, url_wms, url_subset, isNew) {

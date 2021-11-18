@@ -76,6 +76,69 @@ var GROUPS_PACKAGE = (function () {
 
 })()
 
+var notify_user_danger = function(message) {
+  $.notify(
+    {
+      message: message,
+    },
+    {
+      type: "danger",
+      allow_dismiss: true,
+      z_index: 20000,
+      delay: 5000,
+      animate: {
+        enter: 'animated fadeInRight',
+        exit: 'animated fadeOutRight'
+      },
+      onShow: function () {
+        this.css({'width': 'auto', 'height': 'auto'});
+      }
+    }
+  )
+}
+
+var notify_user_info = function(message) {
+  $.notify(
+    {
+      message: message,
+    },
+    {
+      type: "info",
+      allow_dismiss: true,
+      z_index: 20000,
+      delay: 5000,
+      animate: {
+        enter: 'animated fadeInRight',
+        exit: 'animated fadeOutRight'
+      },
+      onShow: function () {
+        this.css({'width': 'auto', 'height': 'auto'});
+      }
+    }
+  )
+}
+
+var notify_user_success = function(message) {
+  $.notify(
+    {
+      message: message,
+    },
+    {
+      type: "success",
+      allow_dismiss: true,
+      z_index: 20000,
+      delay: 5000,
+      animate: {
+        enter: 'animated fadeInRight',
+        exit: 'animated fadeOutRight'
+      },
+      onShow: function () {
+        this.css({'width': 'auto', 'height': 'auto'});
+      }
+    }
+  )
+}
+
 var apply_var_filter = function () {
   try {
     let elementForm = $("#modalVariablesFilter");
@@ -145,67 +208,16 @@ var apply_var_filter = function () {
           $("#btn-r-reset").show()
         } catch (e) {
           console.log(e);
-          $.notify(
-              {
-                message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('There was an error trying to retrieve the different Thredds files associated to the variables selected');
         }
 
       },
       error: function (error) {
-        $.notify(
-            {
-              message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('There was an error trying to retrieve the different Thredds files associated to the variables selected');
       }
     })
   } catch (e) {
-    $.notify(
-        {
-          message: `There was an error trying to retrieve the different Thredds files associated to the variables selected`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There was an error trying to retrieve the different Thredds files associated to the variables selected');
   }
 }
 
@@ -230,34 +242,13 @@ var give_all_variables = function () {
         HSTableHtml += "</tbody></table>"
         $("#modalVariablesFilter").find("#groups_variables").html(HSTableHtml);
       } catch (e) {
-        $.notify(
-            {
-              message: `There was an error trying to retrieve the different countries contained by the web services in the app`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('There was an error trying to retrieve the different countries contained by the web services in the app');
       }
-
-
     }
   })
-
 }
 
 var remove_var_from_table = function () {
-  var selected = [];
   $('#added_thredds_files_table_body input:checked').each(function () {
     let index_value = $(this).attr('value');
     let index = add_services_list.findIndex(serv => serv.title == index_value);
@@ -323,115 +314,23 @@ var delete_group_of_hydroservers = function () {
               })
 
             });
-
-            $.notify(
-                {
-                  message: `Successfully Deleted Group!`
-                },
-                {
-                  type: "success",
-                  allow_dismiss: true,
-                  z_index: 20000,
-                  delay: 5000,
-                  animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                  },
-                  onShow: function () {
-                    this.css({'width': 'auto', 'height': 'auto'});
-                  }
-                }
-            )
+            notify_user_success('Successfully Deleted Group!');
           } catch (e) {
             console.log(e);
-            $.notify(
-                {
-                  message: `We are having an error deleting the selected groups of views`
-                },
-                {
-                  type: "danger",
-                  allow_dismiss: true,
-                  z_index: 20000,
-                  delay: 5000,
-                  animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                  },
-                  onShow: function () {
-                    this.css({'width': 'auto', 'height': 'auto'});
-                  }
-                }
-            )
+            notify_user_danger('We are having an error deleting the selected groups of views');
           }
-
-
         },
         error: function (error) {
           console.log(error);
-          $.notify(
-              {
-                message: `We are having an error deleting the selected groups of views`
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('We are having an error deleting the selected groups of views');
         }
-
-
       })
     } else {
-      $.notify(
-          {
-            message: `You need to select at least one group to delete`
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
-
+      notify_user_info('You need to select at least one group to delete');
     }
 
   } catch (err) {
-    $.notify(
-        {
-          message: `We are having problems tryingto recognize the actual group`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
-
+    notify_user_danger('We are having problems trying to recognize the actual group');
   }
 }
 
@@ -470,26 +369,8 @@ var make_list_groups = function () {
       $("#modalDeleteGroups").find(".modal-body").html(HSTableHtml);
     }
   } catch (error) {
-    $.notify(
-        {
-          message: `We are having an error trying to make the list of groups in the application`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('We are having an error trying to make the list of groups in the application');
   }
-
 }
 
 var load_groups_start = function () {
@@ -550,103 +431,29 @@ var load_groups_start = function () {
         $("#GeneralLoading").addClass("hidden");
 
         console.log(e);
-
-        $.notify(
-            {
-              message: `There was an error while loading the Groups`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('There was an error while loading the Groups');
       }
-
-
     },
     error: function (error) {
       $("#GeneralLoading").addClass("hidden");
-
       console.log(error);
-      $.notify(
-          {
-            message: `There was an error while loading the Groups`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('There was an error while loading the Groups');
     }
-
   })
-
 }
 
 var addServiceToTable = function () {
   try {
     //CHECK IF WE HAVE A SERVICE WITH THAT NAME ALREADY//
     if (check_for_same_names("Thredds", $("#addService-title").val()) == true) {
-      $.notify(
-          {
-            message: "There is already a Thredds file added with that name, Please Provide other name"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('There is already a Thredds file added with that name, Please Provide a different name');
       return false
     }
 
 
     //CHECKS IF THE INPUT IS EMPTY ///
     if ($("#addService-title").val() == "") {
-      $.notify(
-          {
-            message: "Please enter a title. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Check check! Please enter a title. This field cannot be blank.');
       return false
     }
 
@@ -655,111 +462,22 @@ var addServiceToTable = function () {
       var specials = /[*|\":<>[\]{}`\\()';@&$]/;
       var title = $("#addService-title").val()
       if (specials.test(title)) {
-        $.notify(
-            {
-              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
-            },
-            {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_info("The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]");
         return false
       }
     }
 
     //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
     if ($("#addService-description").val() == "") {
-      $.notify(
-          {
-            message: "Please enter a description for this group. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please enter a description for this group. This field cannot be blank.');
       return false
     }
-    // if($("#epsg-input").val() == ""){
-    //   $.notify(
-    //       {
-    //         message: "Please enter a EPSG Code."
-    //       },
-    //       {
-    //           type: "info",
-    //           allow_dismiss: true,
-    //           z_index: 20000,
-    //           delay: 5000,
-    //           animate: {
-    //             enter: 'animated fadeInRight',
-    //             exit: 'animated fadeOutRight'
-    //           },
-    //           onShow: function() {
-    //               this.css({'width':'auto','height':'auto'});
-    //           }
-    //       }
-    //   )
-    //   return false
-    // }
     if ($("#table_wrapper").is(':hidden')) {
-      $.notify(
-          {
-            message: "Please Provide a THREDDS Endpoint"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please Provide a THREDDS Endpoint');
       return false
     }
     if ($("#attributes_table").is(':hidden')) {
-      $.notify(
-          {
-            message: "Please Select a THREDDS File from the given file/folder structure"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please Select a THREDDS File from the given file/folder structure');
       return false
     }
     var url = $('#url').val();
@@ -810,31 +528,10 @@ var addServiceToTable = function () {
       }
     })
     if (variables_list.length <= 0) {
-      $.notify(
-          {
-            message: "Please select at least one variable."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please select at least one variable.');
       return false
     }
-
-
-    // var group = $("#addGroup-title").val();
-    var groupID = 'user-group-container';
-
+    //var groupID = 'user-group-container';
     if ($('#epsg-input').val() == '') {
       var epsg = false;
     } else {
@@ -927,34 +624,15 @@ var addServiceToTable = function () {
       // $(".selectpicker").selectpicker("show");
 
     })
-
     $("#modalAddServices").modal("hide");
     $('#modalAddServiceForm')[0].reset();
     $("#attributes").empty();
     $("#groups_variables_div").hide();
     $("#vars_search").removeClass("hidden");
     // $(html).appendTo("#attributes_dims");
-
   } catch (error) {
     console.log(error);
-    $.notify(
-        {
-          message: `There was an error while adding the THREDDS file and its variables to the Group.`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There was an error while adding the THREDDS file and its variables to the Group.');
   }
 }
 
@@ -1010,24 +688,7 @@ var addCredential = function () {
     pswd: $('#new-auth-pswd').val(),
   };
   if (data['machine'] == '' || data['user'] == '' || data['pswd'] == '') {
-    $.notify(
-        {
-          message: "All fields are requiered."
-        },
-        {
-          type: "info",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_info('All fields are required.');
   } else {
     $.ajax({
       type: "GET",
@@ -1094,8 +755,8 @@ var make_varaibles_appear = function () {
 }
 
 var updateFilepath = function () {
-  $('#loading-add-var').removeClass("hidden");
   if ($(this).attr("class") == "folder") {
+    $('#loading-folders').removeClass("hidden");
     let newURL = $(this).attr("data-url");
     $("#url").val(newURL);
     getFoldersAndFiles();
@@ -1120,8 +781,7 @@ var updateFilepath = function () {
     addFileMetadata(variablesAndFileMetadata[1]);
     $("#groups_variables_div").show();
 
-    // $('#loading-folders').addClass("hidden");
-    $('#loading-add-var').addClass("hidden");
+    $('#loading-folders').addClass("hidden");
     $('#modalFilesStruct').modal('hide');
 
   }
@@ -1206,24 +866,7 @@ var getFoldersAndFiles = function () {
 
         var dataTree = result["dataTree"];
         if (dataTree == "Invalid URL") {
-          $.notify(
-              {
-                message: `Invalid THREDDS Endpoint. Be Sure to provide a Catalog URL, and not a OPENDAP Service `
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('Invalid THREDDS Endpoint. Be Sure to provide a Catalog URL, and not a OPENDAP Service');
         } else {
           $("#filetree-div").css("display", "block");
           // $("#file-info-div").css("display", "none");
@@ -1268,55 +911,22 @@ var getFoldersAndFiles = function () {
             URLpath.push(correctURL);
           }
         }
-        $('#loading-add-service').addClass("hidden");
+        $('#loading-folders').addClass("hidden");
+        //$('#loading-add-service').addClass("hidden");
         $('#modalFilesStruct').modal('show');
         $("#folders_structures").show();
 
 
       } catch (e) {
         $('#loading-add-service').addClass("hidden");
-        $.notify(
-            {
-              message: `Not able to identify the THREDDS endpoint`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('Not able to identify the THREDDS endpoint');
       }
 
     },
     error: function (error) {
       console.log(error);
       $('#loading-add-service').addClass("hidden");
-      $.notify(
-          {
-            message: `Invalid THREDDS Endpoint`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('Invalid THREDDS Endpoint');
     }
   });
 };
@@ -1327,77 +937,24 @@ var createDBArray = function () {
   try {
     if (check_for_same_names("Group", $("#addGroup-title").val()) == true) {
       $("#loading-add-group").removeClass("hidden");
-
-      $.notify(
-          {
-            message: "There is already a GRoup with that name, Please Provide other name"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('There is already a GRoup with that name, Please Provide other name');
       return false
     }
     //CHECKS IF THE INPUT IS EMPTY ///
     if ($("#addGroup-title").val() == "") {
       $("#loading-add-group").addClass("hidden");
-
-      $.notify(
-          {
-            message: "Please enter a title. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please enter a title. This field cannot be blank.');
       return false
     }
 
     if ($("#addGroup-title").val() != "") {
       $("#loading-add-group").addClass("hidden");
 
-      var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
+      //var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
       var specials = /[*|\":<>[\]{}`\\()';@&$]/;
       var title = $("#addGroup-title").val()
       if (specials.test(title)) {
-        $.notify(
-            {
-              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
-            },
-            {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_info("The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]");
         return false
       }
     }
@@ -1405,25 +962,7 @@ var createDBArray = function () {
     //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
     if ($("#addGroup-description").val() == "") {
       $("#loading-add-group").addClass("hidden");
-
-      $.notify(
-          {
-            message: "Please enter a description for this group. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_info('Please enter a description for this group. This field cannot be blank.');
       return false
     }
 
@@ -1470,53 +1009,14 @@ var createDBArray = function () {
         $(`#${new_title}_panel`).on("click", function () {
           current_Group = id_dictionary[new_title];
         });
-
-        $.notify(
-            {
-              message: `Successfully Created Group of THREDDS to the database`
-            },
-            {
-              type: "sucess",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_success('Successfully Created Group of THREDDS to the database');
         $("#modalAddGroupThredds").modal("hide");
-        // $("#rows_servs").empty();
-        // $("#available_services").hide();
-
       }
     })
   } catch (error) {
     add_services_list = [];
     $("#loading-add-group").addClass("hidden");
-
     console.log(error);
-    $.notify(
-        {
-          message: `There was an error while adding the group of THREDDS files`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There was an error while adding the group of THREDDS files');
   }
 }

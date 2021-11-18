@@ -124,26 +124,8 @@ var VARIABLES_PACKAGE = (function () {
           console.log(geoJsonObject['features']);
           console.log(attr_shp);
           if (attr_shp.length == 0) {
-            $.notify(
-                {
-                  message: `Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.`
-                },
-                {
-                  type: "info",
-                  allow_dismiss: true,
-                  z_index: 20000,
-                  delay: 5000,
-                  animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                  },
-                  onShow: function () {
-                    this.css({'width': 'auto', 'height': 'auto'});
-                  }
-                }
-            )
+            notify_user_info('Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.');
           }
-
           // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
           let feature_select = $("#features_file");
           feature_select.empty();
@@ -214,46 +196,12 @@ var get_data_bounds = function () {
     success: function (result) {
       $("#wmslayer-bounds").val(result['range']);
       $('#GeneralLoading').addClass('hidden');
-      $.notify(
-          {
-            message: `Bounds were succesfully retrieved`
-          },
-          {
-            type: "success",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_success('Bounds were succesfully retrieved');
     },
     error: function (e) {
       $('#GeneralLoading').addClass('hidden');
       console.log(e);
-      $.notify(
-          {
-            message: `There was an error retrieving the data bounds`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('An error retrieving the data bounds');
     }
   })
 }
@@ -289,26 +237,7 @@ var download_Methods = function (method_download) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    $.notify(
-        {
-          message: `Download completed for the ${$("#variables_graph").val()} variable in CSV format`
-        },
-        {
-          type: "sucess",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
-
-
+    notify_user_success(`Download completed for the ${$("#variables_graph").val()} variable in CSV format`);
   }
   if (method_download == 'JSON') {
 
@@ -323,59 +252,10 @@ var download_Methods = function (method_download) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    $.notify(
-        {
-          message: `Download completed for the ${$("#variables_graph").val()} variable in JSON format`
-        },
-        {
-          type: "sucess",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
-
+    notify_user_success(`Download completed for the ${$("#variables_graph").val()} variable in JSON format`);
   }
   if (method_download == 'xml') {
-    // console.log("xml");
-    // console.log(values_donwload_json);
-    // var dataStr = parser.parse(values_donwload_json);
-    // console.log(dataStr);
-    // var blob = new Blob([dataStr], { type: 'application/octet-stream;' });
-    // var link = document.createElement("a");
-    // var url = URL.createObjectURL(blob);
-    // link.setAttribute("href", url);
-    // link.setAttribute("download", $("#variables_graph").val() + ".json");
-    // link.style.visibility = 'hidden';
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-    $.notify(
-        {
-          message: `We are still working in these feature :)`
-          // message: `Download completed for the ${$("#variables_graph").val()} variable in XML format`
-        },
-        {
-          type: "sucess",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_success('We are still working on this feature :)');
   }
 }
 
@@ -583,24 +463,7 @@ var addVariablesToTD = function () {
     }
   })
   if (Object.keys(attr).length <= 0) {
-    $.notify(
-        {
-          message: "Please select at least one variable."
-        },
-        {
-          type: "info",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_info('Please select at least one variable');
     return false
   }
   let json_request = {
@@ -871,72 +734,21 @@ var addVariablesToTD = function () {
             $(this).parent().parent().remove();
           }
         })
-
-        $.notify(
-            {
-              message: `The Addition of Variables was Sucessful.`
-            },
-            {
-              type: "success",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_success('Successfully added the variable');
       } catch (e) {
         $("#GeneralLoading").addClass("hidden");
-        $.notify(
-            {
-              message: `There was an error while adding the variables to the Tredds file.`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('An error occurred while adding the variables to the THREDDS file');
       }
     },
     error: function (e) {
       $("#GeneralLoading").addClass("hidden");
       console.log(e);
-      $.notify(
-          {
-            message: `There was an error while adding the variables to the Tredds file.`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('An error occurred while adding the variables to the THREDDS file');
     }
   })
 }
 
+/*
 var getTimeseries = function (coord, subsetURL_tempt) {
   if (subsetURL_tempt['opendapURL'] == '') {
     console.log('Please select a data layer.');
@@ -973,6 +785,7 @@ var getTimeseries = function (coord, subsetURL_tempt) {
     });
   }
 }
+*/
 
 /*
 var getSingleTS = function () {
@@ -1070,24 +883,7 @@ var getFullArray = function () {
           let timeseries = {};
           for (let key in data) {
             if (data[key].hasOwnProperty('error')) {
-              $.notify(
-                  {
-                    message: ` ${data[key]['error']}`
-                  },
-                  {
-                    type: "info",
-                    allow_dismiss: true,
-                    z_index: 20000,
-                    delay: 5000,
-                    animate: {
-                      enter: 'animated fadeInRight',
-                      exit: 'animated fadeOutRight'
-                    },
-                    onShow: function () {
-                      this.css({'width': 'auto', 'height': 'auto'});
-                    }
-                  }
-              )
+              notify_user_info(${data[key][\'error\']});
               break;
               return
             }
@@ -1114,102 +910,22 @@ var getFullArray = function () {
         } catch (e) {
           console.log(e);
           $('#GeneralLoading').addClass('hidden');
-          $.notify(
-              {
-                message: `There was an error while retrieving the data from the ${$("#variables_graph").val()} `
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger(`There was an error while retrieving the data from the ${$("#variables_graph").val()} `);
         }
-
-
       },
       error: function (e) {
         console.log(e);
         $('#GeneralLoading').addClass('hidden');
-        $.notify(
-            {
-              message: `There was an error while retrieving the data from the ${$("#variables_graph").val()} `
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger(`There was an error while retrieving the data from the ${$("#variables_graph").val()} `);
       }
-
     });
   }
   if (var_val != "select_val" && type_drawing == "sptial_in") {
     $('#GeneralLoading').addClass('hidden');
-
-    $.notify(
-        {
-          message: `Please select a Spatial Input Mask to retrieve time series`
-        },
-        {
-          type: "info",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_info('Please select a Spatial Input Mask to retrieve time series');
   }
   if (var_val == "select_val" && type_drawing != "sptial_in") {
     $('#GeneralLoading').addClass('hidden');
-
-    $.notify(
-        {
-          message: `Please select a Thredds file to be able to see the variables associated to it`
-        },
-        {
-          type: "info",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_info('Please select a Thredds file to be able to see the variables associated to it');
   }
 }
-
-/*var refreshContainer = function (container) {
-  let conf = confirm('Do you want to refresh this container?');
-  console.log("this is a change");
-  console.log(current_tdds);
-  console.log(current_Group);
-}*/

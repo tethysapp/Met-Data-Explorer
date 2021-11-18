@@ -119,74 +119,18 @@ var display_vars_from_Tdds = function () {
           }
         } catch (e) {
           console.log(e);
-
-          $.notify(
-              {
-                message: `We are having an error trying to get the list of variables in the current Thredds file`
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('An error occurred while retrieving the list of variables in the current THREDDS file');
         }
-
       },
       error: function (error) {
         console.log(error);
-        $.notify(
-            {
-              message: `We are having an error trying to get the list of variables in the current Thredds file`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('We are having an error trying to get the list of variables in the current Thredds file');
       }
     })
   } catch (error) {
     console.log(error);
-    $.notify(
-        {
-          message: `We are having an error trying to recognize the actual Thedds file`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
-
+    notify_user_danger('We are having an error trying to recognize the actual Thedds file');
   }
-
-
 };
 
 var display_vars_from_OpenDabs = function () {
@@ -194,7 +138,7 @@ var display_vars_from_OpenDabs = function () {
   $('#warning_msg').empty();
 
   isAdding = false;
-  let html = '';
+  //let html = '';
   let html2 = '';
   let variables = {};
   let variablesAndFileMetadata = getVariablesAndFileMetadata(opendapURL);
@@ -480,49 +424,13 @@ var load_individual_thredds_for_group = function (group_name) {
       } catch (e) {
         console.log(e);
         $("#GeneralLoading").addClass("hidden");
-        $.notify(
-            {
-              message: `Something went wrong loading the THREDDS for the group called ${group_name}.`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger(`Something went wrong loading ${group_name}.`);
       }
-
-
     },
     error: function (error) {
       console.log(error);
       $("#GeneralLoading").addClass("hidden");
-      $.notify(
-          {
-            message: `Something went wrong loading the THREDDS for the group called ${group_name}.`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger(`Something went wrong loading ${group_name}.`);
     }
   })
 };
@@ -637,24 +545,7 @@ var addSingleThreddsServer = function () {
 
     //CHECKS IF THE INPUT IS EMPTY ///
     if ($("#addService-title").val() == "") {
-      $.notify(
-          {
-            message: "Please enter a title. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger("Please enter a title. This field cannot be blank.");
       return false
     }
 
@@ -663,111 +554,22 @@ var addSingleThreddsServer = function () {
       var specials = /[*|\":<>[\]{}`\\()';@&$]/;
       var title = $("#addService-title").val()
       if (specials.test(title)) {
-        $.notify(
-            {
-              message: "The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]"
-            },
-            {
-              type: "info",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger("The following characters are not permitted in the title [ * | \" : < > [ \ ] { } ` \ \ ( ) ' ; @ & $ ]");
         return false
       }
     }
 
     //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
     if ($("#addService-description").val() == "") {
-      $.notify(
-          {
-            message: "Please enter a description for this group. This field cannot be blank."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('Please enter a description for this group. This field cannot be blank.');
       return false
     }
-    // if($("#epsg-input").val() == ""){
-    //   $.notify(
-    //       {
-    //         message: "Please enter a EPSG Code."
-    //       },
-    //       {
-    //           type: "info",
-    //           allow_dismiss: true,
-    //           z_index: 20000,
-    //           delay: 5000,
-    //           animate: {
-    //             enter: 'animated fadeInRight',
-    //             exit: 'animated fadeOutRight'
-    //           },
-    //           onShow: function() {
-    //               this.css({'width':'auto','height':'auto'});
-    //           }
-    //       }
-    //   )
-    //   return false
-    // }
     if ($("#table_wrapper").is(':hidden')) {
-      $.notify(
-          {
-            message: "Please Provide a THREDDS Endpoint"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('Please provide a THREDDS endpoint');
       return false
     }
     if ($("#attributes_table").is(':hidden')) {
-      $.notify(
-          {
-            message: "Please Select a THREDDS File from the given file/folder structure"
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('Please Select a THREDDS File from the given file/folder structure');
       return false
     }
     var url = $('#url').val();
@@ -823,30 +625,10 @@ var addSingleThreddsServer = function () {
       }
     })
     if (variables_list.length <= 0) {
-      $.notify(
-          {
-            message: "Please select at least one variable."
-          },
-          {
-            type: "info",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('Please select at least one variable.');
       return false
     }
-
-
-    var groupID = 'user-group-container';
-
+    //var groupID = 'user-group-container';
     if ($('#epsg-input').val() == '') {
       var epsg = false;
     } else {
@@ -886,24 +668,7 @@ var addSingleThreddsServer = function () {
         try {
           if (data.hasOwnProperty("error")) {
             console.log(data["error"])
-            $.notify(
-                {
-                  message: data["error"]//`There is Already a Thredds File With This Name In The Group ${current_Group}`
-                },
-                {
-                  type: "info",
-                  allow_dismiss: true,
-                  z_index: 20000,
-                  delay: 5000,
-                  animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                  },
-                  onShow: function () {
-                    this.css({'width': 'auto', 'height': 'auto'});
-                  }
-                }
-            )
+            notify_user_danger(data["error"]);
             return false
           } else {
             let group_name_e3;
@@ -1091,77 +856,20 @@ var addSingleThreddsServer = function () {
           $("#attributes").empty();
           $("#groups_variables_div").hide();
           $("#vars_search").removeClass("hidden");
-
-          $.notify(
-              {
-                message: `Added new TDS File`
-              },
-              {
-                type: "success",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_success('Added new TDS file');
         } catch (e) {
           console.log(e);
         }
       },
       error: function (error) {
         console.log(error);
-        $.notify(
-            {
-              message: `There was an error while adding the THREDDS file and its variables to the Group.`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('There was an error while adding the THREDDS file and its variables to the Group');
       }
-
     })
-
-
   } catch (error) {
     console.log(error);
-    $.notify(
-        {
-          message: `There was an error while adding the THREDDS file and its variables to the Group.`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('There was an error while adding the THREDDS file and its variables to the Group');
   }
-
-
 }
 
 var get_tdds_list_for_group = function () {
@@ -1213,69 +921,16 @@ var get_tdds_list_for_group = function () {
             $modalDelete.find(".modal-body").html(HSTableHtml)
           }
         } catch (e) {
-          $.notify(
-              {
-                message: `We are having an error trying to get the list of servers that are in the group`
-              },
-              {
-                type: "danger",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('We are having an error trying to get the list of servers that are in the group');
         }
-
       },
       error: function (error) {
         console.log(error);
-        $.notify(
-            {
-              message: `We are having an error trying to get the list of servers that are in the group`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('An error occurred while trying to get the list of servers in the group');
       }
     })
   } catch (error) {
-    $.notify(
-        {
-          message: `We are having an error trying to recognize the actual group`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
-
+    notify_user_danger('An error occured while trying to identify the group');
   }
 }
 
@@ -1338,91 +993,20 @@ var delete_single_tdds = function () {
 
             }
             $(`#${new_title}deleteID`).remove();
-
-            $.notify(
-                {
-                  message: `Successfully Deleted the Web Service!`
-                },
-                {
-                  type: "success",
-                  allow_dismiss: true,
-                  z_index: 20000,
-                  delay: 5000,
-                  animate: {
-                    enter: 'animated fadeInRight',
-                    exit: 'animated fadeOutRight'
-                  },
-                  onShow: function () {
-                    this.css({'width': 'auto', 'height': 'auto'});
-                  }
-                }
-            )
-
+            notify_user_success('Successfully deleted the web service');
           }
         } catch (e) {
           console.log(e);
-          $.notify(
-              {
-                message: `We got a problem updating the interface after deleting the Web Service, please reload your page `
-              },
-              {
-                type: "info",
-                allow_dismiss: true,
-                z_index: 20000,
-                delay: 5000,
-                animate: {
-                  enter: 'animated fadeInRight',
-                  exit: 'animated fadeOutRight'
-                },
-                onShow: function () {
-                  this.css({'width': 'auto', 'height': 'auto'});
-                }
-              }
-          )
+          notify_user_danger('An error occurred while updating the interface, please reload your page');
         }
       },
       error: error => {
-        $.notify(
-            {
-              message: `Something went wrong while deleting the selected web services`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_danger('An error occurred while deleting the selected web services');
       }
     })
   } catch (e) {
-    $.notify(
-        {
-          message: `We are having problems recognizing the actual group or groups to delete.`
-        },
-        {
-          type: "danger",
-          allow_dismiss: true,
-          z_index: 20000,
-          delay: 5000,
-          animate: {
-            enter: 'animated fadeInRight',
-            exit: 'animated fadeOutRight'
-          },
-          onShow: function () {
-            this.css({'width': 'auto', 'height': 'auto'});
-          }
-        }
-    )
+    notify_user_danger('Unable to recognize the groups to delete');
   }
-
 }
 
 var edit_single_tdds = function () {
@@ -1477,68 +1061,15 @@ var edit_single_tdds = function () {
           $(`#${title_e3}_span`).html(`${request_objt['new_title']}`);
           $(`#${title_e3}_span`).attr('title', `${request_objt['new_title']}`);
         }
-        $.notify(
-            {
-              message: `Updating the ${request_objt['old_title']} was Sucessful`
-            },
-            {
-              type: "success",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
-
-
+        notify_user_success('`Updating the ${request_objt[\'old_title\']} was Sucessful`');
       } catch (e) {
         console.log(e);
-        $.notify(
-            {
-              message: `There was an error while editing the THREDDS file and its variables to the Group.`
-            },
-            {
-              type: "danger",
-              allow_dismiss: true,
-              z_index: 20000,
-              delay: 5000,
-              animate: {
-                enter: 'animated fadeInRight',
-                exit: 'animated fadeOutRight'
-              },
-              onShow: function () {
-                this.css({'width': 'auto', 'height': 'auto'});
-              }
-            }
-        )
+        notify_user_success('There was an error while editing the THREDDS file and its variables to the Group.');
       }
     },
     error: function (error) {
       console.log(error);
-      $.notify(
-          {
-            message: `There was an error while editing the THREDDS file and its variables to the Group.`
-          },
-          {
-            type: "danger",
-            allow_dismiss: true,
-            z_index: 20000,
-            delay: 5000,
-            animate: {
-              enter: 'animated fadeInRight',
-              exit: 'animated fadeOutRight'
-            },
-            onShow: function () {
-              this.css({'width': 'auto', 'height': 'auto'});
-            }
-          }
-      )
+      notify_user_danger('There was an error while editing the THREDDS file and its variables to the Group.');
     }
   })
 

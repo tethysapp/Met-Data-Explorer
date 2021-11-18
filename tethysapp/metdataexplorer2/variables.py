@@ -310,7 +310,6 @@ def get_full_array(request):
 
 def organize_array(attribute_array, behavior_type, label_type):
     access_urls = {}
-#    variables = ''
     if attribute_array['timestamp'] == 'true':
         access_urls, file_name = iterate_files(attribute_array['url'])
     else:
@@ -319,12 +318,8 @@ def organize_array(attribute_array, behavior_type, label_type):
         access_urls['NetcdfSubset'] = attribute_array['url_netcdf']
 
     variable = attribute_array['attributes']['name']
-#    epsg = attribute_array['epsg']
-#    geojson_path = get_geojson_and_data(attribute_array['spatial'], epsg)
     print(attribute_array['spatial'])
     original_filepath = print_geojson_to_file(attribute_array['spatial'])
-    print('bounds:')
-    print(attribute_array['attributes']['bounds'])
     geojson_path = shift_shape_bounds(attribute_array['attributes']['bounds'], original_filepath)
     dim_order = tuple(attribute_array['attributes']['dimensions'])
     stats_value = 'mean'
