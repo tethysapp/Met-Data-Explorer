@@ -618,10 +618,7 @@ var addSingleThreddsServer = function () {
             color: color,
           }
           attr_array.push(attr[var_string]);
-
         }
-
-
       }
     })
     if (variables_list.length <= 0) {

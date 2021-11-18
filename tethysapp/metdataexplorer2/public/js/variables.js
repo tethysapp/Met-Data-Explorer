@@ -869,7 +869,6 @@ var getFullArray = function () {
   let var_val = $("#variables_graph").val();
   if (type_drawing != "sptial_in" && var_val != "select_val") {
     $('#GeneralLoading').removeClass('hidden');
-
     $.ajax({
       url: "getFullArray/",
       data: request_obj,
@@ -899,7 +898,6 @@ var getFullArray = function () {
                     yArray.push(timeseries[key]['datetime'][key3]);
                   })
                 }
-
               });
               initialize_graphs(yArray, xArray, `${$("#variables_graph").val()} Mean`, `${$("#variables_graph").val()}`, "", `${$("#variables_graph").val()}`, $("#type_graph_select2").val());
             } else {
@@ -916,7 +914,7 @@ var getFullArray = function () {
       error: function (e) {
         console.log(e);
         $('#GeneralLoading').addClass('hidden');
-        notify_user_danger(`There was an error while retrieving the data from the ${$("#variables_graph").val()} `);
+        notify_user_danger(`There was an error while retrieving the data from the ${$("#variables_graph").val()}`);
       }
     });
   }

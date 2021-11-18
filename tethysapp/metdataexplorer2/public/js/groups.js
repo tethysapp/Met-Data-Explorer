@@ -762,7 +762,6 @@ var updateFilepath = function () {
     getFoldersAndFiles();
   } else if ($(this).attr("class") == "file") {
     $('#loading-folders').removeClass("hidden");
-
     let newURL = $(this).attr("data-opendap-url");
     $("#url").val(newURL);
 
@@ -777,13 +776,9 @@ var updateFilepath = function () {
     addVariables(variablesAndFileMetadata[0]);
     make_varaibles_appear();
     $(".tables_mul").selectpicker("refresh");
-
     addFileMetadata(variablesAndFileMetadata[1]);
     $("#groups_variables_div").show();
-
-    $('#loading-folders').addClass("hidden");
     $('#modalFilesStruct').modal('hide');
-
   }
 }
 
@@ -843,7 +838,6 @@ var addDimensions = function (dimensions) {
 var addFileMetadata = function (fileMetadata) {
   $('#metadata-div').attr('data-description', fileMetadata);
   $(fileMetadata).appendTo("#metadata-div");
-
   $('#file-metadata-button').css("background-color", "#1600F0");
 }
 
@@ -869,7 +863,6 @@ var getFoldersAndFiles = function () {
           notify_user_danger('Invalid THREDDS Endpoint. Be Sure to provide a Catalog URL, and not a OPENDAP Service');
         } else {
           $("#filetree-div").css("display", "block");
-          // $("#file-info-div").css("display", "none");
           var correctURL = result["correct_url"];
           let html =
               `<tbody>`
@@ -912,12 +905,13 @@ var getFoldersAndFiles = function () {
           }
         }
         $('#loading-folders').addClass("hidden");
-        //$('#loading-add-service').addClass("hidden");
+        $('#loading-add-service').addClass("hidden");
         $('#modalFilesStruct').modal('show');
         $("#folders_structures").show();
 
 
       } catch (e) {
+        $('#loading-folders').addClass("hidden");
         $('#loading-add-service').addClass("hidden");
         notify_user_danger('Not able to identify the THREDDS endpoint');
       }
@@ -925,6 +919,7 @@ var getFoldersAndFiles = function () {
     },
     error: function (error) {
       console.log(error);
+      $('#loading-folders').addClass("hidden");
       $('#loading-add-service').addClass("hidden");
       notify_user_danger('Invalid THREDDS Endpoint');
     }
