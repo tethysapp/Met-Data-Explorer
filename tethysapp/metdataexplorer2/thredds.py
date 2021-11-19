@@ -195,7 +195,7 @@ def add_tdds(request):
 
             #print(key)
             #print('this is the variable:')
-            #print(max(ds.variables[key][:]).astype(float))
+            print(max(ds.variables[key][:]).astype(float))
             #print(min(ds.variables[key][:]).astype(float))
             #print(ds.variables[key][:])
             #max = ds.variables[key][:].max().values
