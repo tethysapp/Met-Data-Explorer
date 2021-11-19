@@ -222,9 +222,9 @@ var load_individual_thredds_for_group = function (group_name) {
             url_wms,
             url_subset,
             epsg,
-            spatial,
-            description,
-            timestamp,
+            //spatial,
+            //description,
+            //timestamp,
             attributes,
             metadata_file,
             extra_coordinate
@@ -252,9 +252,7 @@ var load_individual_thredds_for_group = function (group_name) {
             wmsURL = $(this).attr("data-wms-url");
             subsetURL = $(this).attr("data-subset-url");
           });
-          //
           // let input_check_serv = $(`#${new_title}_check`);
-
           // input_check_serv.on("click", function(){
           $(`#${new_title}_span`).on("click", function () {
             $('#sG').bootstrapToggle('on');
@@ -322,13 +320,7 @@ var load_individual_thredds_for_group = function (group_name) {
 
             // extra dim //
             let extra_dim_order = $("#extra_dim");
-            // extra_dim_order.empty();
-            // extra_dim_order.selectpicker("refresh");
-            // extra_dim_order.selectpicker('hide');
 
-            //console.log(layers_style[layernameUI2]['dimensions']);
-            //console.log(layernameUI2)
-            //console.log(layers_style)
             if (layers_style[layernameUI2]['dimensions'].length > 3) {
               console.log("entro 4");
               extra_dim_order.empty();
@@ -365,7 +357,6 @@ var load_individual_thredds_for_group = function (group_name) {
               extra_dim_order.selectpicker('hide');
             }
 
-
             $('#show_wms').bootstrapToggle('on');
 
             updateWMSLayer2(layernameUI2, layers_style[layernameUI2])
@@ -374,7 +365,6 @@ var load_individual_thredds_for_group = function (group_name) {
               changeOpacity(layernameUI2, this.value);
               layers_style[layernameUI2]['opacity'] = $("#opacity-slider").val();
             });
-
 
             // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
             for (let i = 0; i < attributes.length; ++i) {
@@ -415,8 +405,6 @@ var load_individual_thredds_for_group = function (group_name) {
 
             $("#GeneralLoading").addClass("hidden");
             last_selected_id = new_title;
-
-
           });
 
         })
@@ -447,7 +435,6 @@ var get_table_vars = function (attributes, title) {
     if (key != "metadata_var" && key != "color" && key != "name" && key != "units") {
       table_content += `<th>${key}</th>`;
     }
-
   });
 
   // CLOSE HEADER //
@@ -468,76 +455,15 @@ var get_table_vars = function (attributes, title) {
                     </button>
           </td>`;
       }
-      //   table_content += `<td>
-      //             <input id = "${var_metad[key]}_${title}_check" class="chkbx-variables" type="checkbox" value = "${var_metad[key]}">
-      //             <button class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalStyleInfo">
-      //               <i class="fas fa-layer-group"></i>
-      //             </button>
-      //             <button id = "${var_metad[key]}_${title}_info" class="btn btn-primary btn-sm" data-toggle="modal" data-dismiss="modal" data-target="#modalMetaDataInfo">
-      //                 <i class="fas fa-info-circle"></i>
-      //             </button>
-      //   </td>`;
-      // }
       if (key != "metadata_var" && key != "color" && key != "name" && key != "units") {
-
         table_content += `<td>${var_metad[key]}</td>`;
       }
-
-      // else{
-      //     table_content += `<td>${var_metad[key]}</td>`;
-      // }
     });
-
-
     table_content += "</tr>";
   }
-
   table_content += "</tbody> </table>"
   return table_content
-
-
 }
-
-/*var get_all_the_var_metadata = function (attributes) {
-  let table_content = '<table id = "table_vars" class="table table-hover table-responsive table-sm"><thead><tr>'
-
-  let unique_headers = [];
-
-  for (let i = 0; i < attributes.length; ++i) {
-    let var_metad = JSON.parse(attributes[i]['metadata_var']);
-    // MAKE THE HEADERS FIRST //
-    Object.keys(var_metad).forEach(function (key) {
-      if (unique_headers.includes(key) == false) {
-        unique_headers.push(key);
-        table_content += `<th >${key}</th>`;
-      }
-    });
-
-  }
-  // CLOSE HEADER //
-  table_content += "</tr></thead>"
-
-  // ADD ROWS //
-  table_content += "<tbody>"
-  for (let i = 0; i < attributes.length; ++i) {
-    table_content += "<tr>";
-    let var_metad = JSON.parse(attributes[i]['metadata_var']);
-    // MAKE THE HEADERS FIRST //
-    let all_vars_keys = Object.keys(var_metad);
-    for (let j = 0; j < all_vars_keys.length; ++j) {
-      if (var_metad[all_vars_keys[j]]) {
-        table_content += `<td>${var_metad[all_vars_keys[j]]}</td>`
-      } else {
-        table_content += `<td> </td>`
-
-      }
-    }
-    table_content += "</tr>";
-  }
-
-  table_content += "</tbody> </table>"
-  return table_content
-}*/
 
 var addSingleThreddsServer = function () {
 
@@ -586,11 +512,7 @@ var addSingleThreddsServer = function () {
         let allDimensions = [];
         var x = document.getElementById(`${var_string}_time`);
         if (x != null) {
-          var i;
           allDimensions = $(`#${var_string}_time`).val();
-          // for (i = 0; i < x.length; i++) {
-          //     allDimensions.push(x.options[i].text);
-          // }
           attr[var_string] = {
             name: var_string,
             dimensions: allDimensions,
@@ -699,15 +621,12 @@ var addSingleThreddsServer = function () {
               subsetURL = $(this).attr("data-subset-url");
             });
 
+            //let input_check_serv = $(`#${new_title}_check`);
 
-            let input_check_serv = $(`#${new_title}_check`);
-
-            // input_check_serv.on("click", function(){
             $(`#${new_title}_span`).on("click", function () {
               $('#sG').bootstrapToggle('on');
 
               //ONLY ONE CHECKBOX AT A TIME//
-              // $('input[type="checkbox"]').not(this).prop('checked', false);
               current_tdds = id_dictionary[new_title].split('_join_')[0];
 
               $(`#${new_title}`).css({"border-color": "#2e6da4", "border-width": "2px 2px"});
@@ -724,7 +643,6 @@ var addSingleThreddsServer = function () {
               $(table_content).appendTo("#table_div");
               let info_file = make_metadata_file_table(data['services'][0]['metadata_file'], databaseInfo);
               $(info_file).appendTo("#siteDes");
-
 
               let layernameUI2 = `${attr_array[0]['name']}_${new_title}`
               layers_style[layernameUI2] = {}
@@ -759,34 +677,23 @@ var addSingleThreddsServer = function () {
               // extra dim //
               let extra_dim_order = $("#extra_dim");
 
-
-              console.log(layers_style[layernameUI2]['dimensions']);
-              console.log(layers_style)
               if (layers_style[layernameUI2]['dimensions'].length > 3) {
-                console.log("entro 4");
                 extra_dim_order.empty();
                 extra_dim_order.selectpicker("refresh");
                 extra_dim_order.selectpicker('hide');
                 let extra_json = layers_style[layernameUI2]['extra_dim'];
-                console.log('Here is one forEach:')
-                console.log(layers_style) //ToDo
                 layers_style[layernameUI2]['dimensions'].forEach(function (dim) {
                   if (dim != "lat" && dim != "lon") {
                     if (!dim.includes("time")) {
-                      console.log("las tiene");
                       let option;
                       option = `<option value=${dim}> Select a ${dim} val </option>`;
                       extra_dim_order.append(option);
-                      console.log('This is where is stops:')
-                      console.log(extra_json[dim]);
                       extra_json[dim].forEach(function (val_e) {
-                        // console.log(val_e);
                         let option2 = `<option value=${val_e}> ${val_e} </option>`;
                         extra_dim_order.append(option2);
                       })
                       extra_dim_order.selectpicker("refresh");
                       extra_dim_order.selectpicker('show');
-
                     }
                   }
                 })
@@ -795,8 +702,6 @@ var addSingleThreddsServer = function () {
                 extra_dim_order.selectpicker("refresh");
                 extra_dim_order.selectpicker('hide');
               }
-
-
               $('#show_wms').bootstrapToggle('on');
 
               updateWMSLayer2(layernameUI2, layers_style[layernameUI2])
@@ -815,7 +720,6 @@ var addSingleThreddsServer = function () {
                 })
 
                 // DEFINE THE LAYER ATTRIBUTES //
-
                 let layernameUI = `${attr_array[i]['name']}_${new_title}`
                 layers_style[layernameUI] = {}
                 layers_style[layernameUI]['title'] = attr_array[i]['name'];
@@ -841,10 +745,8 @@ var addSingleThreddsServer = function () {
                 })
               }
               $("#GeneralLoading").addClass("hidden");
-
               last_selected_id = new_title;
             });
-
           }
           $("#GeneralLoading").addClass("hidden");
 
@@ -874,8 +776,6 @@ var get_tdds_list_for_group = function () {
     let group_name_obj = {
       group: current_Group
     };
-    // console.log(id_dictionary)
-
     $.ajax({
       type: "GET",
       url: `load-group/`,
@@ -958,7 +858,6 @@ var delete_single_tdds = function () {
             this.reset()
           })
           for (let i = 0; i < Object.keys(json_titles).length; ++i) {
-
             let i_string = i.toString();
             let title = json_titles[i_string];
             let new_title;
@@ -980,14 +879,11 @@ var delete_single_tdds = function () {
               removeActiveLayer(layernameUI)
               delete layers_dict_wms[layernameUI]
             }
-
-
             let id_group_separator = `${group_name_e3}_list_separator`;
             let separator_element = document.getElementById(id_group_separator);
             let children_element = Array.from(separator_element.children);
             if (children_element.length < 2) {
               $(`#${group_name_e3}-noGroups`).show();
-
             }
             $(`#${new_title}deleteID`).remove();
             notify_user_success('Successfully deleted the web service');
@@ -1009,7 +905,6 @@ var delete_single_tdds = function () {
 var edit_single_tdds = function () {
   let serviceTitle = '';
   let serviceDescription = '';
-  // let epsg_edit = '';
   let epsg_edit = false;
   let spatial_edit = '';
   let url_edit = '';
@@ -1042,7 +937,6 @@ var edit_single_tdds = function () {
   $.ajax({
     url: "edit-thredds/",
     dataType: 'json',
-    // data: {"data":databaseInfo},
     data: request_objt,
     type: 'POST',
     success: function (data) {
@@ -1069,5 +963,4 @@ var edit_single_tdds = function () {
       notify_user_danger('There was an error while editing the THREDDS file and its variables to the Group.');
     }
   })
-
 }

@@ -52,7 +52,6 @@ var VARIABLES_PACKAGE = (function () {
               extra_dim_order.append(option);
               console.log(extra_json[dim]);
               extra_json[dim].forEach(function (val_e) {
-                // console.log(val_e);
                 let option2 = `<option value=${val_e}> ${val_e} </option>`;
                 extra_dim_order.append(option2);
               })
@@ -77,7 +76,6 @@ var VARIABLES_PACKAGE = (function () {
         spatial_input_select.selectpicker("refresh");
       }
 
-
     })
     $("#variable_met_info").on("click", function () {
       let tdds_e3;
@@ -86,9 +84,7 @@ var VARIABLES_PACKAGE = (function () {
           tdds_e3 = key;
         }
       });
-      let id_vari = `${$("#variables_graph").val()}_${tdds_e3}_info`;
-
-      // $(`#${id_vari}`).on("click", function(){
+      //let id_vari = `${$("#variables_graph").val()}_${tdds_e3}_info`;
       $("#metadata_vars").empty();
       let info_content = get_metadata_button(attr[i]);
       $(info_content).appendTo("#metadata_vars");
@@ -102,7 +98,6 @@ var VARIABLES_PACKAGE = (function () {
         dataType: "json",
         success: function (result) {
           let geoJsonObject = result
-
           let check = {};
           geoJsonObject['features'].forEach(function (fed) {
             Object.keys(fed['properties']).forEach(function (single_k) {
@@ -126,7 +121,6 @@ var VARIABLES_PACKAGE = (function () {
           if (attr_shp.length == 0) {
             notify_user_info('Please, upload a different shapefile that contains at least a common property in all the features of the shapefile.');
           }
-          // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
           let feature_select = $("#features_file");
           feature_select.empty();
           feature_select.selectpicker('refresh');
@@ -141,7 +135,6 @@ var VARIABLES_PACKAGE = (function () {
             "weight": 5,
             "opacity": 0.5
           };
-
           jsonLayer = L.geoJSON(result, {
             style: myStyle
           })
@@ -158,14 +151,7 @@ var VARIABLES_PACKAGE = (function () {
     $("#get_data_values").on("click", get_data_bounds);
     $("#apply_config").on("click", apply_style_config);
     $("#btn-add-shp").on("click", uploadShapefile)
-
-    // $(document).on("click", "add_var", function(){
-    //   console.log("no");
-    //   $("GeneralLoading").removeClass("hidden")
-    // })
-
   })
-
 })()
 
 var apply_style_config = function () {
@@ -209,14 +195,11 @@ var get_data_bounds = function () {
 var download_Methods = function (method_download) {
   if (method_download == 'CSV') {
     var csvData = [];
-    // var csvData_temp = [];
-
     var header = [] //main header.
     Object.keys(values_donwload_json).forEach(function (key) {
       header.push(key);
     });
     csvData.push(header);
-
 
     for (let i = 0; i < Object.keys(values_donwload_json['datetime']).length; i++) {
       let row = []
@@ -224,9 +207,7 @@ var download_Methods = function (method_download) {
         row.push(values_donwload_json[header[r]][i]);
       }
       csvData.push(row);
-
     }
-
     var csvFile = csvData.map(e => e.map(a => '"' + ((a || "").toString().replace(/"/gi, '""')) + '"').join(",")).join("\r\n"); //quote all fields, escape quotes by doubling them.
     var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
     var link = document.createElement("a");
@@ -268,18 +249,13 @@ var myWMS_display = function () {
     }
   });
   let layernameUI = `${$("#variables_graph").val()}_${tdds_e3}`;
-  // console.log(layers_dict_wms[layernameUI]);
-  // console.log(layernameUI);
-  // console.log(layers_dict_wms);
   layers_dict_wms[layernameUI]['style'] = $('#wmslayer-style').val();
   layers_dict_wms[layernameUI]['range'] = $('#wmslayer-bounds').val();
   updateWMSLayer(layernameUI, layers_dict_wms[layernameUI]);
-
 }
 
 var myWMS_display2 = function () {
   let tdds_e3;
-
   Object.keys(id_dictionary).forEach(function (key) {
     if (id_dictionary[key] == `${current_tdds}_join_${current_Group}`) {
       tdds_e3 = key;
@@ -331,48 +307,7 @@ var chosen_method_spatial = function (method_draw) {
     }
     $("#fifthContainer").removeClass("hidden");
   }
-
-
 }
-
-/*var drawGraphTwo = function () {
-  let timeseriesVariable = false;
-  let timeseriesFeature = false;
-  $('.timeseries-variable').each(function () {
-    if ($(this).attr('data-selected') == 'true') {
-      timeseriesVariable = $(this).attr('data-variable');
-    }
-  })
-  $('.timeseries-features').each(function () {
-    if ($(this).attr('data-selected') == 'true') {
-      timeseriesFeature = $(this).attr('data-feature');
-    }
-  })
-  let series = {};
-  series['timeseries'] = fullArrayTimeseries[timeseriesVariable]['datetime'];
-  series['mean'] = fullArrayTimeseries[timeseriesVariable][timeseriesFeature];
-  let x = [];
-  let y = [];
-  for (let i = 0; i < Object.keys(series['timeseries']).length; i++) {
-    x.push(series['timeseries'][i]);
-    y.push(series['mean'][i]);
-  }
-  let variable = $('#variable-input').val();
-  let layout = {
-    title: 'Mean of ' + variable,
-    xaxis: {title: 'Time', type: 'datetime'},
-    yaxis: {title: 'Amount'}
-  };
-  let values = {
-    x: x,
-    y: y,
-    mode: 'lines+markers',
-    type: 'scatter'
-  };
-  Plotly.newPlot('chart-two', [values], layout);
-  let chart = $("#chart-two");
-  Plotly.Plots.resize(chart[0]);
-}*/
 
 var deleteVariablesToTD = function () {
   let $modalAddVars = $("#modalDeleteVariable");
@@ -408,9 +343,7 @@ var deleteVariablesToTD = function () {
         if (index_remove > -1) {
           current_vars.splice(index_remove, 1);
         }
-
       });
-
     },
     error: function (e) {
       console.log(e);
@@ -429,10 +362,6 @@ var addVariablesToTD = function () {
       var x = document.getElementById(`${var_string}_time`);
       if (x != null) {
         allDimensions = $(`#${var_string}_time`).val();
-        // var i;
-        // for (i = 0; i < x.length; i++) {
-        //     allDimensions.push(x.options[i].text);
-        // }
         attr[var_string] = {
           name: var_string,
           dimensions: allDimensions,
@@ -478,27 +407,19 @@ var addVariablesToTD = function () {
     dataType: "json",
     success: function (result) {
       try {
-        console.log(result);
-        // let attr2 = JSON.parse(result['all_attr']);
         let attr2 = result['all_attr'];
         let current_tdds_id;
         let layers_style = {}
-
         Object.keys(id_dictionary).forEach(function (key) {
           if (id_dictionary[key].split('_join_')[0] == current_tdds) {
             current_tdds_id = key;
           }
         })
-
-
         if (current_tdds_id == tdds_displaying_metadata) {
           console.log("here now");
           let table_content = $('#table_var_body').html().split('</tbody>')[0];
           Object.keys(attr).forEach(function (single_att_key) {
-
-            // for (let i = 0; i< attr.length; ++i){
             table_content += "<tr>";
-            // let var_metad = attr[i];
             let var_metad = attr[single_att_key];
             // MAKE THE HEADERS FIRST //
             Object.keys(var_metad).forEach(function (key) {
@@ -511,29 +432,17 @@ var addVariablesToTD = function () {
                             </button>
                   </td>`;
               }
-
               if (key != "metadata_var" && key != "color" && key != "name" && key != "units") {
-
                 table_content += `<td>${var_metad[key]}</td>`;
               }
-
             });
-
-
             table_content += "</tr>";
-
           })
           table_content += "</tbody>"
           $("#table_var_body").empty();
-          // let table_content = get_table_vars(attr2,current_tdds_id);
-
           $(table_content).appendTo("#table_var_body");
-          // let info_file = make_metadata_file_table(result['metadata_file'],result);
-          // $(info_file).appendTo("#siteDes");
         }
-        // for (let i = 0; i< attr.length; ++i){
         Object.keys(attr2).forEach(function (single_att_key) {
-
           $(`#${attr2[single_att_key]['name']}_${current_tdds_id}_info`).on("click", function () {
             $("#metadata_vars").empty();
             let info_content = get_metadata_button(attr2[single_att_key]);
@@ -557,8 +466,6 @@ var addVariablesToTD = function () {
           layers_style[layernameUI]['selected'] = false;
           layers_style[layernameUI]['dimensions'] = attr2[single_att_key]['dimensions'];
           layers_style[layernameUI]['extra_dim'] = JSON.parse(result['extra_coordinate']);
-
-
           layers_dict_wms = layers_style;
 
           // ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
@@ -566,22 +473,15 @@ var addVariablesToTD = function () {
             changeOpacity(layernameUI, this.value);
             layers_style[layernameUI]['opacity'] = $("#opacity-slider").val();
           })
-
-
         });
 
         options_vars(attr2, current_tdds_id);
-
         //ADD event listener to display the modality after each click in the info logo///
         let input_check_serv = $(`#${current_tdds_id}_span`);
-
-
         input_check_serv.on("click", function () {
           $('#sG').bootstrapToggle('on');
-
           current_tdds = id_dictionary[current_tdds_id].split('_join_')[0];
           current_Group = current_Group;
-
           subsetURL = $(this).attr("data-subset-url");
           $("#GeneralLoading").removeClass("hidden");
           $(`#${current_tdds_id}`).css({"border-color": "#2e6da4", "border-width": "2px 2px"});
@@ -589,12 +489,9 @@ var addVariablesToTD = function () {
           Object.keys(id_dictionary).forEach(function (key) {
             if (key != current_tdds_id) {
               $(`#${id_dictionary[key]}`).css({"border-color": "darkgrey", "border-width": "0px 0px"});
-
             }
           })
-          // console.log(last_selected_id);
           tdds_displaying_metadata = current_tdds_id;
-
 
           //CLEAN TABLE //
           $("#table_div").empty();
@@ -604,13 +501,10 @@ var addVariablesToTD = function () {
           options_vars(attr2, current_tdds_id);
           ///MAKE TABLE//
           let table_content = get_table_vars(attr2, current_tdds_id);
-
           let info_file = make_metadata_file_table(result['metadata_file'], result);
           $(info_file).appendTo("#siteDes");
-
           $(table_content).appendTo("#table_div");
           //make the layers to display
-
           let layernameUI2 = `${attr2[0]['name']}_${current_tdds_id}`
           layers_style[layernameUI2] = {}
           layers_style[layernameUI2]['title'] = attr2[0]['name'];
@@ -660,13 +554,11 @@ var addVariablesToTD = function () {
                   extra_dim_order.append(option);
                   console.log(extra_json[dim]);
                   extra_json[dim].forEach(function (val_e) {
-                    // console.log(val_e);
                     let option2 = `<option value=${val_e}> ${val_e} </option>`;
                     extra_dim_order.append(option2);
                   })
                   extra_dim_order.selectpicker("refresh");
                   extra_dim_order.selectpicker('show');
-
                 }
               }
             })
@@ -684,8 +576,6 @@ var addVariablesToTD = function () {
             changeOpacity(layernameUI2, this.value);
             layers_style[layernameUI2]['opacity'] = $("#opacity-slider").val();
           });
-
-
           // MAKE THE BUTTON MODAL FOR THE INFORMATION OF THE FILE
           // for (let i = 0; i< attributes.length; ++i){
           Object.keys(attr2).forEach(function (i) {
@@ -697,7 +587,6 @@ var addVariablesToTD = function () {
             })
 
             // DEFINE THE LAYER ATTRIBUTES //
-
             let layernameUI = `${attr2[i]['name']}_${current_tdds_id}`
             layers_style[layernameUI] = {}
             layers_style[layernameUI]['title'] = attr2[i]['name'];
@@ -713,7 +602,6 @@ var addVariablesToTD = function () {
             layers_style[layernameUI]['selected'] = false;
             layers_style[layernameUI]['dimensions'] = attr2[i]['dimensions'];
             layers_style[layernameUI]['extra_dim'] = JSON.parse(result['extra_coordinate']);
-
             layers_dict_wms = layers_style;
 
             //ADD A EVENT LISTENER FOR THE OPCACITY IN THE LAYERS SETTINGS //
@@ -721,8 +609,6 @@ var addVariablesToTD = function () {
               changeOpacity(layernameUI, this.value);
               layers_style[layernameUI]['opacity'] = $("#opacity-slider").val();
             });
-
-
           })
           $("#GeneralLoading").addClass("hidden");
           last_selected_id = current_tdds_id;
@@ -748,92 +634,6 @@ var addVariablesToTD = function () {
   })
 }
 
-/*
-var getTimeseries = function (coord, subsetURL_tempt) {
-  if (subsetURL_tempt['opendapURL'] == '') {
-    console.log('Please select a data layer.');
-  } else {
-    // $('#loading-modal').modal('show');
-    var maxlat = coord[0][2].lat;
-    var maxlng = coord[0][2].lng;
-    var minlat = coord[0][0].lat;
-    var minlng = coord[0][0].lng;
-    var vars = $('#variable-input').val();
-    var time = $('#time').val();
-    var subsetUrlFull = `${subsetURL_tempt}?var=${vars}&north=${maxlat}&west=${minlng}&east=${maxlng}&south=${minlat}&disableProjSubset=on&horizStride=1&temporal=all`;
-    $.ajax({
-      url: URL_getBoxValues,
-      data: {
-        'subsetURL': subsetUrlFull,
-        'var': vars,
-        'time': time,
-      },
-      dataType: 'json',
-      contentType: "application/json",
-      method: 'GET',
-      success: function (result) {
-        var data = result['data'];
-        if (data == false) {
-          $('#loading-modal').modal('hide');
-          alert('Invalid dimensions');
-        } else {
-          drawGraph(data);
-          $('#loading-modal').modal('hide');
-          $('#timeseries-modal').modal('show');
-        }
-      },
-    });
-  }
-}
-*/
-
-/*
-var getSingleTS = function () {
-  $.ajax({
-    url: 'getSingle-TS',
-    data: {
-      'containerAttributes': JSON.stringify(containerAttributes),
-    },
-    dataType: 'json',
-    contentType: "application/json",
-    method: 'GET',
-    success: function (result) {
-      let data = result['result'];
-      let timeseries = {};
-      let htmlVariables = '';
-      let i = 1;
-      for (let key in data) {
-        timeseries[key] = JSON.parse(data[key])
-        if (i == 1) {
-          htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${key}</p></div>`;
-        } else {
-          htmlVariables += `<div class="timeseries-variable" data-variable="${key}" onclick="updateSelectedVariable.call(this)" data-selected="false"><p>${key}</p></div>`;
-        }
-        i += 1;
-      }
-      i = 1;
-      let htmlFeatures = '';
-      for (let feature in timeseries[Object.keys(timeseries)[0]]) {
-        if (feature !== 'datetime') {
-          if (i == 1) {
-            htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="true" style="background-color: #4532fc;"><p style="color: white">${feature}</p></div>`;
-          } else {
-            htmlFeatures += `<div class="timeseries-features" onclick="updateSelectedFeature.call(this)" data-feature="${feature}" data-selected="false"><p>${feature}</p></div>`;
-          }
-          i += 1;
-        }
-      }
-      fullArrayTimeseries = timeseries;
-      $('#timeseries-variable-div').empty().append(htmlVariables);
-      $('#timeseries-feature-div').empty().append(htmlFeatures);
-      $('#full-array-modal').modal('show');
-      $('#loading-modal').modal('hide');
-      drawGraphTwo();
-    },
-  });
-}
-*/
-
 var getPlotData = function () {
   console.log($("#variables_graph").val());
   console.log(values_donwload_json)
@@ -850,8 +650,6 @@ var getPlotData = function () {
 var getFullArray = function () {
   let extra_dim = $("#extra_dim").val();
   let extra_epsg = false;
-  // let extra_epsg = $("#epsg_change").val();
-
   let request_obj = {
     group: current_Group,
     tds: current_tdds,
@@ -864,7 +662,6 @@ var getFullArray = function () {
     extra_dim: extra_dim,
     epsg_offset: extra_epsg
   }
-
   let type_drawing = $("#spatial_input").val();
   let var_val = $("#variables_graph").val();
   if (type_drawing != "sptial_in" && var_val != "select_val") {

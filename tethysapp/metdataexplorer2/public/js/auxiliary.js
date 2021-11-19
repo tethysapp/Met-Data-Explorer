@@ -708,12 +708,9 @@ var html_for_servers = function (isAdmin, title, group_name, url_opendap, url_wm
       `;
       return newHtml
     }
-
-
   } catch (e) {
     console.log(e);
   }
-
 }
 
 var html_for_groups = function (isAdmin, title, id_group_separator) {
@@ -809,9 +806,9 @@ var check_for_same_names = function (type_level, title_to_check) {
   return check_nene;
 }
 
-var addAttribute = function (attribute, dimensionString, units, color) {
+var addAttribute = function (attribute, dimensionString) { //, units, color) {
   let options = '';
-  let dimOptions;
+  //let dimOptions;
   let html = ''
   let count = $('.attr-checkbox').length;
   let class_name_ = "";
@@ -858,8 +855,6 @@ var addAttribute = function (attribute, dimensionString, units, color) {
                     </td>
                   </tr>`
   }
-
-
   return html;
 }
 
@@ -867,8 +862,6 @@ var get_metadata_button = function (attribute) {
   let table_content = '<table id = "table_metadata" class="table table-hover table-responsive table-sm"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
   let var_metad = attribute;
-  // let var_metad = JSON.parse(attribute);
-  // let all_vars_keys = Object.keys(var_metad);
   let all_vars_keys = Object.keys(attribute);
 
   for (let j = 0; j < all_vars_keys.length; ++j) {
@@ -893,41 +886,5 @@ var get_extra_file_metdata = function (layer_obj) {
   table_content += `<tr><td>OPENDAP Enpoint</td><td>${layer_obj["url"]}</td></tr>`
   table_content += `<tr><td>WMS Endpoint</td><td>${layer_obj["url_wms"]}</td></tr>`
   table_content += `<tr><td>Subset Endpoint</td><td>${layer_obj["url_subset"]}</td></tr>`
-  // table_content +=  `<tr><td>EPSG</td><td>${layer_obj['epsg']}</td></tr>`
-
   return table_content
 }
-
-// var check_if_td_contained = function(td_name,tds_array){
-//   let checked = false;
-//   tds_array.forEach(function(single_tds){
-//     if(td_name == single_tds['title']){
-//        checked = true;
-//     }
-//   })
-//   return checked;
-// }
-//
-// var check_tdds_groups = function(group_name){
-//   // make ajax request to know the tdds //
-//   let group_name_obj={
-//     group: group_name
-//   };
-//   $.ajax({
-//       type: "GET",
-//       url: `load-group/`,
-//       dataType: "JSON",
-//       data: group_name_obj,
-//       success: result => {
-//         console.log(result);
-//         return result;
-//
-//
-//       },
-//       error:function(e){
-//         console.log(e);
-//         let no_data = {}
-//         return no_data
-//       }
-//     })
-// }

@@ -69,11 +69,8 @@ var GROUPS_PACKAGE = (function () {
       $("GeneralLoading").removeClass("hidden")
     })
     // THREDDS LISTENER //
-
     //DELETION SERVICE
-
   })
-
 })()
 
 var notify_user_danger = function(message) {
@@ -161,13 +158,10 @@ var apply_var_filter = function () {
               });
             })
           });
-
           $("#current-GroupThredds").find("li").each(function () {
             var $li = $(this)['0'];
             let id_li = $li['id'];
-
             if (filter_tdds_id.includes(id_li)) {
-
               $(`#${id_li}`).css({
                 "opacity": "1",
                 "border-color": "#ac2925",
@@ -179,21 +173,7 @@ var apply_var_filter = function () {
               $(`#${id_li} input[type=checkbox]`).each(function () {
                 this.checked = true;
               });
-
             } else {
-              // let groups_divs = Object.keys(information_model);
-              // let groups_divs_3e = []
-              // groups_divs.forEach(function(g3){
-              //   let g_new2;
-              //   Object.keys(id_dictionary).forEach(function(key) {
-              //     if(id_dictionary[key] == g3 ){
-              //       g_new2 = key;
-              //     }
-              //   });
-              //   groups_divs_3e.push(g_new2);
-              // })
-              // groups_divs = groups_divs_3e
-              // if (!groups_divs.includes(id_li)){
               $(`#${id_li}`).css({
                 "opacity": "0.5",
                 "border-color": "#d3d3d3",
@@ -210,7 +190,6 @@ var apply_var_filter = function () {
           console.log(e);
           notify_user_danger('There was an error trying to retrieve the different Thredds files associated to the variables selected');
         }
-
       },
       error: function (error) {
         notify_user_danger('There was an error trying to retrieve the different Thredds files associated to the variables selected');
@@ -228,24 +207,20 @@ var give_all_variables = function () {
     success: function (result) {
       try {
         let variables_groups = result['attrs'];
-
-
         var HSTableHtml =
             `<table id="data-table" class="table table-striped table-bordered table-condensed"><tbody>`
-
         variables_groups.forEach(l_arr => {
           HSTableHtml += '<tr class="odd gradeX">'
           HSTableHtml += `<td><input type="checkbox" class="filter_check" name="variables" value = "${l_arr}" /> ${l_arr}</td>`;
           HSTableHtml += '</tr>';
-        })
-
+        });
         HSTableHtml += "</tbody></table>"
         $("#modalVariablesFilter").find("#groups_variables").html(HSTableHtml);
       } catch (e) {
         notify_user_danger('There was an error trying to retrieve the different countries contained by the web services in the app');
       }
     }
-  })
+  });
 }
 
 var remove_var_from_table = function () {
@@ -306,13 +281,11 @@ var delete_group_of_hydroservers = function () {
                 try {
                   levels_to_erase[`${group}`][`${thredd_single}`].forEach(function (var_name) {
                     removeActiveLayer(`${var_name}_${thredd_single}`);
-                  })
+                  });
                 } catch (e) {
                   console.log(e);
                 }
-
-              })
-
+              });
             });
             notify_user_success('Successfully Deleted Group!');
           } catch (e) {
@@ -324,11 +297,10 @@ var delete_group_of_hydroservers = function () {
           console.log(error);
           notify_user_danger('We are having an error deleting the selected groups of views');
         }
-      })
+      });
     } else {
       notify_user_info('You need to select at least one group to delete');
     }
-
   } catch (err) {
     notify_user_danger('We are having problems trying to recognize the actual group');
   }
@@ -348,10 +320,7 @@ var make_list_groups = function () {
     var HSTableHtml =
         '<table class="table table-condensed-xs" id="tbl-groups"><thead><th>Select</th><th>Catalog Title</th></thead><tbody>'
     if (finalGroupArray.length < 0) {
-      $("#modalDeleteGroups").find(".modal-body")
-          .html(
-              "<b>There are no groups in the Water Data Explorer</b>"
-          )
+      $("#modalDeleteGroups").find(".modal-body").html("<b>There are no groups in the Water Data Explorer</b>");
     } else {
       for (var i = 0; i < finalGroupArray.length; i++) {
         var title = finalGroupArray[i]
@@ -374,7 +343,6 @@ var make_list_groups = function () {
 }
 
 var load_groups_start = function () {
-
   $.ajax({
     type: "GET",
     url: `get-groups-list/`,
@@ -382,7 +350,6 @@ var load_groups_start = function () {
     success: result => {
       try {
         let groups = result["groups"];
-
         $(".divForServers").empty() //Resetting the catalog
         ind = 1;
         groups.forEach(group => {
@@ -392,35 +359,25 @@ var load_groups_start = function () {
           } = group
           let unique_id_group = uuidv4()
           id_dictionary[unique_id_group] = title;
-
           let new_title = unique_id_group;
           let id_group_separator = `${new_title}_list_separator`;
-
-
           $(`#${new_title}-noGroups`).show();
-
           let newHtml = html_for_groups(can_delete_groups, new_title, id_group_separator);
-
           $(newHtml).appendTo("#current-GroupThredds");
-
           load_individual_thredds_for_group(title);
           $(`#${new_title}_panel`).on("click", function () {
             current_Group = id_dictionary[new_title];
           });
-
           let $title = "#" + new_title;
           $($title).click(function () {
             $("#pop-up_description2").html("");
-
             actual_group = `&actual-group=${title}`;
-
             let description_html = `
                    <h3>Catalog Title</h3>
                    <p>${title}</p>
                    <h3>Catalog Description</h3>
                    <p>${description}</p>`;
             $("#pop-up_description2").html(description_html);
-
           });
           ind = ind + 1;
 
@@ -449,14 +406,11 @@ var addServiceToTable = function () {
       notify_user_info('There is already a Thredds file added with that name, Please Provide a different name');
       return false
     }
-
-
     //CHECKS IF THE INPUT IS EMPTY ///
     if ($("#addService-title").val() == "") {
       notify_user_info('Check check! Please enter a title. This field cannot be blank.');
       return false
     }
-
     if ($("#addService-title").val() != "") {
       var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
       var specials = /[*|\":<>[\]{}`\\()';@&$]/;
@@ -466,7 +420,6 @@ var addServiceToTable = function () {
         return false
       }
     }
-
     //CHECKS IF THERE IS AN EMPTY DESCRIPTION //
     if ($("#addService-description").val() == "") {
       notify_user_info('Please enter a description for this group. This field cannot be blank.');
@@ -495,10 +448,6 @@ var addServiceToTable = function () {
         if (x != null) {
           var i;
           allDimensions = $(`#${var_string}_time`).val();
-
-          // for (i = 0; i < x.length; i++) {
-          //     allDimensions.push(x.options[i].text);
-          // }
           attr[var_string] = {
             dimensions: allDimensions,
             units: units,
@@ -523,8 +472,6 @@ var addServiceToTable = function () {
             color: color,
           }
         }
-
-
       }
     })
     if (variables_list.length <= 0) {
@@ -611,18 +558,10 @@ var addServiceToTable = function () {
                         ${options2}
                       </td>
                     </tr>`
-        // <select  class="selectpicker modal_dim" data-style="btn-info" multiple>${options}</select>
-
-        // $( "#attributes_dims" ).append(html);
-        // $(`${variables_list[i]}_time`).selectpicker("render");
       }
       $(html).appendTo("#attributes_dims");
       $('.modal_dim').selectpicker('selectAll');
-
       $(".modal_dim").selectpicker("refresh");
-
-      // $(".selectpicker").selectpicker("show");
-
     })
     $("#modalAddServices").modal("hide");
     $('#modalAddServiceForm')[0].reset();
@@ -678,8 +617,6 @@ var getCredentials = function () {
     })
   }
 }
-
-//addCredential('m','u','p')
 
 var addCredential = function () {
   let data = {
@@ -782,26 +719,6 @@ var updateFilepath = function () {
   }
 }
 
-/*var variableMetadata = function () {
-  var variableMetadata = {};
-  let variable = $("#variable-input").val();
-  $.ajax({
-    url: URL_getVariableMetadata,
-    data: {
-      variable: variable,
-      opendapURL: opendapURL
-    },
-    dataType: "json",
-    contentType: "application/json",
-    method: "GET",
-    async: false,
-    success: function (result) {
-      variableMetadata = result["variable_metadata"];
-    }
-  })
-  return [variableMetadata];
-}*/
-
 var addVariables = function (variables) {
   let keys = Object.keys(variables);
   keys.sort();
@@ -831,10 +748,6 @@ var addDimensions = function (dimensions) {
 
 }
 
-/*var addVariableMetadata = function (variableMetadata) {
-  $("#var-metadata-div").empty().append(variableMetadata);
-}*/
-
 var addFileMetadata = function (fileMetadata) {
   $('#metadata-div').attr('data-description', fileMetadata);
   $(fileMetadata).appendTo("#metadata-div");
@@ -845,10 +758,8 @@ var getFoldersAndFiles = function () {
   let request_obj = {
     url: $("#url").val()
   }
-
   $('#name-in-form').attr('data-type', 'folder');
   $('#loading-add-service').removeClass("hidden");
-
   $.ajax({
     url: 'getFilesAndFolders/',
     data: request_obj,
@@ -857,7 +768,6 @@ var getFoldersAndFiles = function () {
     method: "GET",
     success: function (result) {
       try {
-
         var dataTree = result["dataTree"];
         if (dataTree == "Invalid URL") {
           notify_user_danger('Invalid THREDDS Endpoint. Be Sure to provide a Catalog URL, and not a OPENDAP Service');
@@ -881,9 +791,7 @@ var getFoldersAndFiles = function () {
                           </td>
                         </tr>`
             }
-
           }
-
           for (var folder in dataTree["folders"]) {
             html += `
                       <tr>
@@ -908,14 +816,11 @@ var getFoldersAndFiles = function () {
         $('#loading-add-service').addClass("hidden");
         $('#modalFilesStruct').modal('show');
         $("#folders_structures").show();
-
-
       } catch (e) {
         $('#loading-folders').addClass("hidden");
         $('#loading-add-service').addClass("hidden");
         notify_user_danger('Not able to identify the THREDDS endpoint');
       }
-
     },
     error: function (error) {
       console.log(error);
@@ -928,7 +833,6 @@ var getFoldersAndFiles = function () {
 
 var createDBArray = function () {
   $("#loading-add-group").removeClass("hidden");
-
   try {
     if (check_for_same_names("Group", $("#addGroup-title").val()) == true) {
       $("#loading-add-group").removeClass("hidden");
@@ -941,11 +845,8 @@ var createDBArray = function () {
       notify_user_info('Please enter a title. This field cannot be blank.');
       return false
     }
-
     if ($("#addGroup-title").val() != "") {
       $("#loading-add-group").addClass("hidden");
-
-      //var regex = new RegExp("^(?![0-9]*$)[a-zA-Z0-9]+$")
       var specials = /[*|\":<>[\]{}`\\()';@&$]/;
       var title = $("#addGroup-title").val()
       if (specials.test(title)) {
@@ -960,13 +861,11 @@ var createDBArray = function () {
       notify_user_info('Please enter a description for this group. This field cannot be blank.');
       return false
     }
-
     let group_info = {
       title: $('#addGroup-title').val(),
       description: $('#addGroup-description').val(),
       attributes: add_services_list,
     };
-
     $.ajax({
       url: "add-group/",
       dataType: 'json',
@@ -985,29 +884,24 @@ var createDBArray = function () {
         $(newHtml).appendTo("#current-GroupThredds");
         $(`#${title}-noGroups`).show();
         load_individual_thredds_for_group(title);
-
         $("#loading-add-group").addClass("hidden");
-
         $("#modalAddGroupServerForm").each(function () {
           this.reset();
         })
-
         $("#modalAddServiceForm").each(function () {
           this.reset();
         });
         $("#added_thredds_files_table_body").empty();
         $("#groups_variables_div").hide();
-
         $("#filetree-div").empty();
         $("#folders_structures").hide();
-
         $(`#${new_title}_panel`).on("click", function () {
           current_Group = id_dictionary[new_title];
         });
         notify_user_success('Successfully Created Group of THREDDS to the database');
         $("#modalAddGroupThredds").modal("hide");
       }
-    })
+    });
   } catch (error) {
     add_services_list = [];
     $("#loading-add-group").addClass("hidden");

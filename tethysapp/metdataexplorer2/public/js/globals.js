@@ -1,22 +1,16 @@
 let id_dictionary = {};
-//let firstlayeradded = false;
-//let shpfileAdded = false;
 let URLpath = [];
 let subsetURL = "";
 let wmsURL = "";
 let opendapURL = "";
 let containerAttributes = false;
-//let chartdata = {};
 let isEditing = false;
 let urlInfoBox = false;
-//let fullArrayTimeseries = {};
 let spatial_shape = false;
 let add_services_list = [];
-//let services_layers = {};
 let mapObj;
 let layers_dict = {};
 let layerControlObj;
-//let subsetURL_tempt = {}
 let current_Group;
 let current_tdds;
 let current_vars;
@@ -24,11 +18,8 @@ let dict_file_vars = {};
 let isAdding = true;
 let tdds_displaying_metadata;
 let input_spatial;
-//let label_type;
-//let behavior_type;
 let layers_dict_wms = {};
 let values_donwload_json ={};
 let last_selected_id;
 let jsonLayer;
 let type_of_series;
-// let array_services = []

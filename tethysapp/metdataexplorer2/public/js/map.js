@@ -35,51 +35,6 @@ var MAP_PACKAGE = (function () {
     }
   };
 
-//  var clickShpLayer = function (e) {
-//      let coords = e.sourceTarget._bounds;
-//      let coord = {
-//          0: {
-//              0: {'lat': coords['_southWest']['lat'], 'lng': coords['_southWest']['lng']},
-//              1: {'lat': coords['_northEast']['lat'], 'lng': coords['_southWest']['lng']},
-//              2: {'lat': coords['_northEast']['lat'], 'lng': coords['_northEast']['lng']},
-//              3: {'lat': coords['_southWest']['lat'], 'lng': coords['_northEast']['lng']}
-//          }
-//      };
-//      getTimeseries(coord);
-//  };
-
-
-//  var configureBounds = function(bounds) {
-//      if (typeof(bounds) === 'string') {
-//          if (bounds.slice(0, 4) == 'http') {
-//              $.getJSON(bounds,function(data){
-//                  makeGeojsonLayer(data);
-//                  mapObj.flyToBounds(shpLayer.getBounds());
-//              });
-//          } else {
-//              $.ajax({
-//                  url: URL_getGeojson,
-//                  data: {
-//                      name: bounds,
-//                  },
-//                  dataType: "json",
-  //                 contentType: "application/json",
-//                  method: "GET",
-//                  async: false,
-//                  success: function (result) {
-//                      let geojson = result['geojson'];
-//                      makeGeojsonLayer(geojson);
-//                      mapObj.flyToBounds(shpLayer.getBounds());
-//                  },
-//              });
-//          }
-//      } else {
-//          makeGeojsonLayer(bounds);
-//          mapObj.flyToBounds(shpLayer.getBounds());
-//      }
-//  }
-
-
   $(function () {
     mapObj = map_init();
     var getDataBounds = function () {
@@ -92,7 +47,7 @@ var MAP_PACKAGE = (function () {
     layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
     /* Drawing/Layer Controls */
     drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
-    let shpLayer;
+    //let shpLayer;
 
     let drawControl = new L.Control.Draw({
       edit: {
@@ -116,7 +71,6 @@ var MAP_PACKAGE = (function () {
     // $(".leaflet-draw-section").hide();
 
     $('#draw-on-map-button').click(function () {
-      // $('#modalAddGroupThredds').modal('hide');
       urlInfoBox = true;
       $('#modalAddGroupThredds').modal('hide');
       $('#modalAddServices').modal('hide');
@@ -128,11 +82,6 @@ var MAP_PACKAGE = (function () {
       getThreddsBounds();
     });
     $('#get-data-button').click(getDataBounds);
-
-    /*drawnItems.on('click', function (e) {
-      let coord = e.layer.getLatLngs();
-      getTimeseries(coord);
-    });*/
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
 
@@ -156,64 +105,15 @@ var MAP_PACKAGE = (function () {
         let coord = e.layer.toGeoJSON();
         $('#spatial-input2').val(JSON.stringify(coord));
         $('#modalEditServices').modal('show');
-
       }
-
     });
-
-
   })
-
 })();
 
 var getThreddsBounds = function () {
   let polygonDrawer = new L.Draw.Polygon(mapObj);
   polygonDrawer.enable();
 }
-
-/*
-    //if (wmsURL.indexOf("http://") != -1) {
-    //}
-    //else{
-    //  wmsURL2 = wmsURL;
-    //}
-    console.log('staring to get images');
-    //const wmsLayer = L.tileLayer.wms(wmsURL2, {
-    //  layers: layer,
-    //  dimension: 'time',
-    //  useCache: true,
-    //  crossOrigin: false,
-    //  format: 'image/png',
-    //  transparent: true,
-    //  BGCOLOR: '0x000000',
-    //  styles: style,
-    //  colorscalerange: range,
-    //});
- */
-
-/*
-var data_layer = function (layernameUI, wmsURL, layer, range, style) {
-  let wmsURL2;
-  try {
-    wmsURL2 = `${URL_threddsProxy}?main_url=${encodeURIComponent(wmsURL)}`;
-    wmsLayerTime = L.timeDimension.layer.wms(wmsURL2, {
-      name: `${layernameUI}_check`,
-      cacheForward: 200,
-      updateTimeDimension: true,
-      updateTimeDimensionMode: 'replace',
-      requestTimefromCapabilities: false,
-      proxy: URL_threddsProxy,
-
-    });
-    console.log('marker2');
-    layers_dict[`${layernameUI}_check`] = wmsLayerTime
-    console.log('marker3');
-    return wmsLayerTime.addTo(mapObj);
-  } catch (err) {
-    console.log(err);
-  }
-}
- */
 
 var data_layer = function (layernameUI, wmsURL, layer, range, style) {
   let wmsURL2;
@@ -271,8 +171,8 @@ var updateWMSLayer = function (layernameUI, x) {
   } catch (e) {
     console.log(e);
   }
-
 }
+
 var updateWMSLayer2 = function (layernameUI, x) {
   try {
     wmsURL = x['wmsURL'];
@@ -294,7 +194,6 @@ var updateWMSLayer2 = function (layernameUI, x) {
   } catch (e) {
     console.log(e);
   }
-
 }
 
 var removeActiveLayer = function (layernameUI) {
@@ -307,12 +206,6 @@ var removeActiveLayer = function (layernameUI) {
   }
 }
 
-/*var removeWMSLayer = function() {
-    layerControlObj.removeLayer(dataLayerObj);
-    mapObj.removeLayer(dataLayerObj);
-    $("#layer-display-container").css("display", "none");
-}*/
-
 var changeOpacity = function (layernameUI, opacity) {
   opacity_new = Math.trunc(opacity * 100);
   $("#opacityValue").html(`${opacity_new} `);
@@ -321,24 +214,4 @@ var changeOpacity = function (layernameUI, opacity) {
   } catch (e) {
     return
   }
-
 }
-
-
-//let insetMapObj = insetMap('inset-map-one');
-
-
-// Inset map
-/*
-function insetMap(map) {
-  let insetmap = L.map(map, {
-    center: [0, 0],
-    zoom: 3,
-    minZoom: 2,
-    zoomSnap: .5,
-    boxZoom: true,
-    fullscreenControl: true,
-    maxBounds: L.latLngBounds(L.latLng(-100.0, -270.0), L.latLng(100.0, 270.0)),
-  })
-  return L.esri.basemapLayer('Streets').addTo(insetmap);
-}*/
