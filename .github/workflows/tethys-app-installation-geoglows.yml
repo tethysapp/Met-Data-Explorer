@@ -39,4 +39,4 @@ jobs:
         method: 'POST'
         url: 'https://apps.geoglows.org/apps/app-store/install/git/'
         data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ steps.vars.outputs.short_ref }}"}'
-        customHeaders: '{"Authorization": "Token ${{ secrets.TETHYS_BYU_AUTH_TOKEN }}"}'
+        customHeaders: '{"Authorization": "Token ${{ secrets.TETHYS_BYU_AUTH_TOKEN_GEOGLOWS }}"}'
