@@ -1,4 +1,4 @@
-name: tethys-app-installation2
+name: tethys-app-installation-geoglows
 
 on:
   release:
