@@ -1,9 +1,8 @@
 name: tethys-app-installation
 
 on:
-  push
-  # release:
-   # types: published
+  release:
+    ypes: published
 
 jobs:
   app-lint:
@@ -39,5 +38,5 @@ jobs:
       with:
         method: 'POST'
         url: 'https://tethys-staging.byu.edu/apps/app-store/install/git/'
-        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "main"}'  # "${{ steps.vars.outputs.short_ref }}"}' github.event.release.target_commitish
+        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ github.event.release.target_commitish }}"}'
         customHeaders: '{"Authorization": "Token ${{ secrets.TETHYS_BYU_AUTH_TOKEN }}"}'
