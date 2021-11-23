@@ -34,9 +34,23 @@ jobs:
       id: vars
       run: echo ::set-output name=short_ref::${GITHUB_REF##*/}
     - name: Deploy Stage
+      id: deploy
       uses: fjogeleit/http-request-action@master
       with:
         method: 'POST'
         url: 'http://tethys-ideam.westus2.cloudapp.azure.com/apps/app-store/install/git/'
-        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ github.event.release.target_commitish }}"}'
+        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ steps.vars.outputs.short_ref }}"}'
+        timeout: 10000
         customHeaders: '{"Authorization": "Token ${{ secrets.TETHYS_BYU_AUTH_TOKEN_IDEAM }}"}'
+    - name: Get Installation ID
+      id: iid
+      run: |
+        echo ${{ steps.deploy.outputs.response }}
+        echo ::set-output name=IID::${{ fromJson(steps.deploy.outputs.response).install_id }}
+    - name: Get Installation Status
+      id: status
+      uses: msouff/tethys-app-status@v1
+      with:
+        url: 'ttp://tethys-ideam.westus2.cloudapp.azure.com/apps/warehouse/install/git/status'
+        install_id: '${{ steps.iid.outputs.IID }}'
+        tethys_auth_token: '${{ secrets.TETHYS_BYU_AUTH_TOKEN_IDEAM }}'
