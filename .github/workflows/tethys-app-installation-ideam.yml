@@ -38,5 +38,5 @@ jobs:
       with:
         method: 'POST'
         url: 'http://tethys-ideam.westus2.cloudapp.azure.com/apps/app-store/install/git/'
-        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ steps.vars.outputs.short_ref }}"}'
+        data: '{"url": "https://github.com/${{ github.repository }}.git", "branch": "${{ github.event.release.target_commitish }}"}'
         customHeaders: '{"Authorization": "Token ${{ secrets.TETHYS_BYU_AUTH_TOKEN_IDEAM }}"}'
