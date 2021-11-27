@@ -1,8 +1,5 @@
 name: tethys-app-installation-servir
 
-on:
-  release:
-    types:
 
 jobs:
   app-lint:
