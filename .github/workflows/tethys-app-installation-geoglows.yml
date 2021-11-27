@@ -2,7 +2,7 @@ name: tethys-app-installation-geoglows
 
 on:
   release:
-    types: published
+    types:
 
 jobs:
   app-lint:
