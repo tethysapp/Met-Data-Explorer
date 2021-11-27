@@ -1,9 +1,5 @@
 name: tethys-app-installation-ideam
 
-on:
-  release:
-    types: 
-
 jobs:
   app-lint:
     runs-on: ubuntu-latest
