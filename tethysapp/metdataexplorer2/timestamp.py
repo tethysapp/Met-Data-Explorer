@@ -4,7 +4,6 @@ from siphon.catalog import TDSCatalog
 
 def url_to_iterate_files(request):
     url = request.GET['url']
-    print(url)
     access_urls, file_name = iterate_files(url)
     return JsonResponse({'accessUrls': access_urls, 'fileName': file_name})
 
@@ -17,11 +16,9 @@ def iterate_files(url):
         catalog = get_catalog(new_url)
         catalog_files = catalog.catalog_refs
         the_file = get_latest_file(path_list[iteration], catalog_files)
-        print(the_file)
         new_url += the_file + '/'
         iteration += 1
     catalog = get_catalog(new_url)
-    print(catalog)
     catalog_files = catalog.datasets
     parts_of_string = [path_list[iteration].split('#')[0], path_list[iteration].split('#')[2]]
     relevant_files = []

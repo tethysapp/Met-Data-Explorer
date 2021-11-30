@@ -16,7 +16,7 @@ resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces'
 
 setup(
     name=release_package,
-    version='1.2.6',
+    version='1.2.7',
     description='',
     long_description='',
     keywords='',

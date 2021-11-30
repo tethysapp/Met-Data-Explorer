@@ -56,6 +56,10 @@
     overflow: auto;
 }
 
+.modal {
+  overflow-y:auto;
+}
+
 #display_wms_graphs {
     display: flex;
     flex-direction: row;

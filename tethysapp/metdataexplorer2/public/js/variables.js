@@ -679,7 +679,7 @@ var getFullArray = function () {
           let timeseries = {};
           for (let key in data) {
             if (data[key].hasOwnProperty('error')) {
-              notify_user_info(${data[key][\'error\']});
+              notify_user_info(data[key]['error']);
               break;
               return
             }

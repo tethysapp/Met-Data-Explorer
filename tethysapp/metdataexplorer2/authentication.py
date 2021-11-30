@@ -10,7 +10,6 @@ def write_new_engine(request):
     message = {}
     file = open(os.path.expanduser('~') + '/.netrc', 'a+')
     lines = file.readlines()
-    print(lines)
     if len(lines) == 0:
         file.write('machine ' + machine + ' login ' + user + ' password ' + pswd + '\n')
     elif lines[-1] == '\n':
@@ -34,8 +33,6 @@ def remove_credentials(request):
     string_to_remove = 'machine ' + machine + ' login ' + user + ' password ' + pswd + '\n'
     file = open(os.path.expanduser('~') + '/.netrc', 'r+')
     lines = file.readlines()
-    print(string_to_remove)
-    print(lines)
     lines.remove(string_to_remove)
     file.close()
 

@@ -19,7 +19,6 @@ def shp_to_geojson(shp_filepath, filename):
     current_geojsons = glob.glob(os.path.join(new_directory, '*.geojson'))
     already_made = False
     for geojson in current_geojsons:
-        print(geojson)
         if not already_made:
             if os.path.basename(geojson) == filename + '.geojson':
                 already_made = True
@@ -33,7 +32,6 @@ def shp_to_geojson(shp_filepath, filename):
 
 def upload_shapefile(request):
     files = request.FILES.getlist('files')
-    print(files)
     shp_path = os.path.join(os.path.dirname(__file__), 'workspaces', 'user_workspaces')
 
 #    write the new files to the directory
@@ -94,12 +92,8 @@ def get_data_bounds(request):
         var_row.range = range_string
         session.commit()
         session.close()
-        print('test string 1')
-        print(range_string)
     else:
         return_obj['range'] = var_row.range
-        print('test string 2v')
-        print(return_obj)
 
     return JsonResponse(return_obj)
 
@@ -239,6 +233,7 @@ def getVariablesTds(request):
 
 
 def get_full_array(request):
+    print('Getting Values')
     SessionMaker = app.get_persistent_store_database(
         Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()
@@ -252,7 +247,6 @@ def get_full_array(request):
     dimensions_sel = request.GET.getlist('dimensions_sel[]')
     type_ask = request.GET.get('type_ask')
     extra_dim = request.GET.get('extra_dim')
-#    epsg_offset = request.GET.get('epsg_offset')
     tdds_group = session.query(Thredds).join(Groups).filter(Groups.name == actual_group). \
         filter(Thredds.title == actual_tdds).first()
 
@@ -260,12 +254,6 @@ def get_full_array(request):
     attribute_array['description'] = tdds_group.description
     attribute_array['timestamp'] = tdds_group.timestamp
     attribute_array['epsg'] = tdds_group.epsg
-#    if epsg_offset != '':
-#        print("not empty")
-#        attribute_array['epsg'] = epsg_offset
-#    else:
-#        print("empty")
-#        attribute_array['epsg'] = tdds_group.epsg
 
     attribute_array['type'] = 'file'
     attribute_array['url'] = tdds_group.url
@@ -274,7 +262,6 @@ def get_full_array(request):
     attribute_array['type_request'] = type_ask
 
     authentication = json.loads(tdds_group.authentication)
-    print(authentication)
     if not authentication:
         attribute_array['username'] = False
         attribute_array['password'] = False
@@ -303,7 +290,6 @@ def get_full_array(request):
                      'bounds': var_row.bounds}
     attribute_array['attributes'] = attr_variable
     data = organize_array(attribute_array, behavior_type, label_type)
-    print(data)
 
     return JsonResponse({'result': data})
 
@@ -318,7 +304,6 @@ def organize_array(attribute_array, behavior_type, label_type):
         access_urls['NetcdfSubset'] = attribute_array['url_netcdf']
 
     variable = attribute_array['attributes']['name']
-    print(attribute_array['spatial'])
     original_filepath = print_geojson_to_file(attribute_array['spatial'])
     geojson_path = shift_shape_bounds(attribute_array['attributes']['bounds'], original_filepath)
     dim_order = tuple(attribute_array['attributes']['dimensions'])

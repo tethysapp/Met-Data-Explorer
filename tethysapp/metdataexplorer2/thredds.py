@@ -49,7 +49,6 @@ def edit_tdds(request):
             session.close()
             return_objt['message'] = "updated tdds"
         except Exception as e:
-            print(e)
             return_objt['message'] = "failed to update tdds"
 
     return JsonResponse(return_objt)
@@ -131,7 +130,6 @@ def add_tdds(request):
         try:
             dims = ds.dimensions.keys()
             for dim in dims:
-                print(dim)
                 if dim in ds.variables:
                     if dim not in lat_list:
                         if dim not in lon_list:
@@ -193,21 +191,9 @@ def add_tdds(request):
             except Exception as e:
                 print(e)
 
-            #print(key)
-            #print('this is the variable:')
-            print(max(ds.variables[key][:]).astype(float))
-            #print(min(ds.variables[key][:]).astype(float))
-            #print(ds.variables[key][:])
-            #max = ds.variables[key][:].max().values
-            #min = ds.variables[key][:].min().values
-            #range_string = f'{min},{max}'
-            #print('range string:')
-            #print(range_string)
-
             variable_one = Variables(name=key, dimensions=tdds_info['attributes'][key]['dimensions'],
                                      units=tdds_info['attributes'][key]['units'],
                                      color=tdds_info['attributes'][key]['color'],
-                                     #range=range_string,
                                      metadata_variable=json.dumps(variable_tempt_dict),
                                      bounds=bounds)
 

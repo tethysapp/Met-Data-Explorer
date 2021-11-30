@@ -13,41 +13,29 @@ def print_geojson_to_file(geojson_geometry):
 
 def check_lat_lon_within(geo_bounds, bounds):
     bounds_keys = list(bounds.keys())
-    print('checking lat')
     if geo_bounds['lat']['min'] <= bounds[bounds_keys[1]]['min'] and geo_bounds['lat']['max'] \
             <= bounds[bounds_keys[1]]['min']:
-        print('geojson is below of the data without overlap')
         lat = 1
     elif geo_bounds['lat']['max'] >= bounds[bounds_keys[1]]['max'] and geo_bounds['lat']['min'] >= \
             bounds[bounds_keys[1]]['max']:
-        print('geojson is above of the data without overlap')
         lat = 2
     elif geo_bounds['lat']['min'] <= bounds[bounds_keys[1]]['min'] <= geo_bounds['lat']['max']:
-        print('geojson is below of the data with overlap')
         lat = 3
     elif geo_bounds['lat']['max'] >= bounds[bounds_keys[1]]['max'] >= geo_bounds['lat']['min']:
-        print('geojson is above of the data with overlap')
         lat = 4
     else:
-        print('geojson is within the data')
         lat = 5
-    print('checking lon')
     if geo_bounds['lon']['min'] <= bounds[bounds_keys[0]]['min'] and geo_bounds['lon']['max'] \
             <= bounds[bounds_keys[0]]['min']:
-        print('geojson is left of the data without overlap')
         lon = 1
     elif geo_bounds['lon']['max'] >= bounds[bounds_keys[0]]['max'] and geo_bounds['lon']['min'] >= \
             bounds[bounds_keys[0]]['max']:
-        print('geojson is right of the data without overlap')
         lon = 2
     elif geo_bounds['lon']['min'] <= bounds[bounds_keys[0]]['min'] <= geo_bounds['lon']['max']:
-        print('geojson is left of the data with overlap')
         lon = 3
     elif geo_bounds['lon']['max'] >= bounds[bounds_keys[0]]['max'] >= geo_bounds['lon']['min']:
-        print('geojson is right of the data with overlap')
         lon = 4
     else:
-        print('geojson is within the data')
         lon = 5
     case = [lat, lon]
     return case
@@ -110,8 +98,6 @@ def shift_shape_bounds(bounds, filepath):
                     new_coords.append(tuple((lonlat[0], lonlat[1])))
                 poly = new_coords
             else:
-                print('no shape found')
-
                 multipolygons.append(poly)
             new_shp = geojson.MultiPolygon([multipolygons])
         new_feature = geojson.Feature(properties={'iterate': 'this needs to change'},
@@ -135,10 +121,6 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                               label_type, stats, type_ask, extra_dim, username, password):
     timeseries_array = {}
     if not password:
-        print('grids inputs')
-        print(files)
-        print(var)
-        print(dim_order)
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order)
     else:
         series = grids.TimeSeries(files=files, var=var, dim_order=dim_order, user=username, pswd=password)
@@ -146,19 +128,14 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
     geojson_geometry = gpd.read_file(geojson_path)
 
     if len(list(dim_order)) == 3:
-        print(type_ask)
         if type_ask == 'marker':
             try:
-                print(geojson_geometry.geometry[0].bounds[1])
-                print(geojson_geometry.geometry[0].bounds[2])
                 timeseries_array = series.point(None, geojson_geometry.geometry[0].bounds[1],
                                                 geojson_geometry.geometry[0].bounds[2])
                 timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
             except Exception as e:
                 timeseries_array['error'] = str(e)
-                print('is it this exception')
-                print(e)
                 return timeseries_array
         if type_ask == "rectangle":
             try:
@@ -173,12 +150,10 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 return timeseries_array
         if type_ask == "polygon":
             try:
-                print('trying to get polygon')
                 timeseries_array = series.shape(mask=geojson_path, stats=stats)
                 timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
             except Exception as e:
-                print('that didnt work')
                 timeseries_array['error'] = str(e)
                 return timeseries_array
         else:
@@ -188,13 +163,9 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
                 timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
             except Exception as e:
-                print('it went wrong')
-                print(e)
                 timeseries_array['error'] = str(e)
                 return timeseries_array
     if len(list(dim_order)) == 4:
-        print("4 dimensions")
-        print(dim_order)
         if type_ask == 'marker':
             try:
                 if geojson_geometry.crs.area_of_use.west < 0 and geojson_geometry.geometry[0].bounds[2] < 0:
