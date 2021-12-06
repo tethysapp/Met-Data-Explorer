@@ -52,8 +52,13 @@ var THREDDS_PACKAGE = (function () {
       })
     })
     $(document).on("click", "#refresh_file", function () {
+      //$('#modalAddServices').modal('show');
+      //$('#addService-title').append('This is the title');
+      //$('#addService-description').append('This is the description');
       console.log(current_tdds);
       console.log(current_Group);
+      //load_individual_thredds_for_group(current_Group);
+      addSingleThreddsServer();
       let request_obj = {
         group: current_Group,
         tds: current_tdds
@@ -222,9 +227,6 @@ var load_individual_thredds_for_group = function (group_name) {
             url_wms,
             url_subset,
             epsg,
-            //spatial,
-            //description,
-            //timestamp,
             attributes,
             metadata_file,
             extra_coordinate
@@ -252,27 +254,17 @@ var load_individual_thredds_for_group = function (group_name) {
             wmsURL = $(this).attr("data-wms-url");
             subsetURL = $(this).attr("data-subset-url");
           });
-          // let input_check_serv = $(`#${new_title}_check`);
-          // input_check_serv.on("click", function(){
           $(`#${new_title}_span`).on("click", function () {
             $('#sG').bootstrapToggle('on');
 
             current_tdds = id_dictionary[new_title].split('_join_')[0];
             current_Group = group_name;
 
-            // current_vars = dict_file_vars[new_title];
-            // opendapURL = $(this).attr("data-opendap-url");
-            // wmsURL = $(this).attr("data-wms-url");
             subsetURL = $(this).attr("data-subset-url");
             $("#GeneralLoading").removeClass("hidden");
             $(`#${new_title}`).css({"border-color": "#2e6da4", "border-width": "2px 2px"});
-            console.log(new_title);
             $(`#${last_selected_id}`).css({"border-color": "darkgrey", "border-width": "0px 0px"});
-            console.log(last_selected_id);
             tdds_displaying_metadata = new_title;
-
-            //ONLY ONE CHECKBOX AT A TIME//
-            // $('input[type="checkbox"]').not(this).prop('checked', false);
 
             //CLEAN TABLE //
             $("#table_div").empty();
@@ -322,24 +314,16 @@ var load_individual_thredds_for_group = function (group_name) {
             let extra_dim_order = $("#extra_dim");
 
             if (layers_style[layernameUI2]['dimensions'].length > 3) {
-              console.log("entro 4");
               extra_dim_order.empty();
               extra_dim_order.selectpicker("refresh");
               extra_dim_order.selectpicker('hide');
               let extra_json = layers_style[layernameUI2]['extra_dim'];
-              console.log('Here is the first forEach:');
-              console.log(layers_style[layernameUI2]);
-              console.log(extra_json);
-              //ToDo fix when extra_json[dim] is empty
               layers_style[layernameUI2]['dimensions'].forEach(function (dim) {
                 if (dim != "lat" && dim != "lon") {
                   if (!dim.includes("time")) {
-                    console.log("las tiene");
                     let option;
                     option = `<option value=${dim}> Select a ${dim} val </option>`;
                     extra_dim_order.append(option);
-                    console.log('First One stops here:')
-                    console.log(extra_json[dim]);
                     extra_json[dim].forEach(function (val_e) {
                       // console.log(val_e);
                       let option2 = `<option value=${val_e}> ${val_e} </option>`;
@@ -580,7 +564,6 @@ var addSingleThreddsServer = function () {
     $.ajax({
       url: "add-thredds/",
       dataType: 'json',
-      // data: {"data":databaseInfo},
       data: {data: JSON.stringify(databaseInfo)},
       type: 'POST',
       success: function (data) {

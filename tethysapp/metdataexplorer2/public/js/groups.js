@@ -724,14 +724,16 @@ var addVariables = function (variables) {
   keys.sort();
   let html = "";
   for (let i = 0; i < keys.length; i++) {
+    console.log(keys[i])
     html += `<option data-dimensions="${variables[keys[i]]['dimensions']}" data-units="${variables[keys[i]]['units']}" data-color="${variables[keys[i]]['color']}">${keys[i]}</option>`;
   }
   $("#variable-input").empty()
+  console.log('html: ')
+  console.log(html)
   $(html).appendTo("#variable-input");
-  console.log("dimensions" + $("#variable-input option:selected").attr('data-dimensions'));
+  console.log("dimensions: " + $("#variable-input option:selected").attr('data-dimensions'));
   addDimensions($("#variable-input option:selected").attr('data-dimensions'));
   $("#variable-input").selectpicker("refresh");
-
 }
 
 var addDimensions = function (dimensions) {
@@ -745,7 +747,7 @@ var addDimensions = function (dimensions) {
 
   $("#time option:contains('time')").attr('selected', 'selected');
   $("#time").selectpicker("refresh");
-
+  console.log(html);
 }
 
 var addFileMetadata = function (fileMetadata) {

@@ -62,7 +62,6 @@ def thredds_proxy(request):
 
 def get_files_and_folders(request):
     url = request.GET.get('url')
-    print(url)
     data_tree = {}
     folders_dict = {}
     files_dict = {}
@@ -90,9 +89,7 @@ def get_files_and_folders(request):
     data_tree['files'] = files_dict
 
     correct_url = ds.catalog_url
-    final_obj = {}
-    final_obj['dataTree'] = data_tree
-    final_obj['correct_url'] = correct_url
+    final_obj = {'dataTree': data_tree, 'correct_url': correct_url}
     return JsonResponse(final_obj)
 
 
@@ -103,7 +100,6 @@ def get_variables_and_file_metadata(request):
     try:
         ds = netCDF4.Dataset(url)
     except OSError:
-        log.exception('get_variables_and_file_metadata')
         exception = False
         return JsonResponse({'variables_sorted': exception})
 
@@ -113,14 +109,13 @@ def get_variables_and_file_metadata(request):
         dimension_list = []
         try:
             var_lo = ds[variable].units
-            print(var_lo)
         except Exception as e:
             print(e)
-            print("no units")
+            var_lo = 'false'
         if len(ds[variable].dimensions) > 2:
             for dimension in ds[variable].dimensions:
                 dimension_list.append(dimension)
-            array = {'dimensions': dimension_list, 'units': 'false', 'color': 'false'}
+            array = {'dimensions': dimension_list, 'units': var_lo, 'color': 'false'}
             variables[variable] = array
 
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
@@ -175,9 +170,6 @@ def add_group(request):
                                 hs = pd.Series(h[:])
                                 file_attr_ex[dim] = hs.to_list()
 
-            print(file_attr_ex)
-            print(servi['authentication'])
-
             thredds_one = Thredds(server_type=servi['type'],
                                   title=servi['title'],
                                   url=servi['url'],
@@ -224,7 +216,6 @@ def refresh_group(request):
     group_obj = {}
     specific_group = request.GET.get('group')
     specific_tds = request.GET.get('tds')
-    print(specific_group)
 
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
 
@@ -235,6 +226,7 @@ def refresh_group(request):
         layer_obj = {}
         layer_obj["title"] = trds.title
         if layer_obj["title"] == specific_tds:
+            print('title')
             print(layer_obj["title"])
     group_obj['services'] = "this group"
     return JsonResponse(group_obj)
@@ -282,10 +274,7 @@ def load_group(request):
 
 def get_groups_list(request):
     list_catalog = {}
-    print(Persistent_Store_Name)
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
-    print('Session Maker:')
-    print(SessionMaker)
     session = SessionMaker()  # Initiate a session
 
     thredds_groups = session.query(Groups).all()

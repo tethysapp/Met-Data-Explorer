@@ -47,7 +47,6 @@ var MAP_PACKAGE = (function () {
     layerControlObj = L.control.layers(basemapObj,).addTo(mapObj);
     /* Drawing/Layer Controls */
     drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
-    //let shpLayer;
 
     let drawControl = new L.Control.Draw({
       edit: {
@@ -68,55 +67,16 @@ var MAP_PACKAGE = (function () {
     /* Add the controls to the map */
     mapObj.addControl(drawControl);
 
-    // $(".leaflet-draw-section").hide();
-    /*
-    $('#draw-on-map-button').click(function () {
-      urlInfoBox = true;
-      $('#modalAddGroupThredds').modal('hide');
-      $('#modalAddServices').modal('hide');
-      getThreddsBounds();
-    });
-    $('#draw-on-map-button2').click(function () {
-      isEditing = true;
-      $('#modalEditServices').modal('hide');
-      getThreddsBounds();
-    });*/
     $('#get-data-button').click(getDataBounds);
 
     mapObj.on(L.Draw.Event.CREATED, function (e) {
       console.log('Draw Event Created');
-
-      //if (!isEditing) {
-      if (urlInfoBox == true) {
-
-        let coord = e.layer.toGeoJSON();
-        $('#spatial-input').val(JSON.stringify(coord));
-        spatial_shape = coord;
-        $('#modalAddGroupThredds').modal('show');
-        $('#modalAddServices').modal('show');
-        urlInfoBox = false;
-        type_of_series = e.layerType;
-      } else {
-        drawnItems.addLayer(e.layer);
-        input_spatial = JSON.stringify(e.layer.toGeoJSON());
-        type_of_series = e.layerType;
-      }
-      /*} else {
-      isEditing = false;
-      let coord = e.layer.toGeoJSON();
-      $('#spatial-input2').val(JSON.stringify(coord));
-      $('#modalEditServices').modal('show');
-      }*/
+      drawnItems.addLayer(e.layer);
+      input_spatial = JSON.stringify(e.layer.toGeoJSON());
+      type_of_series = e.layerType;
     });
   })
 })();
-
-/*
-var getThreddsBounds = function () {
-  let polygonDrawer = new L.Draw.Polygon(mapObj);
-  polygonDrawer.enable();
-}
-*/
 
 var data_layer = function (layernameUI, wmsURL, layer, range, style) {
   let wmsURL2;
@@ -125,7 +85,7 @@ var data_layer = function (layernameUI, wmsURL, layer, range, style) {
     const wmsLayer = L.tileLayer.wms(wmsURL2, {
       layers: layer,
       dimension: 'time',
-      useCache: false,
+      useCache: true,
       crossOrigin: true,
       format: 'image/png',
       transparent: true,

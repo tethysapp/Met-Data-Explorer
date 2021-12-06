@@ -207,8 +207,6 @@ var reset_keywords = function () {
         "color": "#555555",
         "font-weight": "normal"
       });
-
-
     });
   } catch (error) {
     notify_user_danger('There is a problem reseting the fitler');
@@ -310,7 +308,7 @@ var getVariablesAndFileMetadata = function (opendapURL) {
     success: function (result) {
       variables = result["variables_sorted"];
       fileMetadata = result["file_metadata"];
-      $("#loading-folders").addClass("hidden")
+      $("#loading-folders").addClass("hidden");
     }
   })
   return [variables, fileMetadata];

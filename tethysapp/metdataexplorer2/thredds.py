@@ -49,6 +49,7 @@ def edit_tdds(request):
             session.close()
             return_objt['message'] = "updated tdds"
         except Exception as e:
+            print(e)
             return_objt['message'] = "failed to update tdds"
 
     return JsonResponse(return_objt)
@@ -148,6 +149,7 @@ def add_tdds(request):
                 if hl != 'lat' and hl != 'lon':
                     if 'time' not in hl:
                         file_attr_ex[hl] = da.coords[hl].to_dict()['data']
+
         thredds_one = Thredds(server_type=tdds_info['type'],
                               title=tdds_info['title'],
                               url=tdds_info['url'],
