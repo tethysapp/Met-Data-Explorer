@@ -99,9 +99,9 @@ def get_variables_and_file_metadata(request):
     file_metadata = ''
     try:
         ds = netCDF4.Dataset(url)
-    except OSError:
-        exception = False
-        return JsonResponse({'variables_sorted': exception})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'variables_sorted': e})
 
     for metadata_string in ds.__dict__:
         file_metadata += '<b>' + str(metadata_string) + '</b><br><p>' + str(ds.__dict__[metadata_string]) + '</p>'

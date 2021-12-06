@@ -306,6 +306,8 @@ var getVariablesAndFileMetadata = function (opendapURL) {
     method: "GET",
     async: false,
     success: function (result) {
+      console.log('sorted variables');
+      console.log(result["variables_sorted"])
       variables = result["variables_sorted"];
       fileMetadata = result["file_metadata"];
       $("#loading-folders").addClass("hidden");

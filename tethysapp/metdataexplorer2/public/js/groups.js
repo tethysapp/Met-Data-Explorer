@@ -727,7 +727,7 @@ var addVariables = function (variables) {
     console.log(keys[i])
     html += `<option data-dimensions="${variables[keys[i]]['dimensions']}" data-units="${variables[keys[i]]['units']}" data-color="${variables[keys[i]]['color']}">${keys[i]}</option>`;
   }
-  $("#variable-input").empty()
+  $("#variable-input").empty();
   console.log('html: ')
   console.log(html)
   $(html).appendTo("#variable-input");
