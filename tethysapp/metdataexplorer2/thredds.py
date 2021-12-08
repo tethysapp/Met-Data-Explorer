@@ -1,3 +1,4 @@
+import os
 import json
 import netCDF4
 import pandas as pd
@@ -96,6 +97,9 @@ def delete_single_thredd(request):
 
 
 def add_tdds(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     group_obj = {}
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
@@ -211,6 +215,8 @@ def add_tdds(request):
         session.close()
         group_obj['services'] = services_array
 
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
     return JsonResponse(group_obj)
 
 

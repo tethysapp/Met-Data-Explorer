@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 import netCDF4
@@ -61,6 +62,9 @@ def thredds_proxy(request):
 
 
 def get_files_and_folders(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     url = request.GET.get('url')
     data_tree = {}
     folders_dict = {}
@@ -90,10 +94,15 @@ def get_files_and_folders(request):
 
     correct_url = ds.catalog_url
     final_obj = {'dataTree': data_tree, 'correct_url': correct_url}
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
     return JsonResponse(final_obj)
 
 
 def get_variables_and_file_metadata(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     url = request.GET.get('opendapURL')
     variables = {}
     file_metadata = ''
@@ -118,10 +127,15 @@ def get_variables_and_file_metadata(request):
             array = {'dimensions': dimension_list, 'units': var_lo, 'color': 'false'}
             variables[variable] = array
 
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
 
 
 def add_group(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     group_obj = {}
     single_obj = {}
     services_array = []
@@ -208,6 +222,9 @@ def add_group(request):
         session.commit()
         session.close()
         group_obj['services'] = services_array
+
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
 
     return JsonResponse(group_obj)
 

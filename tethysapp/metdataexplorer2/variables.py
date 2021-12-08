@@ -69,6 +69,9 @@ def upload_shapefile(request):
 
 
 def get_data_bounds(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     print('Getting Data Bounds')
     return_obj = {}
     variable_single = request.POST.get('variable')
@@ -95,10 +98,16 @@ def get_data_bounds(request):
     else:
         return_obj['range'] = var_row.range
 
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
+
     return JsonResponse(return_obj)
 
 
 def add_vars(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     group_obj = {}
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
@@ -169,6 +178,9 @@ def add_vars(request):
         group_obj['all_attr'] = old_attr_arr
         group_obj['services'] = services_array
 
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
+
     return JsonResponse(group_obj)
 
 
@@ -233,6 +245,9 @@ def getVariablesTds(request):
 
 
 def get_full_array(request):
+    old_daprcfile = os.environ.get('DAPRCFILE')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+
     print('Getting Values')
     SessionMaker = app.get_persistent_store_database(
         Persistent_Store_Name, as_sessionmaker=True)
@@ -291,6 +306,8 @@ def get_full_array(request):
     attribute_array['attributes'] = attr_variable
     data = organize_array(attribute_array, behavior_type, label_type)
 
+    if old_daprcfile is not None:
+        os.environ['DAPRCFILE'] = OldDAPRCFILE
     return JsonResponse({'result': data})
 
 
