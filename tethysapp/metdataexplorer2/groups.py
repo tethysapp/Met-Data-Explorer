@@ -16,6 +16,29 @@ log = logging.getLogger('tethys.metdataexplorer2')
 Persistent_Store_Name = 'thredds_db'
 
 
+def set_rc_vars():
+    print('var set')
+    old_dodsrcfile = os.environ.get('DODS_CACHE_INIT')
+    #old_netrc = os.environ.get('NETRC')
+    old_netrc = os.environ.get('CURLOPT_NETRC')
+    os.environ['DODS_CACHE_INIT'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    #os.environ['CURLOPT_NETRC'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc')
+    os.environ['NETRC'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc')
+    return old_dodsrcfile, old_netrc
+
+
+def reset_rc_vars(old_dodsrcfile, old_netrc):
+    print('var reset')
+    if old_dodsrcfile is not None:
+        os.environ['DODS_CACHE_INIT'] = old_dodsrcfile
+    else:
+        os.environ.pop('DODS_CACHE_INIT')
+    if old_netrc is not None:
+        os.environ['CURLOPT_NETRC'] = old_netrc
+    else:
+        os.environ.pop('CURLOPT_NETRC')
+
+
 def filter_by_variable(request):
     return_objt = {}
     selected_vars = request.POST.getlist('variables')
@@ -62,8 +85,7 @@ def thredds_proxy(request):
 
 
 def get_files_and_folders(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     url = request.GET.get('url')
     data_tree = {}
@@ -94,14 +116,12 @@ def get_files_and_folders(request):
 
     correct_url = ds.catalog_url
     final_obj = {'dataTree': data_tree, 'correct_url': correct_url}
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vars(old_dodsrcfile, old_netrc)
     return JsonResponse(final_obj)
 
 
 def get_variables_and_file_metadata(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     url = request.GET.get('opendapURL')
     variables = {}
@@ -127,14 +147,12 @@ def get_variables_and_file_metadata(request):
             array = {'dimensions': dimension_list, 'units': var_lo, 'color': 'false'}
             variables[variable] = array
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vras(old_dodsrcfile, old_netrc)
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
 
 
 def add_group(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     group_obj = {}
     single_obj = {}
@@ -223,8 +241,7 @@ def add_group(request):
         session.close()
         group_obj['services'] = services_array
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vras(old_dodsrcfile, old_netrc)
 
     return JsonResponse(group_obj)
 

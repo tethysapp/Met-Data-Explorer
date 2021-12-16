@@ -10,6 +10,7 @@ from .app import Metdataexplorer2 as app
 from .model import Variables, Thredds, Groups
 from .timestamp import iterate_files
 from .spatial_func import print_geojson_to_file, shift_shape_bounds, get_timeseries_at_geojson
+from .groups import set_rc_vars, reset_rc_vars
 
 Persistent_Store_Name = 'thredds_db'
 
@@ -69,8 +70,7 @@ def upload_shapefile(request):
 
 
 def get_data_bounds(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     print('Getting Data Bounds')
     return_obj = {}
@@ -98,15 +98,13 @@ def get_data_bounds(request):
     else:
         return_obj['range'] = var_row.range
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vars(old_dodsrcfile, old_netrc)
 
     return JsonResponse(return_obj)
 
 
 def add_vars(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     group_obj = {}
     services_array = []
@@ -136,13 +134,35 @@ def add_vars(request):
                     variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
             except Exception as e:
                 print(e)
+            try:
+                longitude_dim = False
+                latitude_dim = False
+                for dim in tdds_info['attributes'][key]['dimensions']:
+                    if dim.lower() in lon_list:
+                        longitude_dim = dim
+                    elif dim.lower() in lat_list:
+                        latitude_dim = dim
+                if not longitude_dim and not latitude_dim:
+                    longitude_dim = tdds_info['attributes'][key]['dimensions'][-2]
+                    latitude_dim = tdds_info['attributes'][key]['dimensions'][-1]
+                bounds = {longitude_dim: {
+                    'max': max(ds.variables[longitude_dim][:]).astype(float),
+                    'min': min(ds.variables[longitude_dim][:]).astype(float)},
+                    latitude_dim: {
+                    'max': max(ds.variables[latitude_dim][:]).astype(float),
+                    'min': min(ds.variables[latitude_dim][:]).astype(float)}}
+                print(bounds)
+            except Exception as e:
+                print(e)
+
             tdds_var_query = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(
                 Thredds.title == actual_tdds).join(Variables).filter(Variables.name == key).count()
             if tdds_var_query == 0:
                 variable_one = Variables(name=key, dimensions=tdds_info[key]['dimensions'],
                                          units=tdds_info[key]['units'],
                                          color=tdds_info[key]['color'],
-                                         metadata_variable=json.dumps(variable_tempt_dict))
+                                         metadata_variable=json.dumps(variable_tempt_dict),
+                                         bounds=bounds)
                 tdds_object.attributes.append(variable_one)
 
         services_array.append(tdds_info)
@@ -178,8 +198,7 @@ def add_vars(request):
         group_obj['all_attr'] = old_attr_arr
         group_obj['services'] = services_array
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vars(old_dodsrcfile, old_netrc)
 
     return JsonResponse(group_obj)
 
@@ -245,8 +264,7 @@ def getVariablesTds(request):
 
 
 def get_full_array(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     print('Getting Values')
     SessionMaker = app.get_persistent_store_database(
@@ -306,8 +324,7 @@ def get_full_array(request):
     attribute_array['attributes'] = attr_variable
     data = organize_array(attribute_array, behavior_type, label_type)
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vars(old_dodsrcfile, old_netrc)
     return JsonResponse({'result': data})
 
 

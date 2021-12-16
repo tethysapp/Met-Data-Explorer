@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 from .app import Metdataexplorer2 as app
 from .model import Variables, Thredds, Groups
+from .groups import set_rc_vars, reset_rc_vars
 
 Persistent_Store_Name = 'thredds_db'
 
@@ -97,9 +98,7 @@ def delete_single_thredd(request):
 
 
 def add_tdds(request):
-    old_daprcfile = os.environ.get('DAPRCFILE')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
-
+    old_dodsrcfile, old_netrc = set_rc_vars()
     group_obj = {}
     services_array = []
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
@@ -215,8 +214,7 @@ def add_tdds(request):
         session.close()
         group_obj['services'] = services_array
 
-    if old_daprcfile is not None:
-        os.environ['DAPRCFILE'] = OldDAPRCFILE
+    reset_rc_vars(old_dodsrcfile, old_netrc)
     return JsonResponse(group_obj)
 
 
