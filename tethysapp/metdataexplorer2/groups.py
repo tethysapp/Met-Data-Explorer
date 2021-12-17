@@ -17,26 +17,22 @@ Persistent_Store_Name = 'thredds_db'
 
 
 def set_rc_vars():
-    print('var set')
-    old_dodsrcfile = os.environ.get('DODS_CACHE_INIT')
-    #old_netrc = os.environ.get('NETRC')
-    old_netrc = os.environ.get('CURLOPT_NETRC')
-    os.environ['DODS_CACHE_INIT'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
-    #os.environ['CURLOPT_NETRC'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc')
+    old_dodsrcfile = os.environ.get('DAPRCFILE')
+    old_netrc = os.environ.get('NETRC')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
     os.environ['NETRC'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc')
     return old_dodsrcfile, old_netrc
 
 
 def reset_rc_vars(old_dodsrcfile, old_netrc):
-    print('var reset')
     if old_dodsrcfile is not None:
-        os.environ['DODS_CACHE_INIT'] = old_dodsrcfile
+        os.environ['DAPRCFILE'] = old_dodsrcfile
     else:
-        os.environ.pop('DODS_CACHE_INIT')
+        os.environ.pop('DAPRCFILE')
     if old_netrc is not None:
-        os.environ['CURLOPT_NETRC'] = old_netrc
+        os.environ['NETRC'] = old_netrc
     else:
-        os.environ.pop('CURLOPT_NETRC')
+        os.environ.pop('NETRC')
 
 
 def filter_by_variable(request):
@@ -147,7 +143,7 @@ def get_variables_and_file_metadata(request):
             array = {'dimensions': dimension_list, 'units': var_lo, 'color': 'false'}
             variables[variable] = array
 
-    reset_rc_vras(old_dodsrcfile, old_netrc)
+    reset_rc_vars(old_dodsrcfile, old_netrc)
     return JsonResponse({'variables_sorted': variables, 'file_metadata': file_metadata})
 
 
@@ -241,7 +237,7 @@ def add_group(request):
         session.close()
         group_obj['services'] = services_array
 
-    reset_rc_vras(old_dodsrcfile, old_netrc)
+    reset_rc_vars(old_dodsrcfile, old_netrc)
 
     return JsonResponse(group_obj)
 
