@@ -20,3 +20,4 @@ requirements:
   pip:
       - grids
 post:
+  - authentication.sh
