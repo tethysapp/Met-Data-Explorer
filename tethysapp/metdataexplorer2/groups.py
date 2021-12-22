@@ -71,7 +71,9 @@ def thredds_proxy(request):
             request_url = request.GET.get('main_url')
             query_params = request.GET.dict()
             query_params.pop('main_url', None)
+            old_dodsrcfile, old_netrc = set_rc_vars()
             r = requests.get(request_url, params=query_params)
+            reset_rc_vars(old_dodsrcfile, old_netrc)
             return HttpResponse(r.content, content_type="image/png")
         else:
             return JsonResponse({})
