@@ -134,7 +134,7 @@ class Metdataexplorer2(TethysAppBase):
             UrlMap(
                 name='refresh_file',
                 url='refresh_file/',
-                controller='metdataexplorer2.groups.refresh_group'
+                controller='metdataexplorer2.groups.refresh_file'
             ),
             UrlMap(
                 name='get-credentials',

@@ -52,31 +52,26 @@ var THREDDS_PACKAGE = (function () {
       })
     })
     $(document).on("click", "#refresh_file", function () {
-      //$('#modalAddServices').modal('show');
-      //$('#addService-title').append('This is the title');
-      //$('#addService-description').append('This is the description');
-      console.log(current_tdds);
-      console.log(current_Group);
-      //load_individual_thredds_for_group(current_Group);
-      addSingleThreddsServer();
-      let request_obj = {
+      notify_user_info('Refreshing Container')
+      let databaseInfo = {
+        type: 'file',
         group: current_Group,
-        tds: current_tdds
-      }
+        title: current_tdds,
+        url: opendapURL,
+        url_wms: wmsURL,
+      };
+      console.log(databaseInfo)
       $.ajax({
-        type: "GET",
         url: `refresh_file/`,
-        dataType: "JSON",
-        data: request_obj,
-        success: function (result) {
-          //$("#editService-title").val(result['title']);
-          //$("#editService-description").val(result['description']);
-          //$("#epsg-input2").val(result['epsg']);
+        dataType: 'json',
+        data: {data: JSON.stringify(databaseInfo)},
+        type: 'POST',
+        success: function (data) {
+          notify_user_success(data['message'])
         }
       })
     })
   })
-
 })()
 
 var display_vars_from_Tdds = function () {
@@ -561,6 +556,7 @@ var addSingleThreddsServer = function () {
       timestamp: timestamp,
       authentication: authentication,
     };
+    console.log(databaseInfo)
     $.ajax({
       url: "add-thredds/",
       dataType: 'json',

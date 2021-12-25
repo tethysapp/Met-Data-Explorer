@@ -108,6 +108,10 @@ def add_vars(request):
 
     group_obj = {}
     services_array = []
+
+    lon_list = ['lon', 'longitude', 'x', 'degrees east', 'degrees west']
+    lat_list = ['lat', 'latitude', 'y', 'degrees north', 'degrees south']
+
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
     session = SessionMaker()  # Initiate a session
     tdds_info = json.loads(request.POST.get("attributes"))
@@ -171,8 +175,10 @@ def add_vars(request):
         session.close()
 
         session = SessionMaker()
+
         tdds_object2 = session.query(Thredds).join(Groups).filter(Groups.name == actual_group).filter(
             Thredds.title == actual_tdds).first()
+
         group_obj['metadata_file'] = tdds_object2.metadata_td_file
         group_obj['extra_coordinate'] = tdds_object2.extra_coordinate
         group_obj['title'] = tdds_object2.title
@@ -182,6 +188,7 @@ def add_vars(request):
         group_obj['url_subset'] = tdds_object2.url_subset
         group_obj['epsg'] = tdds_object2.epsg
         old_attr_arr = []
+
         for old_attr in tdds_object2.attributes:
             variable_obj = {}
             variable_obj['name'] = old_attr.name
@@ -192,6 +199,7 @@ def add_vars(request):
             variable_obj['epsg'] = tdds_object2.epsg
 
             old_attr_arr.append(variable_obj)
+
         session.commit()
         session.close()
 

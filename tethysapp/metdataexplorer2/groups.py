@@ -244,23 +244,124 @@ def add_group(request):
     return JsonResponse(group_obj)
 
 
-def refresh_group(request):
-    group_obj = {}
-    specific_group = request.GET.get('group')
-    specific_tds = request.GET.get('tds')
+def refresh_file(request):
+    tdds_info = json.loads(request.POST["data"])
+    old_dodsrcfile, old_netrc = set_rc_vars()
 
     SessionMaker = app.get_persistent_store_database(Persistent_Store_Name, as_sessionmaker=True)
-
     session = SessionMaker()  # Initiate a session
-    thredds_in_group = session.query(Groups).filter(Groups.name == specific_group)[0].thredds_server
 
-    for trds in thredds_in_group:
-        layer_obj = {}
-        layer_obj["title"] = trds.title
-        if layer_obj["title"] == specific_tds:
-            print('title')
-            print(layer_obj["title"])
-    group_obj['services'] = "this group"
+    lon_list = ['lon', 'longitude', 'x', 'degrees east', 'degrees west']
+    lat_list = ['lat', 'latitude', 'y', 'degrees north', 'degrees south']
+
+    if request.is_ajax() and request.method == 'POST':
+
+        # File Metadata
+        file_tempt_dict = {}
+
+        try:
+            ds = netCDF4.Dataset(tdds_info['url'])
+        except Exception as e:
+            print(e)
+
+        # INITIALIZING THE THREDDS FILES
+        try:
+            for metadata_string in ds.__dict__:
+                file_tempt_dict[metadata_string] = str(ds.__dict__[metadata_string])
+        except Exception as e:
+            print(e)
+
+        file_attr_ex = {}
+        try:
+            dims = ds.dimensions.keys()
+            for dim in dims:
+                if dim in ds.variables:
+                    if dim not in lat_list:
+                        if dim not in lon_list:
+                            if 'time' not in dim:
+                                h = ds.variables[dim]
+                                hs = pd.Series(h[:])
+                                file_attr_ex[dim] = hs.to_list()
+                else:
+                    print('This dimension does not have an associated variable: ' + dim)
+
+        except Exception as e:
+            print(e)
+            da = xarray.open_dataset(tdds_info['url'].strip(), chunks={"time": '100MB'})
+            attr_dims = da.coords.keys()
+            for hl in attr_dims:
+                if hl != 'lat' and hl != 'lon':
+                    if 'time' not in hl:
+                        file_attr_ex[hl] = da.coords[hl].to_dict()['data']
+
+        tdds_old = session.query(Thredds).join(Groups).filter(Groups.name == tdds_info['group']).filter(
+            Thredds.title == tdds_info['title']).first()
+
+        tdds_old.metadata_td_file = json.dumps(file_tempt_dict)
+        tdds_old.extra_coordinate = json.dumps(file_attr_ex)
+
+        group_thredds = session.query(Thredds).filter(Thredds.title == tdds_info['title'])[0].attributes
+        attributes = {}
+
+        for variable in group_thredds:
+            dimension_list = []
+            try:
+                var_lo = ds[variable.name].units
+            except Exception as e:
+                print(e)
+                var_lo = 'false'
+            if len(ds[variable.name].dimensions) > 2:
+                for dimension in ds[variable.name].dimensions:
+                    dimension_list.append(dimension)
+                array = {'dimensions': dimension_list, 'units': var_lo, 'color': 'false'}
+                attributes[variable.name] = array
+
+        tdds_info['attributes'] = attributes
+
+        # Attributes addition and metadata
+        for key in tdds_info['attributes']:
+            variable_tempt_dict = {}
+            try:
+                for metadata_string in ds[key].__dict__:
+                    variable_tempt_dict[metadata_string] = str(ds[key].__dict__[metadata_string])
+            except Exception as e:
+                print(e)
+            try:
+                longitude_dim = False
+                latitude_dim = False
+                for dim in tdds_info['attributes'][key]['dimensions']:
+                    print(dim)
+                    if dim.lower() in lon_list:
+                        longitude_dim = dim
+                    elif dim.lower() in lat_list:
+                        latitude_dim = dim
+                if not longitude_dim and not latitude_dim:
+                    longitude_dim = tdds_info['attributes'][key]['dimensions'][-2]
+                    latitude_dim = tdds_info['attributes'][key]['dimensions'][-1]
+                bounds = {longitude_dim: {
+                    'max': max(ds.variables[longitude_dim][:]).astype(float),
+                    'min': min(ds.variables[longitude_dim][:]).astype(float)},
+                    latitude_dim: {
+                    'max': max(ds.variables[latitude_dim][:]).astype(float),
+                    'min': min(ds.variables[latitude_dim][:]).astype(float)}}
+            except Exception as e:
+                print(e)
+
+            for attr in tdds_old.attributes:
+                attr.dimensions = tdds_info['attributes'][key]['dimensions']
+                attr.units = tdds_info['attributes'][key]['units']
+                attr.color = tdds_info['attributes'][key]['color']
+                attr.metadata_variable = json.dumps(variable_tempt_dict)
+                attr.bounds = bounds
+
+        tdds_info['metadata_file'] = json.dumps(file_tempt_dict)
+        tdds_info['extra_coordinate'] = json.dumps(file_attr_ex)
+
+        session.commit()
+        session.close()
+
+    group_obj = {'message': 'Container Successfully Refreshed'}
+    reset_rc_vars(old_dodsrcfile, old_netrc)
     return JsonResponse(group_obj)
 
 
