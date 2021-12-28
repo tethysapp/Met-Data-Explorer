@@ -2,6 +2,10 @@
 cwd="$(pwd)/tethysapp/metdataexplorer2/workspaces/app_workspace/"
 cd $cwd
 
+rm .netrc
+rm .dodsrc
+rm .urs_cookies
+
 touch .netrc
 touch .dodsrc
 touch .urs_cookies
