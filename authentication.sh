@@ -1,4 +1,4 @@
 #! /bin/bash
 
-python init_auth.py
+python metdataexplorer2/init_auth.py
 
