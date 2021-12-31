@@ -19,8 +19,8 @@ Persistent_Store_Name = 'thredds_db'
 def set_rc_vars():
     old_dodsrcfile = os.environ.get('DAPRCFILE')
     old_netrc = os.environ.get('NETRC')
-    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.dodsrc')
-    os.environ['NETRC'] = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc')
+    os.environ['DAPRCFILE'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace', '.dodsrc')
+    os.environ['NETRC'] = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace', '.netrc')
     return old_dodsrcfile, old_netrc
 
 

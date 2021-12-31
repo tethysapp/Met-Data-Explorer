@@ -1,5 +1,4 @@
 import os
-
 from django.http import JsonResponse
 
 
@@ -8,7 +7,8 @@ def write_new_engine(request):
     user = request.GET.get('user')
     pswd = request.GET.get('pswd')
     message = {}
-    file = open(os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc'), 'a+')
+    file = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             'workspaces', 'app_workspace', '.netrc'), 'a+')
     lines = file.readlines()
     if len(lines) == 0:
         file.write('machine ' + machine + ' login ' + user + ' password ' + pswd + '\n')
@@ -27,16 +27,17 @@ def remove_credentials(request):
     machine = request.GET.get('machine')
     user = request.GET.get('user')
     pswd = request.GET.get('pswd')
-    #line = int(request.GET.get('line'))
 
     message = {}
     string_to_remove = 'machine ' + machine + ' login ' + user + ' password ' + pswd + '\n'
-    file = open(os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc'), 'r+')
+    file = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             'workspaces', 'app_workspace', '.netrc'), 'r+')
     lines = file.readlines()
     lines.remove(string_to_remove)
     file.close()
 
-    new_file = open(os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc'), 'w')
+    new_file = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                 'workspaces', 'app_workspace', '.netrc'), 'w')
     for line in lines:
         new_file.write(line)
 
@@ -47,7 +48,8 @@ def remove_credentials(request):
 
 
 def get_credentials(request):
-    file = open(os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', '.netrc'), 'r')
+    file = open(os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                             'workspaces', 'app_workspace', '.netrc'), 'r')
     lines = file.readlines()
     auth = {}
     x = 1

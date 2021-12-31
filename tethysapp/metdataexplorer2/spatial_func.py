@@ -5,7 +5,8 @@ import grids
 
 
 def print_geojson_to_file(geojson_geometry):
-    filepath = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', 'original.geojson')
+    filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                            'workspaces', 'app_workspace', 'original.geojson')
     with open(filepath, 'w') as f:
         geojson.dump(geojson_geometry, f)
     return filepath
@@ -68,7 +69,8 @@ def find_shift(coord, case):
 
 def shift_shape_bounds(bounds, filepath):
     geojson_geometry = gpd.read_file(filepath)
-    new_filepath = os.path.join(os.path.dirname(__file__), 'workspaces', 'app_workspace', 'grids.geojson')
+    new_filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                'workspaces', 'app_workspace', 'grids.geojson')
     geo_bounds = {'lat': {'max': max(geojson_geometry.geometry.bounds['maxy']),
                           'min': min(geojson_geometry.geometry.bounds['miny'])},
                   'lon': {'max': max(geojson_geometry.geometry.bounds['maxx']),
