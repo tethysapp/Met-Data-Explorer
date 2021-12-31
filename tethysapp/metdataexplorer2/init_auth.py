@@ -17,3 +17,6 @@ with open(os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'wor
                                               'app_workspace', '.urs_cookies') + '\nHTTP.NETRC='
              + os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace', '.netrc'))
     ft.close()
+
+print('app_workspace filepath:')
+print(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace', '.netrc'))
