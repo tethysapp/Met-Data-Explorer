@@ -568,7 +568,6 @@ var addServiceToTable = function () {
     $("#attributes").empty();
     $("#groups_variables_div").hide();
     $("#vars_search").removeClass("hidden");
-    // $(html).appendTo("#attributes_dims");
   } catch (error) {
     console.log(error);
     notify_user_danger('There was an error while adding the THREDDS file and its variables to the Group.');

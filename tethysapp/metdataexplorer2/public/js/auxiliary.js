@@ -78,7 +78,7 @@ var AUX_PACKAGE = (function () {
           });
         }
       } catch (e) {
-        console.log("Simple plotly error, not worry")
+        console.log("Simple plotly error, not worry");
       }
     } else {
       $("#graph").hide();
@@ -119,7 +119,6 @@ var uploadShapefile = function () {
     contentType: false,
     success: function (result) {
       try {
-        // console.log(result);
         let filename = result["filename"];
         let alreadyMade = result["alreadyMade"];
         let geoJsonObject = JSON.parse(result['geojson']);
@@ -138,7 +137,6 @@ var uploadShapefile = function () {
         let attr_shp = [];
         Object.keys(check).forEach(function (ch_key) {
           let unique_check = check[ch_key].filter((v, i, a) => a.indexOf(v) == i)
-          // if(check[ch_key].length == geoJsonObject['features'].length){
           if (unique_check.length == geoJsonObject['features'].length) {
             attr_shp.push(ch_key)
           }
@@ -148,9 +146,7 @@ var uploadShapefile = function () {
         if (attr_shp.length == 0) {
           notify_user_info('Please, upload a different shapefile that contains at least a common property in all the features of the shapefile');
         }
-        // else{
         input_spatial = filename
-        // let attr_shp = Object.keys(geoJsonObject['features'][0]['properties']);
         let feature_select = $("#features_file");
         feature_select.empty();
         feature_select.selectpicker('refresh');
@@ -178,8 +174,6 @@ var uploadShapefile = function () {
         } else {
           $('#externalSPTL_modal').modal('hide');
         }
-        // }
-
       } catch (e) {
         console.log(e);
         notify_user_danger('There was problem updating the shapefile');
@@ -216,23 +210,18 @@ var reset_keywords = function () {
 var metadata_button_modal = function (infoService) {
   let table_content = '<table id = "table_metadata_file2" class="table table-hover table-condensed"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
-  // let var_metad = JSON.parse(attribute['metadata_var']);
   let mtda_objt = infoService;
-
   let all_file_keys = Object.keys(mtda_objt);
-
   for (let j = 0; j < all_file_keys.length; ++j) {
     if (all_file_keys[j] != 'attributes' && all_file_keys[j] != 'spatial') {
       table_content += `<tr><td>${all_file_keys[j]}</td><td>${mtda_objt[all_file_keys[j]]}</td></tr>`;
     }
-
     if (all_file_keys[j] == 'attributes') {
       table_content += `<tr><td>${all_file_keys[j]}</td><td>${Object.keys(mtda_objt[all_file_keys[j]]).length}</td></tr>`;
     }
   }
-  table_content += "</tbody> </table>"
-  return table_content
-
+  table_content += "</tbody> </table>";
+  return table_content;
 }
 
 var make_metadata_file_table = function (metadata_string, layer_obj) {
@@ -276,7 +265,6 @@ var general_search = function (id_search_input, id_table) {
 
 // for only one group
 var searchGroups_group = function () {
-
   try {
     general_search("add-attribute", "attributes_table");
   } catch (error) {
@@ -286,7 +274,6 @@ var searchGroups_group = function () {
 
 //for the attr in the variables filter
 var searchVariables_func = function () {
-
   try {
     general_search("search_attr", "data-table");
   } catch (error) {
@@ -333,19 +320,15 @@ var options_vars = function (attributes, new_title) {
       variable_select.append(option);
       variable_select.selectpicker("refresh");
     }
-
-
   } catch (e) {
     console.log(e);
   }
-  // return html_vars
-
 }
 
 var getRandomColor = function () {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
+  let letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
@@ -432,8 +415,6 @@ var graphs_features = function (timeseries, yTitle, type) {
     };
     Plotly.newPlot('plots', dataArray, layout, config);
   }
-
-
   if (type === "whisker") {
     let xArray = [];
     let yArray = [];
@@ -613,11 +594,6 @@ var initialize_graphs = function (xArray, yArray, title_graph, xTitle, yTitle, l
 
       let data = [trace1];
 
-      // let layout = {
-      //   title: title_graph,
-      //   autosize: true,
-      // };
-
       var layout = {
         title: title_graph,
         width: $(".carousel-inner").parent().width(),
@@ -635,7 +611,6 @@ var initialize_graphs = function (xArray, yArray, title_graph, xTitle, yTitle, l
           automargin: true,
         },
         autosize: true,
-        // showlegend:true,
         legend: {
           "orientation": "h",
           traceorder: 'reversed'
@@ -650,7 +625,6 @@ var initialize_graphs = function (xArray, yArray, title_graph, xTitle, yTitle, l
         },
       };
 
-
       Plotly.newPlot('plots', data, layout, config);
     }
     // update the layout to expand to the available size
@@ -661,7 +635,6 @@ var initialize_graphs = function (xArray, yArray, title_graph, xTitle, yTitle, l
         'yaxis.autorange': true
       });
     };
-
 
   } catch (e) {
     notify_user_danger('Unable to initialize the graphs');
@@ -807,7 +780,6 @@ var check_for_same_names = function (type_level, title_to_check) {
 
 var addAttribute = function (attribute, dimensionString) { //, units, color) {
   let options = '';
-  //let dimOptions;
   let html = ''
   let count = $('.attr-checkbox').length;
   let class_name_ = "";
@@ -875,7 +847,7 @@ var get_metadata_button = function (attribute) {
     }
   }
   table_content += "</tbody> </table>"
-  return table_content
+  return table_content;
 }
 
 var get_extra_file_metdata = function (layer_obj) {
@@ -885,5 +857,5 @@ var get_extra_file_metdata = function (layer_obj) {
   table_content += `<tr><td>OPENDAP Enpoint</td><td>${layer_obj["url"]}</td></tr>`
   table_content += `<tr><td>WMS Endpoint</td><td>${layer_obj["url_wms"]}</td></tr>`
   table_content += `<tr><td>Subset Endpoint</td><td>${layer_obj["url_subset"]}</td></tr>`
-  return table_content
+  return table_content;
 }

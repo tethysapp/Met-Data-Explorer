@@ -4,7 +4,6 @@ let subsetURL = "";
 let wmsURL = "";
 let opendapURL = "";
 let containerAttributes = false;
-//let isEditing = false;
 let urlInfoBox = false;
 let spatial_shape = false;
 let add_services_list = [];

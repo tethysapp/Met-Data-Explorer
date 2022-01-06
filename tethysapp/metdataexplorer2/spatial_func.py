@@ -5,9 +5,10 @@ import grids
 
 
 def print_geojson_to_file(geojson_geometry):
+    print()
     filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             'workspaces', 'app_workspace', 'original.geojson')
-    if geojson_geometry[0] == '{':
+    if type(geojson_geometry) == dict:
         with open(filepath, 'w') as f:
             geojson.dump(geojson_geometry, f)
     else:
