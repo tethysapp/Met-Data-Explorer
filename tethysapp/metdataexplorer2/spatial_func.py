@@ -7,8 +7,15 @@ import grids
 def print_geojson_to_file(geojson_geometry):
     filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             'workspaces', 'app_workspace', 'original.geojson')
-    with open(filepath, 'w') as f:
-        geojson.dump(geojson_geometry, f)
+    if geojson_geometry[0] == '{':
+        with open(filepath, 'w') as f:
+            geojson.dump(geojson_geometry, f)
+    else:
+        old_filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                    'workspaces', 'app_workspace', geojson_geometry + '.geojson')
+        geojson_string = gpd.read_file(old_filepath)
+        with open(filepath, 'w') as f:
+            geojson.dump(geojson_string, f)
     return filepath
 
 
@@ -68,6 +75,8 @@ def find_shift(coord, case):
 
 
 def shift_shape_bounds(bounds, filepath):
+    print(bounds)
+    print(filepath)
     geojson_geometry = gpd.read_file(filepath)
     new_filepath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                 'workspaces', 'app_workspace', 'grids.geojson')
@@ -161,7 +170,7 @@ def get_timeseries_at_geojson(files, var, dim_order, geojson_path, behavior_type
         else:
             try:
                 timeseries_array = series.shape(mask=geojson_path, behavior=behavior_type,
-                                                labelby=label_type, stats=stats)
+                                                label_attr=label_type, stats=stats)
                 timeseries_array['datetime'] = format_datetime(timeseries_array['datetime'])
                 return timeseries_array
             except Exception as e:

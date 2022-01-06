@@ -320,6 +320,8 @@ def get_full_array(request):
             return JsonResponse({'result': data})
     else:
         attribute_array['extra_dim'] = extra_dim
+    print('spatial')
+    print(input_spatial)
     try:
         attribute_array['spatial'] = json.loads(input_spatial)
     except Exception as e:

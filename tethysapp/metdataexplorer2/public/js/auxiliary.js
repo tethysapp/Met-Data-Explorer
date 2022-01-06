@@ -238,7 +238,6 @@ var metadata_button_modal = function (infoService) {
 var make_metadata_file_table = function (metadata_string, layer_obj) {
   let table_content = '<table id = "table_metadata_file" class="table table-hover table-condensed"><thead><tr>'
   table_content += '<th>Property</th><th>Value</th></tr></thead><tbody>'
-  // let var_metad = JSON.parse(attribute['metadata_var']);
   let mtda_objt = JSON.parse(metadata_string);
 
   let all_file_keys = Object.keys(mtda_objt);
