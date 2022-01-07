@@ -1,8 +1,8 @@
 import os
 
-from .helpers import *
+#from .helpers import *
 
-logger.info("Creating authentication files")
+#logger.info("Creating authentication files")
 
 try:
     with open(os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace',
@@ -11,7 +11,8 @@ try:
         fh.close()
 
 except Exception as e:
-    logger.info(e)
+    #logger.info(e)
+    print(e)
 
 try:
     with open(os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace',
@@ -20,7 +21,8 @@ try:
         fl.close()
 
 except Exception as e:
-    logger.info(e)
+    #logger.info(e)
+    print(e)
 
 try:
     with open(os.open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'workspaces', 'app_workspace', '.dodsrc'),
@@ -32,4 +34,5 @@ try:
         ft.close()
 
 except Exception as e:
-    logger.info(e)
+    #logger.info(e)
+    print(e)
