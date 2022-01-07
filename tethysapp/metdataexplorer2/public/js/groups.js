@@ -597,7 +597,7 @@ var getCredentials = function () {
                    </tr>`
         }
         html += `<tr id="new-auth">
-                   <th scope="col"><span><input type="radio" class="auth-radio" name="auth-select" value="" checked="checked"></span></th>
+                   <th scope="col"><span><input type="radio" class="auth-radio" name="auth-select" value="false" checked="checked"></span></th>
                    <th scope="col"><span><p>None</p></span></th>
                    <th scope="col"><span></span></th>
                    <th scope="col"><span></span></th>

@@ -303,7 +303,11 @@ def get_full_array(request):
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
 
+    print('AUTHENTICATION')
+    print(type(tdds_group.authentication))
+    print(tdds_group.authentication)
     authentication = json.loads(tdds_group.authentication)
+    print(authentication)
     if not authentication:
         attribute_array['username'] = False
         attribute_array['password'] = False
