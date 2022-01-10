@@ -1,6 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 
 from .model import Base
+from .init_auth import make_auth_files
 
 import os
 
@@ -9,6 +10,7 @@ import os
 def init_thredds_db(engine, first_time):
     print("Initializing Persistant Storage")
     Base.metadata.create_all(engine)
+    make_auth_files()
     if first_time:
         # # Make session
         SessionMaker = sessionmaker(bind=engine)
