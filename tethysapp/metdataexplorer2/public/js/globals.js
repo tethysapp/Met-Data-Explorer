@@ -1,3 +1,5 @@
+// TODO implement closures
+
 let id_dictionary = {};
 let URLpath = [];
 let subsetURL = "";

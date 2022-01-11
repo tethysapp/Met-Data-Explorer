@@ -4,6 +4,7 @@ import os
 import geopandas as gpd
 import netCDF4
 import xarray
+import grids
 from django.http import JsonResponse
 
 from .app import Metdataexplorer2 as app
@@ -86,6 +87,8 @@ def get_data_bounds(request):
     var_row = session.query(Variables).filter(Variables.name == variable_single).join(Thredds).filter(
         Thredds.title == tdds_single).join(Groups).filter(Groups.name == group_single).first()
     if var_row.range is None:
+        # Grids
+        # da = grids.TimeSeries(files: list, var: variable_single, dim_order: tuple, **kwargs)
         da = xarray.open_dataset(tdds_group.url.strip(), chunks={"time": '100MB'})
         data = da[variable_single].compute()
         max = data.max().values
@@ -303,11 +306,8 @@ def get_full_array(request):
     attribute_array['url_netcdf'] = tdds_group.url_subset
     attribute_array['type_request'] = type_ask
 
-    print('AUTHENTICATION')
-    print(type(tdds_group.authentication))
-    print(tdds_group.authentication)
     authentication = json.loads(tdds_group.authentication)
-    print(authentication)
+
     if not authentication:
         attribute_array['username'] = False
         attribute_array['password'] = False
